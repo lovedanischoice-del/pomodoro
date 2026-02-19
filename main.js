@@ -128,10 +128,10 @@ const REST_TIME = 5 * 60;
 const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 45;
 
 // State Variables
-let timeLeft = WORK_TIME;
-let isRunning = false;
-let isWorkMode = true;
-let timerId = null;
+var timeLeft = WORK_TIME;
+var isRunning = false;
+var isWorkMode = true;
+var timerId = null;
 let todos = JSON.parse(localStorage.getItem('todos')) || [];
 
 // Initialization

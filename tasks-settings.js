@@ -210,7 +210,7 @@ function initSettings() {
         const settings = JSON.parse(localStorage.getItem('settings') || '{}');
         if (type === 'bgm') {
             settings.bgmId = id;
-            updateSoundButtonText('bgm', id);
+            updateSoundDisplay('bgm', id);
             // Update playing BGM immediately if enabled
             updateAudioSource('fireSound', id);
             const fireSound = document.getElementById('fireSound');
@@ -221,7 +221,7 @@ function initSettings() {
             }
         } else {
             settings.bellId = id;
-            updateSoundButtonText('bell', id);
+            updateSoundDisplay('bell', id);
         }
 
         localStorage.setItem('settings', JSON.stringify(settings));
@@ -230,15 +230,17 @@ function initSettings() {
         }
     }
 
-    function updateSoundButtonText(type, id) {
-        const btn = type === 'bgm' ? bgmBtn : bellBtn;
-        if (!btn || !window.SOUND_CONFIG) return;
+    function updateSoundDisplay(type, id) {
+        const displayId = type === 'bgm' ? 'bgmName' : 'bellName';
+        const displayEl = document.getElementById(displayId);
+
+        if (!displayEl || !window.SOUND_CONFIG) return;
 
         const list = type === 'bgm' ? window.SOUND_CONFIG.bgm : window.SOUND_CONFIG.bells;
         const sound = list.find(s => s.id === id) || list[0];
+
         if (sound) {
-            // Use innerHTML to include span for styling/truncation
-            btn.innerHTML = `<span>${sound.name}</span>`;
+            displayEl.textContent = sound.name;
         }
     }
 
@@ -258,8 +260,8 @@ function initSettings() {
         if (soundEnabled) soundEnabled.checked = settings.soundEnabled !== false;
 
         // Load initial button texts
-        updateSoundButtonText('bgm', settings.bgmId || 'fire');
-        updateSoundButtonText('bell', settings.bellId || 'chime');
+        updateSoundDisplay('bgm', settings.bgmId || 'fire');
+        updateSoundDisplay('bell', settings.bellId || 'chime');
 
         if (volumeSettings) {
             volumeSettings.value = settings.volume || 0.5;

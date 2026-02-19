@@ -879,11 +879,43 @@ button {
     /* Allow shrinking below content size */
 }
 
-.sound-select-btn::after {
-    content: '▼';
-    font-size: 0.7em;
-    margin-left: 8px;
-    opacity: 0.7;
+
+/* New sound settings layout */
+.sound-name-display {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-right: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* max-width: 150px; Removed, let it grow but shrink if needed */
+    flex: 1;
+    text-align: right;
+    min-width: 0;
+}
+
+.btn-select-sound {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    height: 32px;
+}
+
+.btn-select-sound:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: var(--accent-work);
+}
+
+@media (max-width: 500px) {
+    .sound-name-display {
+        /* max-width: 100px; */
+    }
 }
 
 .sound-select-btn:hover {

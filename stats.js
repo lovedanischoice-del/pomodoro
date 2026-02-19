@@ -112,12 +112,20 @@ class StatsManager {
             return;
         }
 
+        // Set a minimum max value to avoid division by zero or tiny bars
+        // But if max value is small, we still want it to scale up to be visible?
+        // User wants "7.0 to go way up". 
+        // If max is 7, then 7 should be 100%.
         const maxValue = Math.max(...values, 1);
 
         chartContainer.innerHTML = days.map(day => {
             const value = stats.daily[day];
             const hours = (value / 60).toFixed(1);
-            const heightPercent = (value / maxValue) * 100;
+            // Calculate percentage based on max value in the set
+            let heightPercent = (value / maxValue) * 100;
+
+            // Ensure even small values have a tiny visible bar if they are not 0
+            if (value > 0 && heightPercent < 5) heightPercent = 5;
 
             return `
                 <div class="chart-bar">
