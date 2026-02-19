@@ -69,11 +69,21 @@ const todoList = document.getElementById('todoList');
 // Chime Bell Sound Function
 function playChimeBell() {
     try {
-        const chimeSound = new Audio('./chime.mp3');
+        // Get selected chime from settings
+        let soundFile = 'sounds/bells/chime.mp3'; // new default path
+
+        if (window.SOUND_CONFIG) {
+            const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+            const bellId = settings.bellId || 'chime';
+            const sound = window.SOUND_CONFIG.bells.find(s => s.id === bellId);
+            if (sound) soundFile = sound.file;
+        }
+
+        const chimeSound = new Audio(soundFile);
         chimeSound.volume = 0.7;
         chimeSound.play()
             .then(() => {
-                console.log('Chime bell played successfully');
+                console.log(`Chime bell played successfully (${soundFile})`);
             })
             .catch(error => {
                 console.error('Chime bell playback failed:', error);
@@ -309,7 +319,23 @@ if (toggleBtn) toggleBtn.addEventListener('click', toggleTimer);
 if (resetBtn) resetBtn.addEventListener('click', resetTimer);
 if (volumeSlider) {
     volumeSlider.addEventListener('input', (e) => {
-        if (fireSound) fireSound.volume = e.target.value;
+        const volume = e.target.value;
+        if (fireSound) fireSound.volume = volume;
+
+        // Save to settings
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        settings.volume = volume;
+        localStorage.setItem('settings', JSON.stringify(settings));
+
+        // Sync with settings slider if it exists
+        const settingsVolumeSlider = document.getElementById('volumeSettings');
+        if (settingsVolumeSlider) {
+            settingsVolumeSlider.value = volume;
+            const volumeValue = document.getElementById('volumeValue');
+            if (volumeValue) {
+                volumeValue.textContent = Math.round(volume * 100) + '%';
+            }
+        }
     });
 }
 

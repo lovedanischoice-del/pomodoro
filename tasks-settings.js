@@ -126,8 +126,22 @@ function initSettings() {
     const volumeValue = document.getElementById('volumeValue');
     const notificationSound = document.getElementById('notificationSound');
     const exportData = document.getElementById('exportData');
-    const importData = document.getElementById('importData');
-    const clearAllData = document.getElementById('clearAllData');
+    const bgmSelect = document.getElementById('bgmSelect');
+    const bellSelect = document.getElementById('bellSelect');
+
+    // Populate Sound Selectors
+    if (window.SOUND_CONFIG) {
+        if (bgmSelect && window.SOUND_CONFIG.bgm) {
+            bgmSelect.innerHTML = window.SOUND_CONFIG.bgm.map(sound =>
+                `<option value="${sound.id}">${sound.name}</option>`
+            ).join('');
+        }
+        if (bellSelect && window.SOUND_CONFIG.bells) {
+            bellSelect.innerHTML = window.SOUND_CONFIG.bells.map(sound =>
+                `<option value="${sound.id}">${sound.name}</option>`
+            ).join('');
+        }
+    }
 
     function loadSettings() {
         const settings = JSON.parse(localStorage.getItem('settings') || '{}');
@@ -136,11 +150,19 @@ function initSettings() {
         if (restDuration) restDuration.value = settings.restDuration || 5;
         if (autoStart) autoStart.checked = settings.autoStart !== false;
         if (soundEnabled) soundEnabled.checked = settings.soundEnabled !== false;
+
+        if (bgmSelect) bgmSelect.value = settings.bgmId || (window.SOUND_CONFIG?.bgm[0]?.id || 'fire');
+        if (bellSelect) bellSelect.value = settings.bellId || (window.SOUND_CONFIG?.bells[0]?.id || 'chime');
+
         if (volumeSettings) {
             volumeSettings.value = settings.volume || 0.5;
             updateVolumeDisplay(settings.volume || 0.5);
         }
         if (notificationSound) notificationSound.checked = settings.notificationSound !== false;
+
+        // Update audio sources based on loaded settings
+        updateAudioSource('fireSound', settings.bgmId);
+        // We'll update chime source when it's played, or globally if possible
     }
 
     function saveSettings() {
@@ -149,6 +171,8 @@ function initSettings() {
             restDuration: parseInt(restDuration?.value || 5),
             autoStart: autoStart?.checked !== false,
             soundEnabled: soundEnabled?.checked !== false,
+            bgmId: bgmSelect?.value || 'fire',
+            bellId: bellSelect?.value || 'chime',
             volume: parseFloat(volumeSettings?.value || 0.5),
             notificationSound: notificationSound?.checked !== false
         };
@@ -159,11 +183,33 @@ function initSettings() {
         }
     }
 
+    function updateAudioSource(elementId, soundId) {
+        if (!window.SOUND_CONFIG) return;
+
+        let soundUrl = '';
+        if (elementId === 'fireSound') { // BGM
+            const sound = window.SOUND_CONFIG.bgm.find(s => s.id === soundId) || window.SOUND_CONFIG.bgm[0];
+            if (sound) soundUrl = sound.file;
+        }
+
+        const audioElement = document.getElementById(elementId);
+        if (audioElement && soundUrl) {
+            // Only update if source changed
+            const currentSrc = audioElement.querySelector('source')?.src;
+            if (!currentSrc || !currentSrc.includes(soundUrl)) {
+                audioElement.innerHTML = `<source src="${soundUrl}?v=${Date.now()}" type="audio/mpeg">`;
+                audioElement.load(); // Reload audio element
+            }
+        }
+    }
+
     function applyTimerSettings(settings) {
         const fireSound = document.getElementById('fireSound');
         const volumeSlider = document.getElementById('volumeSlider');
         if (fireSound) fireSound.volume = settings.volume;
         if (volumeSlider) volumeSlider.value = settings.volume;
+
+        updateAudioSource('fireSound', settings.bgmId);
     }
 
     function updateVolumeDisplay(value) {
@@ -173,30 +219,25 @@ function initSettings() {
     }
 
     function playTestNotificationSound() {
-        if (window.playChimeBell) {
-            window.playChimeBell();
-        } else {
-            // Fallback if window.playChimeBell is not available
-            try {
-                const chimeSound = new Audio('./chime.mp3');
-                chimeSound.volume = 0.7;
-                chimeSound.play()
-                    .then(() => {
-                        console.log('Test notification sound played (fallback)');
-                    })
-                    .catch(error => {
-                        console.error('Test sound playback failed (fallback):', error);
-                        // Try synthesis fallback
-                        if (window.playFallbackChime) {
-                            window.playFallbackChime();
-                        }
-                    });
-            } catch (error) {
-                console.error('Test sound error:', error);
-                if (window.playFallbackChime) {
-                    window.playFallbackChime();
-                }
-            }
+        const bellId = bellSelect?.value || 'chime';
+        const soundConfig = window.SOUND_CONFIG?.bells.find(s => s.id === bellId) || window.SOUND_CONFIG?.bells[0];
+        const soundFile = soundConfig ? soundConfig.file : 'sounds/bells/chime.mp3';
+
+        // Fallback or custom play
+        try {
+            const chimeSound = new Audio(soundFile);
+            chimeSound.volume = 0.7;
+            chimeSound.play()
+                .then(() => {
+                    console.log(`Test notification sound played (${soundFile})`);
+                })
+                .catch(error => {
+                    console.error('Test sound playback failed:', error);
+                    if (window.playFallbackChime) window.playFallbackChime();
+                });
+        } catch (error) {
+            console.error('Test sound error:', error);
+            if (window.playFallbackChime) window.playFallbackChime();
         }
     }
 
@@ -204,12 +245,91 @@ function initSettings() {
     if (restDuration) restDuration.addEventListener('change', saveSettings);
     if (autoStart) autoStart.addEventListener('change', saveSettings);
 
-    // Add event listener for the test button
-    const testChimeBellBtn = document.getElementById('testChimeBell');
-    if (testChimeBellBtn) {
-        testChimeBellBtn.addEventListener('click', () => {
-            console.log('Test chime bell button clicked');
-            playTestNotificationSound();
+    if (bgmSelect) bgmSelect.addEventListener('change', () => {
+        saveSettings();
+        // If sound is enabled and running, the new sound should start playing?
+        // For now, handleSound in main.js will resume/pause. 
+        // If we change source while playing, we might need to restart play.
+        const fireSound = document.getElementById('fireSound');
+        if (fireSound && !fireSound.paused) {
+            fireSound.play().catch(e => console.log('Resume failed:', e));
+        }
+    });
+
+    if (bellSelect) bellSelect.addEventListener('change', () => {
+        saveSettings();
+        // Preview is now manual via button, so removed auto-play
+    });
+
+    // Preview Logic
+    let currentPreviewAudio = null;
+    let isPreviewingBgm = false;
+
+    const previewBgmBtn = document.getElementById('previewBgm');
+    const previewBellBtn = document.getElementById('previewBell');
+
+    if (previewBgmBtn) {
+        previewBgmBtn.addEventListener('click', () => {
+            if (isPreviewingBgm && currentPreviewAudio) {
+                // Stop Preview
+                currentPreviewAudio.pause();
+                currentPreviewAudio = null;
+                isPreviewingBgm = false;
+                previewBgmBtn.textContent = '▶';
+                previewBgmBtn.classList.remove('playing');
+            } else {
+                // Start Preview
+                if (currentPreviewAudio) {
+                    currentPreviewAudio.pause(); // Stop any other preview
+                    if (previewBellBtn) previewBellBtn.classList.remove('playing');
+                }
+
+                const bgmId = bgmSelect?.value || 'fire';
+                const sound = window.SOUND_CONFIG?.bgm.find(s => s.id === bgmId);
+                if (sound) {
+                    currentPreviewAudio = new Audio(sound.file);
+                    currentPreviewAudio.loop = true;
+                    currentPreviewAudio.volume = volumeSettings?.value || 0.5;
+                    currentPreviewAudio.play().catch(e => console.error('Preview failed:', e));
+
+                    isPreviewingBgm = true;
+                    previewBgmBtn.textContent = '■';
+                    previewBgmBtn.classList.add('playing');
+
+                    // Reset when ended (though loop is true, just in case)
+                    currentPreviewAudio.onended = () => {
+                        isPreviewingBgm = false;
+                        previewBgmBtn.textContent = '▶';
+                        previewBgmBtn.classList.remove('playing');
+                    };
+                }
+            }
+        });
+    }
+
+    if (previewBellBtn) {
+        previewBellBtn.addEventListener('click', () => {
+            if (currentPreviewAudio && isPreviewingBgm) {
+                // Stop BGM preview if running
+                currentPreviewAudio.pause();
+                isPreviewingBgm = false;
+                if (previewBgmBtn) {
+                    previewBgmBtn.textContent = '▶';
+                    previewBgmBtn.classList.remove('playing');
+                }
+            }
+
+            // Play Bell
+            const bellId = bellSelect?.value || 'chime';
+            const sound = window.SOUND_CONFIG?.bells.find(s => s.id === bellId);
+            if (sound) {
+                const bellAudio = new Audio(sound.file);
+                bellAudio.volume = volumeSettings?.value || 0.5;
+                bellAudio.play().catch(e => console.error('Bell preview failed:', e));
+
+                previewBellBtn.classList.add('playing');
+                setTimeout(() => previewBellBtn.classList.remove('playing'), 1000);
+            }
         });
     }
 
@@ -233,9 +353,8 @@ function initSettings() {
     if (notificationSound) {
         notificationSound.addEventListener('change', (e) => {
             saveSettings();
-            if (e.target.checked) {
-                playTestNotificationSound();
-            }
+            // Note: removed automatic test play on toggle to avoid annoyance, 
+            // but user can use sound selector change to test.
         });
     }
 
