@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bbangmodoro-v4-force-reset-' + new Date().getTime();
+const CACHE_NAME = 'bbangmodoro-v5-force-reset-' + new Date().getTime();
 const urlsToCache = [
     './',
     './index.html',
