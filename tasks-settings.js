@@ -126,22 +126,128 @@ function initSettings() {
     const volumeValue = document.getElementById('volumeValue');
     const notificationSound = document.getElementById('notificationSound');
     const exportData = document.getElementById('exportData');
-    const bgmSelect = document.getElementById('bgmSelect');
-    const bellSelect = document.getElementById('bellSelect');
+    const bgmBtn = document.getElementById('bgmBtn');
+    const bellBtn = document.getElementById('bellBtn');
+    const bgmSelect = null; // Removed
+    const bellSelect = null; // Removed
 
-    // Populate Sound Selectors
-    if (window.SOUND_CONFIG) {
-        if (bgmSelect && window.SOUND_CONFIG.bgm) {
-            bgmSelect.innerHTML = window.SOUND_CONFIG.bgm.map(sound =>
-                `<option value="${sound.id}">${sound.name}</option>`
-            ).join('');
+    // Modal Elements
+    const soundModal = document.getElementById('soundModal');
+    const soundList = document.getElementById('soundList');
+    const soundModalTitle = document.getElementById('soundModalTitle');
+    const closeSoundModal = document.getElementById('closeSoundModal');
+
+    let currentModalType = ''; // 'bgm' or 'bell'
+
+    function openSoundModal(type) {
+        if (!soundModal) return;
+        currentModalType = type;
+        soundModal.classList.add('show');
+        soundModalTitle.textContent = type === 'bgm' ? 'Select Background Music' : 'Select Notification Sound';
+        renderSoundList(type);
+    }
+
+    function closeSoundModalFunc() {
+        if (soundModal) soundModal.classList.remove('show');
+        currentModalType = '';
+    }
+
+    if (closeSoundModal) {
+        closeSoundModal.addEventListener('click', closeSoundModalFunc);
+    }
+
+    // Close on outside click
+    window.addEventListener('click', (e) => {
+        if (e.target === soundModal) {
+            closeSoundModalFunc();
         }
-        if (bellSelect && window.SOUND_CONFIG.bells) {
-            bellSelect.innerHTML = window.SOUND_CONFIG.bells.map(sound =>
-                `<option value="${sound.id}">${sound.name}</option>`
-            ).join('');
+    });
+
+    function renderSoundList(type) {
+        if (!soundList || !window.SOUND_CONFIG) return;
+
+        const sounds = type === 'bgm' ? window.SOUND_CONFIG.bgm : window.SOUND_CONFIG.bells;
+        const currentSettingId = getCurrentSoundId(type);
+
+        soundList.innerHTML = '';
+
+        sounds.forEach(sound => {
+            const div = document.createElement('div');
+            div.className = `sound-option ${sound.id === currentSettingId ? 'selected' : ''}`;
+            div.textContent = sound.name;
+            div.dataset.id = sound.id;
+
+            div.addEventListener('click', () => {
+                selectSound(type, sound.id);
+                // Visual feedback
+                document.querySelectorAll('.sound-option').forEach(el => el.classList.remove('selected'));
+                div.classList.add('selected');
+
+                // Optional: Play sample on selection (short preview if it's bell)
+                if (type === 'bell') {
+                    playTestSound(sound.file);
+                } else if (type === 'bgm') {
+                    // For BGM, maybe just save. Preview button on main screen handles preview.
+                }
+
+                // Close modal after short delay or immediately?
+                // User asked "save on selection?". Keep it open so they can try others, or close?
+                // Standard mobile behavior: select and close.
+                setTimeout(closeSoundModalFunc, 200);
+            });
+
+            soundList.appendChild(div);
+        });
+    }
+
+    function getCurrentSoundId(type) {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        if (type === 'bgm') return settings.bgmId || 'fire';
+        return settings.bellId || 'chime';
+    }
+
+    function selectSound(type, id) {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        if (type === 'bgm') {
+            settings.bgmId = id;
+            updateSoundButtonText('bgm', id);
+            // Update playing BGM immediately if enabled
+            updateAudioSource('fireSound', id);
+            const fireSound = document.getElementById('fireSound');
+            // Check if timer is running and sound is enabled (assuming `isRunning` is a global variable from main.js)
+            if (fireSound && settings.soundEnabled && window.isRunning) {
+                // If timer running and sound enabled, switch track
+                fireSound.play().catch(e => console.log(e));
+            }
+        } else {
+            settings.bellId = id;
+            updateSoundButtonText('bell', id);
+        }
+
+        localStorage.setItem('settings', JSON.stringify(settings));
+        if (window.saveToFirestore) {
+            window.saveToFirestore('settings', settings);
         }
     }
+
+    function updateSoundButtonText(type, id) {
+        const btn = type === 'bgm' ? bgmBtn : bellBtn;
+        if (!btn || !window.SOUND_CONFIG) return;
+
+        const list = type === 'bgm' ? window.SOUND_CONFIG.bgm : window.SOUND_CONFIG.bells;
+        const sound = list.find(s => s.id === id) || list[0];
+        if (sound) {
+            // Use innerHTML to include span for styling/truncation
+            btn.innerHTML = `<span>${sound.name}</span>`;
+        }
+    }
+
+    function playTestSound(file) {
+        const audio = new Audio(file);
+        audio.volume = 0.5;
+        audio.play().catch(e => console.error(e));
+    }
+
 
     function loadSettings() {
         const settings = JSON.parse(localStorage.getItem('settings') || '{}');
@@ -151,8 +257,9 @@ function initSettings() {
         if (autoStart) autoStart.checked = settings.autoStart !== false;
         if (soundEnabled) soundEnabled.checked = settings.soundEnabled !== false;
 
-        if (bgmSelect) bgmSelect.value = settings.bgmId || (window.SOUND_CONFIG?.bgm[0]?.id || 'fire');
-        if (bellSelect) bellSelect.value = settings.bellId || (window.SOUND_CONFIG?.bells[0]?.id || 'chime');
+        // Load initial button texts
+        updateSoundButtonText('bgm', settings.bgmId || 'fire');
+        updateSoundButtonText('bell', settings.bellId || 'chime');
 
         if (volumeSettings) {
             volumeSettings.value = settings.volume || 0.5;
@@ -166,16 +273,15 @@ function initSettings() {
     }
 
     function saveSettings() {
-        const settings = {
-            workDuration: parseInt(workDuration?.value || 20),
-            restDuration: parseInt(restDuration?.value || 5),
-            autoStart: autoStart?.checked !== false,
-            soundEnabled: soundEnabled?.checked !== false,
-            bgmId: bgmSelect?.value || 'fire',
-            bellId: bellSelect?.value || 'chime',
-            volume: parseFloat(volumeSettings?.value || 0.5),
-            notificationSound: notificationSound?.checked !== false
-        };
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        // Update other fields
+        settings.workDuration = parseInt(workDuration?.value || 20);
+        settings.restDuration = parseInt(restDuration?.value || 5);
+        settings.autoStart = autoStart?.checked !== false;
+        settings.soundEnabled = soundEnabled?.checked !== false;
+        settings.volume = parseFloat(volumeSettings?.value || 0.5);
+        settings.notificationSound = notificationSound?.checked !== false;
+
         localStorage.setItem('settings', JSON.stringify(settings));
         applyTimerSettings(settings);
         if (window.saveToFirestore) {
@@ -245,10 +351,17 @@ function initSettings() {
     if (restDuration) restDuration.addEventListener('change', saveSettings);
     if (autoStart) autoStart.addEventListener('change', saveSettings);
 
+    if (bgmBtn) {
+        bgmBtn.addEventListener('click', () => openSoundModal('bgm'));
+    }
+    if (bellBtn) {
+        bellBtn.addEventListener('click', () => openSoundModal('bell'));
+    }
+
     if (bgmSelect) bgmSelect.addEventListener('change', () => {
         saveSettings();
         // If sound is enabled and running, the new sound should start playing?
-        // For now, handleSound in main.js will resume/pause. 
+        // For now, handleSound in main.js will resume/pause.
         // If we change source while playing, we might need to restart play.
         const fireSound = document.getElementById('fireSound');
         if (fireSound && !fireSound.paused) {
