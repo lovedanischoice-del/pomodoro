@@ -1,0 +1,548 @@
+/* ========================================
+   통계 화면 스타일
+   ======================================== */
+
+.view {
+    display: none;
+    width: 100%;
+    min-height: calc(100vh - 80px);
+    padding-bottom: 80px;
+}
+
+.view.active {
+    display: block;
+}
+
+.stats-content {
+    padding: 30px 20px;
+}
+
+.stats-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 30px;
+    letter-spacing: -0.5px;
+}
+
+/* Weekly Summary */
+.stats-summary {
+    margin-bottom: 40px;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(165, 94, 234, 0.2));
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(255, 107, 107, 0.2);
+}
+
+.summary-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+}
+
+.summary-time {
+    font-family: 'Outfit', sans-serif;
+    font-size: 48px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 8px;
+    letter-spacing: -2px;
+}
+
+.summary-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* Weekly Chart */
+.stats-chart {
+    margin-bottom: 40px;
+}
+
+.stats-chart h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+}
+
+.chart-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 8px;
+    height: 200px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chart-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.bar {
+    width: 100%;
+    background: linear-gradient(180deg, #ff6b6b, #ff8e53);
+    border-radius: 8px 8px 0 0;
+    position: relative;
+    transition: var(--transition);
+    min-height: 20px;
+}
+
+.bar:hover {
+    filter: brightness(1.2);
+    transform: scaleY(1.05);
+}
+
+.bar-value {
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.bar-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: auto;
+}
+
+/* Monthly Heatmap */
+.stats-heatmap {
+    margin-bottom: 20px;
+}
+
+.heatmap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.heatmap-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.heatmap-legend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.legend-colors {
+    display: flex;
+    gap: 3px;
+}
+
+.legend-box {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}
+
+.legend-box.level-0 {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.legend-box.level-1 {
+    background: rgba(255, 107, 107, 0.3);
+}
+
+.legend-box.level-2 {
+    background: rgba(255, 107, 107, 0.5);
+}
+
+.legend-box.level-3 {
+    background: rgba(255, 107, 107, 0.7);
+}
+
+.legend-box.level-4 {
+    background: rgba(255, 107, 107, 1);
+}
+
+.heatmap-container {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 20px;
+    overflow-x: auto;
+}
+
+.heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    min-width: 280px;
+}
+
+.heatmap-day {
+    aspect-ratio: 1;
+    border-radius: 4px;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.heatmap-day:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 8px rgba(255, 107, 107, 0.5);
+}
+
+.heatmap-labels {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+    min-width: 280px;
+}
+
+.heatmap-label {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* 하단 네비게이션 */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(42, 45, 58, 0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    z-index: 100;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.nav-item svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2;
+}
+
+.nav-item.active {
+    color: var(--accent-work);
+}
+
+.nav-item.active svg {
+    stroke: var(--accent-work);
+}
+
+.nav-item:hover {
+    color: var(--text-primary);
+}
+
+/* 반응형 */
+@media (max-width: 480px) {
+    .stats-title {
+        font-size: 24px;
+    }
+
+    .summary-time {
+        font-size: 36px;
+    }
+
+    .chart-container {
+        height: 160px;
+        padding: 16px 12px;
+    }
+
+    .bar-value {
+        font-size: 10px;
+    }
+
+    .bar-label {
+        font-size: 10px;
+    }
+}
+
+/* ========================================
+   Tasks 화면 스타일
+   ======================================== */
+
+.tasks-content {
+    padding: 30px 20px;
+}
+
+.tasks-section {
+    margin-top: 20px;
+}
+
+.tasks-filter {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.filter-btn {
+    flex: 1;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.filter-btn.active {
+    background: var(--gradient-button);
+    border-color: var(--accent-work);
+    color: white;
+}
+
+.filter-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.tasks-list {
+    max-height: 400px;
+    margin-bottom: 20px;
+}
+
+.tasks-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.btn-clear {
+    padding: 8px 16px;
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.2);
+    border-radius: 8px;
+    color: var(--accent-work);
+    font-size: 13px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-clear:hover {
+    background: rgba(255, 107, 107, 0.2);
+}
+
+/* ========================================
+   Settings 화면 스타일
+   ======================================== */
+
+.settings-content {
+    padding: 30px 20px;
+}
+
+.settings-section {
+    margin-bottom: 32px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-item label {
+    font-size: 14px;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.setting-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.setting-control input[type="number"] {
+    width: 80px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 14px;
+    text-align: center;
+}
+
+.setting-control input[type="range"] {
+    flex: 1;
+    min-width: 120px;
+}
+
+.setting-control .unit {
+    font-size: 13px;
+    color: var(--text-muted);
+    min-width: 40px;
+}
+
+/* Toggle Switch */
+.toggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    transition: var(--transition);
+}
+
+.toggle-slider:before {
+    content: "";
+    position: absolute;
+    height: 24px;
+    width: 24px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.toggle input:checked+.toggle-slider {
+    background: var(--gradient-button);
+}
+
+.toggle input:checked+.toggle-slider:before {
+    transform: translateX(30px);
+}
+
+/* Setting Buttons */
+.btn-setting {
+    width: 100%;
+    padding: 14px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-setting:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.btn-setting svg {
+    stroke-width: 2;
+}
+
+.btn-danger {
+    background: rgba(255, 107, 107, 0.1);
+    border-color: rgba(255, 107, 107, 0.2);
+    color: var(--accent-work);
+}
+
+.btn-danger:hover {
+    background: rgba(255, 107, 107, 0.2);
+}
+
+/* About Section */
+.about-info {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.about-info p {
+    margin: 8px 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.about-info strong {
+    color: var(--text-primary);
+    font-size: 18px;
+}
+
+.copyright {
+    margin-top: 16px;
+    font-size: 12px !important;
+    color: var(--text-muted) !important;
+}

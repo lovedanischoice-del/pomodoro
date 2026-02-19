@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Bbangmodoro - 몰입형 포모도로 타이머</title>
+    <meta name="description" content="장작 타는 소리와 함께하는 몰입형 포모도로 타이머">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="onboarding.css">
+    <link rel="stylesheet" href="stats.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@300;500;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- 온보딩 화면 -->
+    <div id="onboarding" class="onboarding-screen">
+        <div class="onboarding-content">
+            <div class="onboarding-header">
+                <h1 class="onboarding-title">Bbangmodoro</h1>
+                <p class="onboarding-subtitle">
+                    몰입의 힘으로 생산성을 높이세요<br>
+                    장작 소리와 함께하는 포모도로 타이머
+                </p>
+            </div>
+
+            <div class="onboarding-features">
+                <div class="feature-item">
+                    <span class="feature-icon">⏱️</span>
+                    <h3>포모도로 타이머</h3>
+                    <p>20분 집중 + 5분 휴식</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🔥</span>
+                    <h3>장작 소리</h3>
+                    <p>몰입을 돕는 배경음</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">✅</span>
+                    <h3>할 일 관리</h3>
+                    <p>간편한 투두 리스트</p>
+                </div>
+            </div>
+
+            <button class="btn-get-started" onclick="startApp()">
+                GET STARTED
+            </button>
+
+            <div class="onboarding-indicator">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 앱 -->
+    <div id="app" class="app-hidden">
+        <!-- 타이머 화면 -->
+        <div id="timerView" class="view active">
+            <main class="content">
+                <header>
+                    <h1 class="logo">Bbangmodoro 🐧</h1>
+                    <div class="status-badge" id="statusBadge">WORK</div>
+                </header>
+
+                <section class="timer-display">
+                    <div class="background-timer">
+                        <svg viewBox="0 0 100 100">
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+                                    <stop offset="25%" style="stop-color:#ff8e53;stop-opacity:1" />
+                                    <stop offset="50%" style="stop-color:#ff6b9d;stop-opacity:1" />
+                                    <stop offset="75%" style="stop-color:#c44569;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#a55eea;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="timer-bg" cx="50" cy="50" r="45"></circle>
+                            <circle class="timer-progress" cx="50" cy="50" r="45"></circle>
+                        </svg>
+                        <div class="time-main" id="timeMain">20:00</div>
+                    </div>
+                    <div class="time-sub" id="timeSub">WORK SESSION</div>
+                </section>
+
+                <section class="controls">
+                    <button id="toggleBtn" class="btn-primary">
+                        <span class="icon" id="playIcon">▶</span>
+                        <span class="text" id="toggleText">START</span>
+                    </button>
+                    <button id="resetBtn" class="btn-secondary">RESET</button>
+                </section>
+
+                <section class="todo-container">
+                    <div class="todo-input-group">
+                        <input type="text" id="todoInput" placeholder="할 일을 입력하세요...">
+                        <button id="addTodoBtn">+</button>
+                    </div>
+                    <ul id="todoList" class="todo-list"></ul>
+                </section>
+
+                <footer class="settings-hint">
+                    <p>20m Work • 5m Rest</p>
+                    <div class="sound-controls">
+                        <div class="sound-indicator" id="soundStatus">
+                            <span class="icon-sound">🔥</span> 장작 소리 재생 중
+                        </div>
+                        <div class="volume-control">
+                            <span>vol</span>
+                            <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.5">
+                        </div>
+                    </div>
+                </footer>
+            </main>
+        </div>
+
+        <!-- 통계 화면 -->
+        <div id="statsView" class="view">
+            <main class="content stats-content">
+                <header>
+                    <h1 class="stats-title">Focus Session Statistics</h1>
+                </header>
+
+                <!-- Weekly Summary -->
+                <section class="stats-summary">
+                    <div class="summary-card">
+                        <h3>Weekly Summary</h3>
+                        <div class="summary-time" id="weeklyTime">0 hrs 0 min</div>
+                        <p class="summary-label">Total Focus Time</p>
+                    </div>
+                </section>
+
+                <!-- Weekly Chart -->
+                <section class="stats-chart">
+                    <h3>Weekly Focus Sessions</h3>
+                    <div class="chart-container" id="weeklyChart">
+                        <!-- 막대 그래프가 여기에 생성됨 -->
+                    </div>
+                </section>
+
+                <!-- Monthly Heatmap -->
+                <section class="stats-heatmap">
+                    <div class="heatmap-header">
+                        <h3>Monthly Insights</h3>
+                        <div class="heatmap-legend">
+                            <span>Less</span>
+                            <div class="legend-colors">
+                                <span class="legend-box level-0"></span>
+                                <span class="legend-box level-1"></span>
+                                <span class="legend-box level-2"></span>
+                                <span class="legend-box level-3"></span>
+                                <span class="legend-box level-4"></span>
+                            </div>
+                            <span>More</span>
+                        </div>
+                    </div>
+                    <div class="heatmap-container" id="monthlyHeatmap">
+                        <!-- 히트맵이 여기에 생성됨 -->
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Tasks 화면 -->
+        <div id="tasksView" class="view">
+            <main class="content tasks-content">
+                <header>
+                    <h1 class="stats-title">My Tasks</h1>
+                </header>
+
+                <section class="tasks-section">
+                    <div class="todo-input-group">
+                        <input type="text" id="todoInputTasks" placeholder="새로운 할 일 추가...">
+                        <button id="addTodoBtnTasks">+</button>
+                    </div>
+
+                    <div class="tasks-filter">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="active">Active</button>
+                        <button class="filter-btn" data-filter="completed">Completed</button>
+                    </div>
+
+                    <ul id="todoListTasks" class="todo-list tasks-list">
+                        <!-- 할 일 목록이 여기에 추가됨 -->
+                    </ul>
+
+                    <div class="tasks-summary">
+                        <span id="taskCount">0개의 할 일</span>
+                        <button id="clearCompleted" class="btn-clear">완료 항목 삭제</button>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Settings 화면 -->
+        <div id="settingsView" class="view">
+            <main class="content settings-content">
+                <header>
+                    <h1 class="stats-title">Settings</h1>
+                </header>
+
+                <!-- Timer Settings -->
+                <section class="settings-section">
+                    <h3 class="section-title">⏱️ Timer Settings</h3>
+
+                    <div class="setting-item">
+                        <label for="workDuration">Work Duration (minutes)</label>
+                        <div class="setting-control">
+                            <input type="number" id="workDuration" min="1" max="60" value="20">
+                            <span class="unit">min</span>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <label for="restDuration">Rest Duration (minutes)</label>
+                        <div class="setting-control">
+                            <input type="number" id="restDuration" min="1" max="30" value="5">
+                            <span class="unit">min</span>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <label for="autoStart">Auto-start next session</label>
+                        <label class="toggle">
+                            <input type="checkbox" id="autoStart" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- Sound Settings -->
+                <section class="settings-section">
+                    <h3 class="section-title">🔊 Sound Settings</h3>
+
+                    <div class="setting-item">
+                        <label for="soundEnabled">Enable background sound</label>
+                        <label class="toggle">
+                            <input type="checkbox" id="soundEnabled" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <label for="volumeSettings">Volume</label>
+                        <div class="setting-control">
+                            <input type="range" id="volumeSettings" min="0" max="1" step="0.1" value="0.5">
+                            <span class="unit" id="volumeValue">50%</span>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <label for="notificationSound">Notification sound</label>
+                        <label class="toggle">
+                            <input type="checkbox" id="notificationSound" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <button class="btn-setting" id="testChimeBell">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            차임벨 소리 테스트
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Data Settings -->
+                <section class="settings-section">
+                    <h3 class="section-title">💾 Data</h3>
+
+                    <div class="setting-item">
+                        <button class="btn-setting" id="exportData">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Export Data
+                        </button>
+                    </div>
+
+                    <div class="setting-item">
+                        <button class="btn-setting" id="importData">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            Import Data
+                        </button>
+                    </div>
+
+                    <!-- Cloud Sync (Firebase) -->
+                    <h3 class="section-title" style="margin-top: 30px;">☁️ Cloud Sync</h3>
+
+                    <!-- 로그인 전 -->
+                    <div id="loginSection">
+                        <button id="googleLoginBtn" class="btn-setting" onclick="googleLogin()"
+                            style="background: white; color: #333;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M23.52 12.29C23.52 11.43 23.44 10.61 23.3 9.82H12V14.45H18.46C18.18 15.92 17.33 17.17 16.06 18.01V20.97H19.93C22.2 18.88 23.52 15.8 23.52 12.29Z"
+                                    fill="#4285F4" />
+                                <path
+                                    d="M12 24C15.24 24 17.96 22.92 19.93 21.11L16.06 18.16C14.99 18.88 13.62 19.31 12 19.31C8.87 19.31 6.22 17.2 5.27 14.36H1.27V17.46C3.25 21.39 7.32 24 12 24Z"
+                                    fill="#34A853" />
+                                <path
+                                    d="M5.27 14.29C5.03 13.56 4.89 12.79 4.89 12C4.89 11.21 5.03 10.45 5.27 9.71V6.62H1.27C0.46 8.23 0 10.06 0 12C0 13.94 0.46 15.77 1.27 17.38L5.27 14.29Z"
+                                    fill="#FBBC05" />
+                                <path
+                                    d="M12 4.75C13.77 4.75 15.35 5.36 16.6 6.55L20.02 3.13C17.96 1.21 15.24 0 12 0C7.32 0 3.25 2.61 1.27 6.62L5.27 9.71C6.22 6.87 8.87 4.75 12 4.75Z"
+                                    fill="#EA4335" />
+                            </svg>
+                            Login with Google
+                        </button>
+                    </div>
+
+                    <!-- 로그인 후 -->
+                    <div id="userProfile"
+                        style="display: none; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; margin-top: 10px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div
+                                style="width: 32px; height: 32px; background: #6366f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                U</div>
+                            <span id="userName" style="font-weight: 500;">User</span>
+                        </div>
+                        <button onclick="googleLogout()"
+                            style="background: none; border: none; color: #ff6b6b; cursor: pointer;">Logout</button>
+                    </div>
+
+
+                    <div class="setting-item">
+                        <button class="btn-setting btn-danger" id="clearAllData">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path
+                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                </path>
+                            </svg>
+                            Clear All Data
+                        </button>
+                    </div>
+                </section>
+
+                <!-- About -->
+                <section class="settings-section">
+                    <h3 class="section-title">ℹ️ About</h3>
+                    <div class="about-info">
+                        <p><strong>Bbangmodoro</strong></p>
+                        <p>Version 1.0.0</p>
+                        <p id="buildTimestamp">Updated: Loading...</p>
+                        <p>장작 소리와 함께하는 몰입형 포모도로 타이머</p>
+                        <p class="copyright">© 2026 Bbangmodoro</p>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- 하단 네비게이션 -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-view="timerView">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span>Timer</span>
+            </button>
+            <button class="nav-item" data-view="tasksView">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                <span>Tasks</span>
+            </button>
+            <button class="nav-item" data-view="statsView">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="20" x2="12" y2="10"></line>
+                    <line x1="18" y1="20" x2="18" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="16"></line>
+                </svg>
+                <span>Stats</span>
+            </button>
+            <button class="nav-item" data-view="settingsView">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path
+                        d="M12 1v6m0 6v6m8.66-13.66l-4.24 4.24m-8.48 8.48l-4.24 4.24M23 12h-6m-6 0H1m20.66 8.66l-4.24-4.24m-8.48-8.48l-4.24-4.24">
+                    </path>
+                </svg>
+                <span>Settings</span>
+            </button>
+        </nav>
+
+        <audio id="fireSound" loop preload="auto">
+            <source src="fire.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- Firebase SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- Firebase Config & Init -->
+    <script src="firebase-config.js"></script>
+
+
+    <script src="main.js"></script>
+    <script src="stats.js"></script>
+    <script src="tasks-settings.js"></script>
+</body>
+
+</html>
