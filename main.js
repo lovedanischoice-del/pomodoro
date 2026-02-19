@@ -208,10 +208,34 @@ function switchMode() {
 }
 
 function handleSound() {
-    if (!fireSound) return;
-    if (isRunning && isWorkMode) {
-        fireSound.play().catch(e => console.log('Auto-play prevented:', e));
-        if (soundStatus) soundStatus.classList.add('visible');
+    if (!fireSound) {
+        console.warn('fireSound element not found');
+        return;
+    }
+
+    // Check if sound is enabled in settings
+    const soundEnabled = document.getElementById('soundEnabled')?.checked ?? true;
+
+    if (isRunning && isWorkMode && soundEnabled) {
+        // Attempt to play sound
+        const playPromise = fireSound.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(_ => {
+                // Playback started successfully
+                if (soundStatus) soundStatus.classList.add('visible');
+            })
+                .catch(error => {
+                    console.error('Audio playback failed:', error);
+
+                    // Common error: user hasn't interacted with document yet
+                    if (error.name === 'NotAllowedError') {
+                        console.log('User interaction required for audio playback.');
+                    }
+
+                    if (soundStatus) soundStatus.classList.remove('visible');
+                });
+        }
     } else {
         fireSound.pause();
         if (soundStatus) soundStatus.classList.remove('visible');

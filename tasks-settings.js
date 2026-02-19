@@ -176,18 +176,26 @@ function initSettings() {
         if (window.playChimeBell) {
             window.playChimeBell();
         } else {
+            // Fallback if window.playChimeBell is not available
             try {
                 const chimeSound = new Audio('./chime.mp3');
                 chimeSound.volume = 0.7;
                 chimeSound.play()
                     .then(() => {
-                        console.log('Test notification sound played');
+                        console.log('Test notification sound played (fallback)');
                     })
                     .catch(error => {
-                        console.log('Test sound playback failed:', error);
+                        console.error('Test sound playback failed (fallback):', error);
+                        // Try synthesis fallback
+                        if (window.playFallbackChime) {
+                            window.playFallbackChime();
+                        }
                     });
             } catch (error) {
-                console.log('Test sound error:', error);
+                console.error('Test sound error:', error);
+                if (window.playFallbackChime) {
+                    window.playFallbackChime();
+                }
             }
         }
     }
@@ -196,28 +204,21 @@ function initSettings() {
     if (restDuration) restDuration.addEventListener('change', saveSettings);
     if (autoStart) autoStart.addEventListener('change', saveSettings);
 
+    // Add event listener for the test button
+    const testChimeBellBtn = document.getElementById('testChimeBell');
+    if (testChimeBellBtn) {
+        testChimeBellBtn.addEventListener('click', () => {
+            console.log('Test chime bell button clicked');
+            playTestNotificationSound();
+        });
+    }
+
     if (soundEnabled) {
         soundEnabled.addEventListener('change', (e) => {
             saveSettings();
-            const fireSound = document.getElementById('fireSound');
-            if (fireSound) {
-                if (e.target.checked) {
-                    fireSound.play().catch(err => console.log('Playback failed:', err));
-                    if (window.soundTestTimeout) {
-                        clearTimeout(window.soundTestTimeout);
-                    }
-                    window.soundTestTimeout = setTimeout(() => {
-                        const isTimerRunning = document.getElementById('toggleText')?.textContent === 'PAUSE';
-                        if (!isTimerRunning) {
-                            fireSound.pause();
-                        }
-                    }, 3000);
-                } else {
-                    fireSound.pause();
-                    if (window.soundTestTimeout) {
-                        clearTimeout(window.soundTestTimeout);
-                    }
-                }
+            // Let main.js handle the audio playback state update
+            if (typeof window.handleSound === 'function') {
+                window.handleSound();
             }
         });
     }
