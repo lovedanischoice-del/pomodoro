@@ -397,7 +397,9 @@ function initSettings() {
                     if (previewBellBtn) previewBellBtn.classList.remove('playing');
                 }
 
-                const bgmId = bgmSelect?.value || 'fire';
+                // const bgmId = bgmSelect?.value || 'fire';
+                const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+                const bgmId = settings.bgmId || 'fire';
                 const sound = window.SOUND_CONFIG?.bgm.find(s => s.id === bgmId);
                 if (sound) {
                     currentPreviewAudio = new Audio(sound.file);
@@ -433,7 +435,9 @@ function initSettings() {
             }
 
             // Play Bell
-            const bellId = bellSelect?.value || 'chime';
+            // const bellId = bellSelect?.value || 'chime';
+            const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+            const bellId = settings.bellId || 'chime';
             const sound = window.SOUND_CONFIG?.bells.find(s => s.id === bellId);
             if (sound) {
                 const bellAudio = new Audio(sound.file);
@@ -536,15 +540,14 @@ function initSettings() {
 }
 
 // Initialize on DOM load
+// Initialize on DOM load
 document.addEventListener('DOMContentLoaded', () => {
-    const app = document.getElementById('app');
-    if (app && !app.classList.contains('app-hidden')) {
-        setTimeout(() => {
-            initTasks();
-            initSettings();
-            updateBuildTimestamp();
-        }, 100);
-    }
+    // Always initialize settings and tasks, regardless of app visibility
+    setTimeout(() => {
+        initTasks();
+        initSettings();
+        updateBuildTimestamp();
+    }, 100);
 });
 
 // Initialize when startApp is called
