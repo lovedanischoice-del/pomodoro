@@ -300,7 +300,8 @@ button {
     margin-bottom: 20px;
 }
 
-#todoInput {
+#todoInput,
+#todoInputTasks {
     flex: 1;
     padding: 14px 20px;
     background: rgba(255, 255, 255, 0.05);
@@ -312,18 +313,21 @@ button {
     transition: var(--transition);
 }
 
-#todoInput::placeholder {
+#todoInput::placeholder,
+#todoInputTasks::placeholder {
     color: var(--text-muted);
 }
 
-#todoInput:focus {
+#todoInput:focus,
+#todoInputTasks:focus {
     outline: none;
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--accent-work);
     box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
 }
 
-#addTodoBtn {
+#addTodoBtn,
+#addTodoBtnTasks {
     width: 48px;
     height: 48px;
     padding: 0;
@@ -337,7 +341,8 @@ button {
     box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
 }
 
-#addTodoBtn:hover {
+#addTodoBtn:hover,
+#addTodoBtnTasks:hover {
     transform: scale(1.05);
     box-shadow: 0 6px 16px rgba(255, 107, 107, 0.4);
 }
@@ -430,6 +435,8 @@ button {
     color: white;
     transform: scale(1.1);
 }
+
+
 
 /* 푸터 */
 .settings-hint {
