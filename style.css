@@ -1028,3 +1028,109 @@ button {
 .btn-close-modal:hover {
     opacity: 0.9;
 }
+
+/* ========================================
+   Improved Sound Settings Layout (New)
+   ======================================== */
+.setting-item.setting-column {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.setting-row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.setting-row-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sound-name-display {
+    flex: 1;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 15px;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    min-width: 0;
+    /* Enable flex item shrinking */
+}
+
+.sound-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* Adjust button sizes for the new layout */
+.sound-actions .btn-select-sound {
+    padding: 8px 16px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.sound-actions .btn-select-sound:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--accent-work);
+}
+
+.sound-actions .btn-preview {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sound-actions .btn-preview:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--accent-work);
+    border-color: var(--accent-work);
+}
+
+.sound-actions .btn-preview.playing {
+    border-color: var(--accent-work);
+    box-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+}
+
+/* Overwrite previous mobile hack if needed */
+@media (max-width: 400px) {
+    .setting-item.setting-column {
+        align-items: stretch;
+    }
+
+    .setting-row-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .sound-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .sound-name-display {
+        width: 100%;
+        margin-right: 0;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.03);
+        padding: 8px;
+        border-radius: 8px;
+    }
+}

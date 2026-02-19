@@ -241,16 +241,20 @@
                 <section class="settings-section">
                     <h3 class="section-title">🔊 Sound Settings</h3>
 
-                    <div class="setting-item">
-                        <label for="soundEnabled">Enable background sound</label>
-                        <div class="setting-control-group">
+                    <div class="setting-item setting-column">
+                        <div class="setting-row-header">
+                            <label for="soundEnabled">Enable background sound</label>
                             <label class="toggle">
                                 <input type="checkbox" id="soundEnabled" checked>
                                 <span class="toggle-slider"></span>
                             </label>
+                        </div>
+                        <div class="setting-row-controls">
                             <span id="bgmName" class="sound-name-display">Loading...</span>
-                            <button id="bgmBtn" class="btn-select-sound">Select</button>
-                            <button class="btn-preview" id="previewBgm" title="미리듣기">▶</button>
+                            <div class="sound-actions">
+                                <button id="bgmBtn" class="btn-select-sound">Select</button>
+                                <button class="btn-preview" id="previewBgm" title="미리듣기">▶</button>
+                            </div>
                         </div>
                     </div>
 
@@ -262,16 +266,20 @@
                         </div>
                     </div>
 
-                    <div class="setting-item">
-                        <label for="notificationSound">Notification sound</label>
-                        <div class="setting-control-group">
+                    <div class="setting-item setting-column">
+                        <div class="setting-row-header">
+                            <label for="notificationSound">Notification sound</label>
                             <label class="toggle">
                                 <input type="checkbox" id="notificationSound" checked>
                                 <span class="toggle-slider"></span>
                             </label>
+                        </div>
+                        <div class="setting-row-controls">
                             <span id="bellName" class="sound-name-display">Loading...</span>
-                            <button id="bellBtn" class="btn-select-sound">Select</button>
-                            <button class="btn-preview" id="previewBell" title="미리듣기">▶</button>
+                            <div class="sound-actions">
+                                <button id="bellBtn" class="btn-select-sound">Select</button>
+                                <button class="btn-preview" id="previewBell" title="미리듣기">▶</button>
+                            </div>
                         </div>
                     </div>
 
