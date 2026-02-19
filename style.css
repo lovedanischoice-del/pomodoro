@@ -768,3 +768,55 @@ button {
     accent-color: var(--accent-work);
     opacity: 1;
 }
+
+/* Sound Settings Styles - Fixed */
+.setting-item {
+    flex-wrap: wrap;
+    /* Allow wrapping */
+    gap: 10px;
+}
+
+.setting-control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    width: 100%;
+    /* Take full width to allow flex-end to work if item wraps */
+    margin-top: 5px;
+    /* Add space if wrapped */
+}
+
+@media (min-width: 400px) {
+    .setting-control-group {
+        width: auto;
+        margin-top: 0;
+    }
+}
+
+.sound-select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 0.9rem;
+    cursor: pointer;
+    max-width: 150px;
+    /* Limit width */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sound-select:focus {
+    outline: none;
+    border-color: var(--accent-work);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.sound-select option {
+    background: #1e1e2e;
+    color: white;
+}
