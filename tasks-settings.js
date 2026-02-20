@@ -28,7 +28,7 @@ function initTasks() {
         const text = todoInputTasks?.value.trim();
         if (text) {
             const todos = getTodos();
-            todos.push({ id: Date.now(), text, completed: false });
+            todos.push({ id: Date.now(), text, completed: false, pomodoroGoal: 1, pomodoroDone: 0 });
             saveTodosLocal(todos);
             renderTasksList();
             if (todoInputTasks) todoInputTasks.value = '';
@@ -45,14 +45,26 @@ function initTasks() {
             return true;
         });
 
-        todoListTasks.innerHTML = filteredTodos.map(todo => `
+        todoListTasks.innerHTML = filteredTodos.map(todo => {
+            const goal = todo.pomodoroGoal || 1;
+            const done = todo.pomodoroDone || 0;
+            const pomodoroDots = Array.from({ length: goal }, (_, i) =>
+                `<span class="task-pomo-dot ${i < done ? 'done' : ''}">🍅</span>`
+            ).join('');
+            return `
             <li class="todo-item ${todo.completed ? 'completed' : ''}">
                 <input type="checkbox" ${todo.completed ? 'checked' : ''} 
                        onchange="window.toggleTodoFromTasks(${todo.id})">
-                <span class="todo-text">${todo.text}</span>
+                <div class="todo-main">
+                    <span class="todo-text">${todo.text}</span>
+                    <div class="task-pomodoro-row">
+                        <span class="task-pomo-dots">${pomodoroDots}</span>
+                        <button class="btn-pomo-add" onclick="window.addPomodoro(${todo.id})" title="뽀모도로 추가">+🍅</button>
+                    </div>
+                </div>
                 <button class="delete-todo" onclick="window.deleteTodoFromTasks(${todo.id})">✕</button>
             </li>
-        `).join('');
+        `}).join('');
 
         updateTaskCount();
     }
@@ -114,6 +126,33 @@ function initTasks() {
         saveTodosLocal(todos);
         renderTasksList();
     };
+
+    window.addPomodoro = function (id) {
+        let todos = getTodos();
+        todos = todos.map(todo => {
+            if (todo.id === id) {
+                const newGoal = (todo.pomodoroGoal || 1) + 1;
+                return { ...todo, pomodoroGoal: newGoal };
+            }
+            return todo;
+        });
+        saveTodosLocal(todos);
+        renderTasksList();
+    };
+
+    window.incrementPomodoroDone = function (id) {
+        let todos = getTodos();
+        todos = todos.map(todo => {
+            if (todo.id === id) {
+                const done = Math.min((todo.pomodoroDone || 0) + 1, todo.pomodoroGoal || 1);
+                return { ...todo, pomodoroDone: done };
+            }
+            return todo;
+        });
+        saveTodosLocal(todos);
+        renderTasksList();
+    };
+    window.renderTasksList = renderTasksList;
 }
 
 // Settings View Logic
@@ -128,6 +167,7 @@ function initSettings() {
     const exportData = document.getElementById('exportData');
     const bgmBtn = document.getElementById('bgmBtn');
     const bellBtn = document.getElementById('bellBtn');
+    const dailyGoalEl = document.getElementById('dailyGoal');
     const bgmSelect = null; // Removed
     const bellSelect = null; // Removed
 
@@ -202,7 +242,7 @@ function initSettings() {
 
     function getCurrentSoundId(type) {
         const settings = JSON.parse(localStorage.getItem('settings') || '{}');
-        if (type === 'bgm') return settings.bgmId || 'fire';
+        if (type === 'bgm') return settings.bgmId || 'crackle';
         return settings.bellId || 'chime';
     }
 
@@ -258,9 +298,10 @@ function initSettings() {
         if (restDuration) restDuration.value = settings.restDuration || 5;
         if (autoStart) autoStart.checked = settings.autoStart !== false;
         if (soundEnabled) soundEnabled.checked = settings.soundEnabled !== false;
+        if (dailyGoalEl) dailyGoalEl.value = settings.dailyGoal || 0;
 
         // Load initial button texts
-        updateSoundDisplay('bgm', settings.bgmId || 'fire');
+        updateSoundDisplay('bgm', settings.bgmId || 'crackle');
         updateSoundDisplay('bell', settings.bellId || 'chime');
 
         if (volumeSettings) {
@@ -283,9 +324,18 @@ function initSettings() {
         settings.soundEnabled = soundEnabled?.checked !== false;
         settings.volume = parseFloat(volumeSettings?.value || 0.5);
         settings.notificationSound = notificationSound?.checked !== false;
+        settings.dailyGoal = parseFloat(dailyGoalEl?.value || 0);
 
         localStorage.setItem('settings', JSON.stringify(settings));
         applyTimerSettings(settings);
+        // 타이머 시간 설정 즉시 반영
+        if (window.refreshTimerSettings) {
+            window.refreshTimerSettings();
+        }
+        // 하루 목표 게이지 즉시 갱신
+        if (window.statsManager) {
+            window.statsManager.updateDailyGoalBar();
+        }
         if (window.saveToFirestore) {
             window.saveToFirestore('settings', settings);
         }
@@ -302,11 +352,15 @@ function initSettings() {
 
         const audioElement = document.getElementById(elementId);
         if (audioElement && soundUrl) {
-            // Only update if source changed
-            const currentSrc = audioElement.querySelector('source')?.src;
-            if (!currentSrc || !currentSrc.includes(soundUrl)) {
-                audioElement.innerHTML = `<source src="${soundUrl}?v=${Date.now()}" type="audio/mpeg">`;
-                audioElement.load(); // Reload audio element
+            // Use currentSrc checks if possible, or just src attribute
+            // Resolved URL check
+            const newSrc = soundUrl;
+
+            // Note: audioElement.src returns absolute URL, so strictly includes check or endsWith
+            if (!audioElement.src.includes(newSrc)) {
+                audioElement.src = `${newSrc}?v=${Date.now()}`;
+                audioElement.load();
+                console.log(`Audio source updated: ${newSrc}`);
             }
         }
     }
@@ -352,6 +406,7 @@ function initSettings() {
     if (workDuration) workDuration.addEventListener('change', saveSettings);
     if (restDuration) restDuration.addEventListener('change', saveSettings);
     if (autoStart) autoStart.addEventListener('change', saveSettings);
+    if (dailyGoalEl) dailyGoalEl.addEventListener('change', saveSettings);
 
     if (bgmBtn) {
         bgmBtn.addEventListener('click', () => openSoundModal('bgm'));

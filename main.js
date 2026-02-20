@@ -15,6 +15,27 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+// Onboarding Slide Logic
+let currentSlide = 0;
+const totalSlides = 3;
+
+function nextSlide() {
+    if (currentSlide < totalSlides - 1) {
+        goToSlide(currentSlide + 1);
+    }
+}
+
+function goToSlide(index) {
+    const slides = document.querySelectorAll('.onboarding-slide');
+    slides.forEach((s, i) => {
+        s.style.display = i === index ? 'block' : 'none';
+    });
+    currentSlide = index;
+}
+
+window.nextSlide = nextSlide;
+window.goToSlide = goToSlide;
+
 // Onboarding Logic
 function startApp() {
     const onboarding = document.getElementById('onboarding');
@@ -29,6 +50,7 @@ function startApp() {
         init();
     }, 500);
 }
+
 
 window.addEventListener('DOMContentLoaded', () => {
     const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
@@ -123,25 +145,54 @@ window.playChimeBell = playChimeBell;
 window.playFallbackChime = playFallbackChime;
 
 // Constants
-const WORK_TIME = 20 * 60;
-const REST_TIME = 5 * 60;
 const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 45;
+const LONG_REST_TIME = 15 * 60; // 긴 휴식 15분
+
+// 설정에서 타이머 시간 가져오기
+function getWorkTime() {
+    const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+    return (settings.workDuration || 20) * 60;
+}
+function getRestTime() {
+    const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+    return (settings.restDuration || 5) * 60;
+}
+function isAutoStart() {
+    const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+    return settings.autoStart !== false;
+}
 
 // State Variables
-var timeLeft = WORK_TIME;
+var timeLeft = getWorkTime();
 var isRunning = false;
 var isWorkMode = true;
 var timerId = null;
+var pomodoroCount = 0; // 완료한 뽀모도로 수
+var isLongRest = false; // 긴 휴식 중인지
 let todos = JSON.parse(localStorage.getItem('todos')) || [];
+
+// 타이머 시간 갱신 (설정 변경 시 외부에서 호출)
+function refreshTimerSettings() {
+    if (!isRunning) {
+        timeLeft = isWorkMode ? getWorkTime() : getRestTime();
+        updateDisplay();
+        updateProgress(0);
+    }
+}
+window.refreshTimerSettings = refreshTimerSettings;
 
 // Initialization
 function init() {
+    timeLeft = getWorkTime();
     updateDisplay();
     updateProgress(0);
+    updatePomodoroCounter();
     renderTodos();
-    if (fireSound && volumeSlider) {
-        fireSound.volume = volumeSlider.value;
-    }
+    // 저장된 볼륨 불러오기
+    const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+    const savedVolume = settings.volume || 0.5;
+    if (fireSound) fireSound.volume = savedVolume;
+    if (volumeSlider) volumeSlider.value = savedVolume;
 }
 
 // Timer Logic
@@ -149,7 +200,7 @@ function tick() {
     if (timeLeft > 0) {
         timeLeft--;
         updateDisplay();
-        const totalTime = isWorkMode ? WORK_TIME : REST_TIME;
+        const totalTime = isWorkMode ? getWorkTime() : (isLongRest ? LONG_REST_TIME : getRestTime());
         const progress = (totalTime - timeLeft) / totalTime;
         updateProgress(progress);
 
@@ -162,7 +213,9 @@ function tick() {
 }
 
 function switchMode() {
-    const completedDuration = isWorkMode ? WORK_TIME / 60 : REST_TIME / 60;
+    const workTimeMin = getWorkTime() / 60;
+    const restTimeMin = isLongRest ? LONG_REST_TIME / 60 : getRestTime() / 60;
+    const completedDuration = isWorkMode ? workTimeMin : restTimeMin;
     const sessionType = isWorkMode ? 'work' : 'rest';
 
     if (typeof statsManager !== 'undefined') {
@@ -171,8 +224,35 @@ function switchMode() {
 
     playChimeBell();
 
-    isWorkMode = !isWorkMode;
-    timeLeft = isWorkMode ? WORK_TIME : REST_TIME;
+    if (isWorkMode) {
+        // 워크 세션 완료 → 뽀모도로 카운트 증가
+        pomodoroCount++;
+        updatePomodoroCounter();
+
+        // 4 뽀모도로마다 긴 휴식
+        if (pomodoroCount % 4 === 0) {
+            isLongRest = true;
+            timeLeft = LONG_REST_TIME;
+        } else {
+            isLongRest = false;
+            timeLeft = getRestTime();
+        }
+        isWorkMode = false;
+    } else {
+        // 휴식 완료 → 워크 모드로
+        isLongRest = false;
+        isWorkMode = true;
+        timeLeft = getWorkTime();
+    }
+
+    // Auto-start 처리
+    const autoStartEnabled = isAutoStart();
+    if (!autoStartEnabled) {
+        clearInterval(timerId);
+        isRunning = false;
+        if (toggleText) toggleText.textContent = 'START';
+        document.body.classList.remove('timer-running', 'timer-rest');
+    }
 
     // Update body classes for background animation
     if (isRunning) {
@@ -186,24 +266,25 @@ function switchMode() {
     }
 
     if (statusBadge) {
-        statusBadge.textContent = isWorkMode ? 'WORK' : 'REST';
+        let badgeText = isWorkMode ? 'WORK' : (isLongRest ? 'LONG REST' : 'REST');
+        statusBadge.textContent = badgeText;
         statusBadge.style.background = isWorkMode ? 'var(--accent-work)' : 'var(--accent-rest)';
         statusBadge.style.boxShadow = isWorkMode ? '0 0 20px rgba(255, 107, 107, 0.4)' : '0 0 20px rgba(78, 205, 196, 0.4)';
     }
     if (timeSub) {
-        timeSub.textContent = isWorkMode ? 'WORK SESSION' : 'REST BREAK';
+        timeSub.textContent = isWorkMode ? 'WORK SESSION' : (isLongRest ? 'LONG BREAK ☕' : 'REST BREAK');
     }
     if (timerProgress) {
         if (isWorkMode) {
             timerProgress.style.stroke = 'url(#gradient)';
         } else {
-            timerProgress.style.stroke = '#4ecdc4';
+            timerProgress.style.stroke = isLongRest ? '#a55eea' : '#4ecdc4';
         }
     }
 
     if ('Notification' in window && Notification.permission === 'granted') {
         new Notification('Bbangmodoro', {
-            body: isWorkMode ? 'Work time!' : 'Rest time!',
+            body: isWorkMode ? `🍅 Work time! (Session #${pomodoroCount + 1})` : (isLongRest ? '☕ Long break! 15 minutes' : '😌 Rest time!'),
             icon: 'icon-192.png'
         });
     }
@@ -211,10 +292,6 @@ function switchMode() {
     handleSound();
     updateDisplay();
     updateProgress(0);
-
-    if (isRunning) {
-        console.log(isWorkMode ? 'Work session started!' : 'Rest session started!');
-    }
 }
 
 function handleSound() {
@@ -281,7 +358,9 @@ function resetTimer() {
     clearInterval(timerId);
     isRunning = false;
     isWorkMode = true;
-    timeLeft = WORK_TIME;
+    isLongRest = false;
+    pomodoroCount = 0;
+    timeLeft = getWorkTime();
 
     // Reset background
     document.body.classList.remove('timer-running', 'timer-rest');
@@ -295,6 +374,7 @@ function resetTimer() {
     if (timeSub) timeSub.textContent = 'WORK SESSION';
     if (timerProgress) timerProgress.style.stroke = 'url(#gradient)';
 
+    updatePomodoroCounter();
     handleSound();
     updateDisplay();
     updateProgress(0);
@@ -313,6 +393,19 @@ function updateProgress(progress) {
     const offset = CIRCLE_CIRCUMFERENCE - (progress * CIRCLE_CIRCUMFERENCE);
     timerProgress.style.strokeDashoffset = offset;
 }
+
+// 뽀모도로 카운터 UI 업데이트
+function updatePomodoroCounter() {
+    const counterEl = document.getElementById('pomodoroCounter');
+    if (!counterEl) return;
+    const dots = [];
+    for (let i = 0; i < 4; i++) {
+        const filled = i < (pomodoroCount % 4);
+        dots.push(`<span class="pomo-dot ${filled ? 'filled' : ''}">🍅</span>`);
+    }
+    counterEl.innerHTML = dots.join('');
+}
+window.updatePomodoroCounter = updatePomodoroCounter;
 
 // Event Listeners
 if (toggleBtn) toggleBtn.addEventListener('click', toggleTimer);

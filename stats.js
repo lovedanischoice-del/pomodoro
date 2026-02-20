@@ -84,6 +84,108 @@ class StatsManager {
         this.updateWeeklySummary();
         this.updateWeeklyChart();
         this.updateMonthlyHeatmap();
+        this.updateTodayCards();
+        this.updateDailyGoalBar();
+    }
+
+    getTodayStats() {
+        const today = new Date().toISOString().split('T')[0];
+        const todaySessions = this.sessions.filter(s => {
+            return s.date.startsWith(today) && s.type === 'work';
+        });
+        const totalMinutes = todaySessions.reduce((sum, s) => sum + s.duration, 0);
+        return { count: todaySessions.length, minutes: totalMinutes };
+    }
+
+    getStreak() {
+        const dates = new Set(
+            this.sessions
+                .filter(s => s.type === 'work')
+                .map(s => s.date.split('T')[0])
+        );
+        let streak = 0;
+        const now = new Date();
+        for (let i = 0; i < 365; i++) {
+            const d = new Date(now);
+            d.setDate(d.getDate() - i);
+            const dateStr = d.toISOString().split('T')[0];
+            if (dates.has(dateStr)) {
+                streak++;
+            } else {
+                break;
+            }
+        }
+        return streak;
+    }
+
+    updateTodayCards() {
+        const today = this.getTodayStats();
+        const streak = this.getStreak();
+
+        const todaySessionsEl = document.getElementById('todaySessions');
+        const todayMinutesEl = document.getElementById('todayMinutes');
+        const streakDaysEl = document.getElementById('streakDays');
+        const streakDisplayEl = document.getElementById('streakDisplay');
+
+        if (todaySessionsEl) todaySessionsEl.textContent = today.count;
+        if (todayMinutesEl) {
+            const h = Math.floor(today.minutes / 60);
+            const m = today.minutes % 60;
+            todayMinutesEl.textContent = h > 0 ? `${h}h ${m}m` : `${m}m`;
+        }
+        if (streakDaysEl) {
+            const fire = streak >= 7 ? '🔥🔥' : streak >= 3 ? '🔥' : '';
+            streakDaysEl.textContent = `${streak}${fire}`;
+        }
+        // 타이머 화면 스트릭 표시
+        if (streakDisplayEl && streak > 0) {
+            streakDisplayEl.textContent = `🔥 ${streak}일 연속`;
+        }
+    }
+
+    updateDailyGoalBar() {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const goalHours = parseFloat(settings.dailyGoal || 0);
+        const goalBar = document.getElementById('dailyGoalBar');
+        const goalFill = document.getElementById('goalFill');
+        const goalProgress = document.getElementById('goalProgress');
+
+        if (!goalBar) return;
+
+        if (goalHours <= 0) {
+            goalBar.style.display = 'none';
+            return;
+        }
+
+        goalBar.style.display = 'block';
+        const today = this.getTodayStats();
+        const doneHours = today.minutes / 60;
+        const pct = Math.min((doneHours / goalHours) * 100, 100);
+
+        if (goalFill) {
+            goalFill.style.width = pct + '%';
+            goalFill.style.background = pct >= 100 ? '#4ecdc4' : 'var(--accent-work)';
+        }
+        if (goalProgress) {
+            goalProgress.textContent = `${doneHours.toFixed(1)} / ${goalHours}h`;
+        }
+
+        // 목표 달성 축하 (처음 달성 시만)
+        if (pct >= 100) {
+            const goalKey = `goalCelebrated_${new Date().toISOString().split('T')[0]}`;
+            if (!localStorage.getItem(goalKey)) {
+                localStorage.setItem(goalKey, '1');
+                this.showGoalCelebration();
+            }
+        }
+    }
+
+    showGoalCelebration() {
+        const el = document.createElement('div');
+        el.className = 'goal-celebration';
+        el.innerHTML = '🎉 오늘 목표 달성!';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 3500);
     }
 
     updateWeeklySummary() {

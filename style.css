@@ -707,61 +707,6 @@ button {
     display: none;
 }
 
-/* 토글 스위치 스타일 */
-.toggle {
-    position: relative;
-    display: inline-block;
-    width: 52px;
-    height: 26px;
-}
-
-.toggle input[type="checkbox"] {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.toggle-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 13px;
-    transition: background 0.3s ease;
-}
-
-.toggle-slider::before {
-    content: '';
-    position: absolute;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: white;
-    top: 2px;
-    left: 2px;
-    transition: transform 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.toggle input[type="checkbox"]:checked+.toggle-slider {
-    background: linear-gradient(90deg, #ff6b6b 0%, #ff8e53 100%);
-}
-
-.toggle input[type="checkbox"]:checked+.toggle-slider::before {
-    transform: translateX(26px);
-}
-
-.toggle-slider:hover {
-    background: rgba(255, 255, 255, 0.15);
-}
-
-.toggle input[type="checkbox"]:checked+.toggle-slider:hover {
-    background: linear-gradient(90deg, #ff7b7b 0%, #ff9e63 100%);
-}
-
 /* Todo 체크박스는 기본 스타일 유지 */
 .todo-item input[type="checkbox"] {
     width: 20px;
@@ -920,11 +865,7 @@ button {
     border-color: var(--accent-work);
 }
 
-@media (max-width: 500px) {
-    .sound-name-display {
-        /* max-width: 100px; */
-    }
-}
+
 
 .sound-select-btn:hover {
     background: rgba(255, 255, 255, 0.15);
@@ -1133,4 +1074,233 @@ button {
         padding: 8px;
         border-radius: 8px;
     }
+}
+
+/* =============================================
+   신규 기능 스타일
+   ============================================= */
+
+/* 뽀모도로 카운터 */
+.pomodoro-counter-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 20px;
+}
+
+.pomodoro-counter {
+    display: flex;
+    gap: 8px;
+    font-size: 22px;
+    min-height: 30px;
+}
+
+.pomo-dot {
+    opacity: 0.2;
+    transition: all 0.3s ease;
+    filter: grayscale(1);
+}
+
+.pomo-dot.filled {
+    opacity: 1;
+    filter: grayscale(0);
+    animation: pomoBounce 0.4s ease;
+}
+
+@keyframes pomoBounce {
+    0% {
+        transform: scale(0.5);
+    }
+
+    70% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pomodoro-streak {
+    font-size: 12px;
+    color: #ff8e53;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    min-height: 18px;
+}
+
+/* 하루 목표 게이지 */
+.daily-goal-bar {
+    margin: 8px 0 24px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.goal-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.goal-track {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.goal-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent-work);
+    transition: width 0.6s ease, background 0.4s ease;
+    width: 0%;
+}
+
+/* 목표 달성 축하 토스트 */
+.goal-celebration {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #ff6b6b, #a55eea);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 40px;
+    font-size: 18px;
+    font-weight: 700;
+    z-index: 9999;
+    animation: celebrationIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), celebrationOut 0.5s ease 3s forwards;
+    box-shadow: 0 8px 32px rgba(165, 94, 234, 0.5);
+    letter-spacing: 0.5px;
+}
+
+@keyframes celebrationIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) scale(0.5) translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) scale(1) translateY(0);
+    }
+}
+
+@keyframes celebrationOut {
+    from {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+}
+
+/* 오늘 통계 카드 */
+.stats-today {
+    margin-bottom: 20px;
+}
+
+.today-cards {
+    display: flex;
+    gap: 12px;
+}
+
+.today-card {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 16px 10px;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.today-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+}
+
+.today-value {
+    font-family: 'Outfit', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--accent-work);
+    margin-bottom: 4px;
+    line-height: 1;
+}
+
+.today-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* 할 일 뽀모도로 UI */
+.todo-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.task-pomodoro-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.task-pomo-dots {
+    display: flex;
+    gap: 2px;
+    flex-wrap: wrap;
+}
+
+.task-pomo-dot {
+    font-size: 12px;
+    opacity: 0.3;
+    transition: opacity 0.3s;
+    filter: grayscale(1);
+}
+
+.task-pomo-dot.done {
+    opacity: 1;
+    filter: grayscale(0);
+}
+
+.btn-pomo-add {
+    flex: unset;
+    width: auto;
+    height: auto;
+    padding: 2px 6px;
+    font-size: 11px;
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.2);
+    border-radius: 6px;
+    color: var(--accent-work);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-pomo-add:hover {
+    background: rgba(255, 107, 107, 0.25);
+    transform: none;
+}
+
+/* 온보딩 슬라이드 */
+.onboarding-slide {
+    animation: fadeIn 0.4s ease-out;
+    width: 100%;
 }

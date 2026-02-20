@@ -522,7 +522,7 @@
 .toggle {
     position: relative;
     display: inline-block;
-    width: 60px;
+    width: 90px;
     height: 30px;
     cursor: pointer;
 }
@@ -541,7 +541,7 @@
     bottom: 0;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 30px;
-    transition: var(--transition);
+    transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .toggle-slider:before {
@@ -550,10 +550,13 @@
     height: 24px;
     width: 24px;
     left: 3px;
+    right: auto;
     bottom: 3px;
     background: white;
     border-radius: 50%;
-    transition: var(--transition);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: left 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+        right 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .toggle input:checked+.toggle-slider {
@@ -561,7 +564,16 @@
 }
 
 .toggle input:checked+.toggle-slider:before {
-    transform: translateX(30px);
+    left: auto;
+    right: 3px;
+}
+
+.toggle-slider:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.toggle input:checked+.toggle-slider:hover {
+    background: linear-gradient(90deg, #ff7b7b 0%, #ff9e63 100%);
 }
 
 /* Setting Buttons */
