@@ -63,6 +63,14 @@ async function saveToFirestore(collectionName, data) {
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         console.log(`Saved ${collectionName} to Firestore`);
+
+        // 세션 저장 시 리더보드도 자동 업데이트
+        if (collectionName === 'sessions' && window.leaderboardManager) {
+            setTimeout(() => {
+                window.leaderboardManager.uploadUserStats();
+            }, 500);
+        }
+
     } catch (error) {
         console.error(`Error saving ${collectionName}:`, error);
     }

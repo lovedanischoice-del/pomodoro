@@ -330,15 +330,18 @@ function handleSound() {
 }
 
 function toggleTimer() {
+    const playIcon = document.getElementById('playIcon');
     if (isRunning) {
         clearInterval(timerId);
         if (toggleText) toggleText.textContent = 'START';
+        if (playIcon) playIcon.textContent = '▶';
         isRunning = false;
         document.body.classList.remove('timer-running', 'timer-rest');
         handleSound();
     } else {
         timerId = setInterval(tick, 1000);
         if (toggleText) toggleText.textContent = 'PAUSE';
+        if (playIcon) playIcon.textContent = '■';
         isRunning = true;
         if (isWorkMode) {
             document.body.classList.add('timer-running');

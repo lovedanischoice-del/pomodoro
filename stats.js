@@ -331,6 +331,15 @@ function initNavigation() {
                 window.statsManager.updateStats();
             }
 
+            if (targetViewId === 'leaderboardView' && window.leaderboardManager) {
+                // 로그인 배너 표시 여부
+                const banner = document.getElementById('lbLoginBanner');
+                if (banner) {
+                    banner.style.display = window.auth?.currentUser ? 'none' : 'flex';
+                }
+                window.leaderboardManager.onEnterLeaderboard();
+            }
+
             console.log('Switched to view:', targetViewId);
         });
     });

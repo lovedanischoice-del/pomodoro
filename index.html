@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="onboarding.css">
     <link rel="stylesheet" href="stats.css">
+    <link rel="stylesheet" href="leaderboard.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -310,6 +311,56 @@
             </main>
         </div>
 
+        <!-- 리더보드 화면 -->
+        <div id="leaderboardView" class="view">
+            <main class="content leaderboard-content">
+                <header>
+                    <h1 class="stats-title">🏆 리더보드</h1>
+                    <p class="lb-subtitle">전 세계 집중력 순위</p>
+                </header>
+
+                <!-- 기간 탭 -->
+                <div class="lb-tabs">
+                    <button class="lb-tab-btn active" data-period="weekly"
+                        onclick="leaderboardManager.switchPeriod('weekly')">이번 주</button>
+                    <button class="lb-tab-btn" data-period="monthly"
+                        onclick="leaderboardManager.switchPeriod('monthly')">이번 달</button>
+                    <button class="lb-tab-btn" data-period="alltime"
+                        onclick="leaderboardManager.switchPeriod('alltime')">전체</button>
+                </div>
+
+                <!-- 내 순위 카드 -->
+                <div class="lb-my-rank">
+                    <div class="lb-my-rank-icon">🎯</div>
+                    <div class="lb-my-rank-info">
+                        <div class="lb-my-rank-label">내 순위</div>
+                        <div id="myRankTime" class="lb-my-rank-time">로딩 중...</div>
+                        <div id="myRankStreak" class="lb-my-streak"></div>
+                    </div>
+                    <div id="myRankValue">-</div>
+                </div>
+
+                <!-- 로그인 유도 배너 (비로그인 시 표시) -->
+                <div id="lbLoginBanner" class="lb-login-banner" onclick="googleLogin()" style="display:none">
+                    <div class="lb-login-banner-icon">🔑</div>
+                    <div class="lb-login-banner-text">
+                        <div class="lb-login-banner-title">구글 로그인으로 순위에 참여하세요!</div>
+                        <div class="lb-login-banner-desc">집중 시간이 자동으로 순위에 반영됩니다</div>
+                    </div>
+                    <div class="lb-login-banner-arrow">›</div>
+                </div>
+
+                <!-- 순위 목록 -->
+                <div class="lb-section-header">
+                    <span class="lb-section-title">TOP 50</span>
+                    <button class="lb-refresh-btn"
+                        onclick="leaderboardManager.fetchLeaderboard(leaderboardManager.currentPeriod)"
+                        title="새로고침">↻</button>
+                </div>
+                <div id="leaderboardList"></div>
+            </main>
+        </div>
+
         <!-- Settings 화면 -->
         <div id="settingsView" class="view">
             <main class="content settings-content">
@@ -527,6 +578,15 @@
                 </svg>
                 <span>Stats</span>
             </button>
+            <button class="nav-item" data-view="leaderboardView">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 6l4-4 4 4"></path>
+                    <path d="M12 2v10"></path>
+                    <path d="M3 18h18"></path>
+                    <path d="M5 22V12l7-4 7 4v10"></path>
+                </svg>
+                <span>Ranks</span>
+            </button>
             <button class="nav-item" data-view="settingsView">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="3"></circle>
@@ -568,6 +628,7 @@
     <script src="main.js"></script>
     <script src="stats.js"></script>
     <script src="tasks-settings.js"></script>
+    <script src="leaderboard.js"></script>
 </body>
 
 </html>
