@@ -126,17 +126,23 @@ function googleLogin() {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider)
         .then((result) => {
-            console.log("Login success");
+            console.log("로그인 성공:", result.user.displayName);
         }).catch((error) => {
-            console.error("Login failed:", error);
-            alert("Login failed: " + error.message);
+            console.error("로그인 실패:", error);
+            if (error.code === 'auth/popup-blocked') {
+                alert('팝업이 차단됐습니다. 브라우저 설정에서 팝업을 허용해주세요.');
+            } else if (error.code === 'auth/cancelled-popup-request') {
+                // 사용자가 직접 닫음, 무시
+            } else {
+                alert('로그인 실패: ' + error.message);
+            }
         });
 }
 
 function googleLogout() {
     if (!auth) return;
     auth.signOut().then(() => {
-        alert("Logged out successfully");
+        console.log('로그아웃 완료');
     });
 }
 

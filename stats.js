@@ -192,7 +192,7 @@ class StatsManager {
         const stats = this.getWeeklyStats();
         const weeklyTimeEl = document.getElementById('weeklyTime');
         if (weeklyTimeEl) {
-            weeklyTimeEl.textContent = `${stats.total.hours} hrs ${stats.total.minutes} min`;
+            weeklyTimeEl.textContent = `${stats.total.hours} 시간 ${stats.total.minutes} 분`;
         }
     }
 
