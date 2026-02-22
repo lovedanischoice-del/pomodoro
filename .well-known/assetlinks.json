@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.bbangmodoro.app",
+            "sha256_cert_fingerprints": [
+                "13:B1:18:F4:62:D0:A8:DE:32:2B:82:6C:7D:79:44:5A:96:A1:0A:8D:2D:C3:14:F3:AF:70:25:E9:80:7A:25:CC"
+            ]
+        }
+    }
+]
