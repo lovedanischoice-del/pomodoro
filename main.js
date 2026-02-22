@@ -84,9 +84,7 @@ const timerProgress = document.querySelector('.timer-progress');
 const fireSound = document.getElementById('fireSound');
 const soundStatus = document.getElementById('soundStatus');
 const volumeSlider = document.getElementById('volumeSlider');
-const todoInput = document.getElementById('todoInput');
-const addTodoBtn = document.getElementById('addTodoBtn');
-const todoList = document.getElementById('todoList');
+
 
 // Chime Bell Sound Function
 function playChimeBell() {
@@ -187,7 +185,6 @@ function init() {
     updateDisplay();
     updateProgress(0);
     updatePomodoroCounter();
-    renderTodos();
     // 저장된 볼륨 불러오기
     const settings = JSON.parse(localStorage.getItem('settings') || '{}');
     const savedVolume = settings.volume || 0.5;
@@ -435,31 +432,7 @@ if (volumeSlider) {
     });
 }
 
-// Todo Logic
-function addTodo() {
-    const text = todoInput?.value.trim();
-    if (text) {
-        todos.push({ id: Date.now(), text, completed: false });
-        if (todoInput) todoInput.value = '';
-        saveTodos();
-        renderTodos();
-    }
-}
-
-function toggleTodo(id) {
-    todos = todos.map(todo =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    );
-    saveTodos();
-    renderTodos();
-}
-
-function deleteTodo(id) {
-    todos = todos.filter(todo => todo.id !== id);
-    saveTodos();
-    renderTodos();
-}
-
+// Todo 저장/로드 (Tasks 탭에서 렌더링, 여기선 데이터만 관리)
 function saveTodos() {
     localStorage.setItem('todos', JSON.stringify(todos));
     if (window.saveToFirestore) {
@@ -469,36 +442,8 @@ function saveTodos() {
 
 function updateGlobalTodos(newTodos) {
     todos = newTodos;
-    renderTodos();
+    if (window.renderTasksList) window.renderTasksList();
 }
 window.updateGlobalTodos = updateGlobalTodos;
-
-function renderTodos() {
-    if (!todoList) return;
-    todoList.innerHTML = '';
-    todos.forEach(todo => {
-        const li = document.createElement('li');
-        li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
-        li.innerHTML = `
-            <input type="checkbox" ${todo.completed ? 'checked' : ''} onchange="toggleTodo(${todo.id})">
-            <span class="todo-text">${todo.text}</span>
-            <button class="delete-todo" onclick="deleteTodo(${todo.id})">✕</button>
-        `;
-        todoList.appendChild(li);
-    });
-}
-
-window.toggleTodo = toggleTodo;
-window.deleteTodo = deleteTodo;
-
-if (addTodoBtn) addTodoBtn.addEventListener('click', addTodo);
-if (todoInput) {
-    todoInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            addTodo();
-        }
-    });
-}
 
 init();
