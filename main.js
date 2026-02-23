@@ -190,6 +190,8 @@ function init() {
     const savedVolume = settings.volume || 0.5;
     if (fireSound) fireSound.volume = savedVolume;
     if (volumeSlider) volumeSlider.value = savedVolume;
+    // 🐇 토끼굴 파킹 초기화
+    if (typeof initRabbitHole === 'function') initRabbitHole();
 }
 
 // Timer Logic
@@ -305,6 +307,15 @@ function _finishSwitchMode() {
     const rfab = document.getElementById('rabbitHoleFab');
     if (rfab) rfab.classList.add('hidden');
 
+    // 🍱 도파민 메뉴 → 워크→휴식 전환 시에만 표시
+    if (!isWorkMode && typeof showDopamineMenu === 'function') {
+        showDopamineMenu(() => _finishSwitchModeCore());
+        return;
+    }
+    _finishSwitchModeCore();
+}
+
+function _finishSwitchModeCore() {
     // Auto-start 처리
     const autoStartEnabled = isAutoStart();
     if (!autoStartEnabled) {
