@@ -343,9 +343,9 @@ function _finishSwitchMode() {
     if (typeof unlockRabbitHole === 'function') unlockRabbitHole();
     // 🐧 펭귄 → 휴식 모드
     if (window.penguinBuddy) window.penguinBuddy.startRest();
-    // 🐇 FAB 숨기기 (휴식 중)
-    const rfab = document.getElementById('rabbitHoleFab');
-    if (rfab) rfab.classList.add('hidden');
+    // 🐇 FAB 숨기기 (휴식 중) - 삭제됨 (상시 표시)
+    // const rfab = document.getElementById('rabbitHoleFab');
+    // if (rfab) rfab.classList.add('hidden');
 
     // 🍱 도파민 메뉴 → 워크→휴식 전환 시에만 표시
     if (!isWorkMode && typeof showDopamineMenu === 'function') {

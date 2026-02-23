@@ -14,6 +14,7 @@ let rabbitInputVisible = false;
  */
 function initRabbitHole() {
     const fab = document.getElementById('rabbitHoleBtn');
+    const fabWrap = document.getElementById('rabbitHoleFab');
     const panel = document.getElementById('rabbitHolePanel');
     const inputEl = document.getElementById('rabbitInput');
     const saveBtn = document.getElementById('rabbitSaveBtn');
@@ -22,10 +23,10 @@ function initRabbitHole() {
     const clearBtn = document.getElementById('rabbitClearBtn');
     const badge = document.getElementById('rabbitBadge');
 
-    if (!fab) return;
+    if (!fabWrap) return;
 
     // FAB 클릭 → 패널 토글
-    fab.addEventListener('click', () => {
+    fabWrap.addEventListener('click', () => {
         if (rabbitLocked) {
             // 집중 중 → 빠른 입력 패널 토글
             rabbitInputVisible = !rabbitInputVisible;
