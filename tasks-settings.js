@@ -312,7 +312,18 @@ function initSettings() {
 
         // Update audio sources based on loaded settings
         updateAudioSource('fireSound', settings.bgmId);
-        // We'll update chime source when it's played, or globally if possible
+
+        // Gemini API Key 로드
+        const savedKey = localStorage.getItem('geminiApiKey');
+        const apiKeyInput = document.getElementById('geminiApiKey');
+        const apiKeyStatus = document.getElementById('apiKeyStatus');
+        if (apiKeyInput && savedKey) {
+            apiKeyInput.value = savedKey;
+            if (apiKeyStatus) {
+                apiKeyStatus.textContent = '✅ API Key 저장됨';
+                apiKeyStatus.className = 'api-key-status saved';
+            }
+        }
     }
 
     function saveSettings() {
@@ -593,6 +604,32 @@ function initSettings() {
         });
     }
 
+    // Gemini API Key 저장 버튼
+    const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
+    if (saveApiKeyBtn) {
+        saveApiKeyBtn.addEventListener('click', () => {
+            const apiKeyInput = document.getElementById('geminiApiKey');
+            const apiKeyStatus = document.getElementById('apiKeyStatus');
+            const key = apiKeyInput?.value?.trim();
+            if (!key) {
+                if (apiKeyStatus) {
+                    apiKeyStatus.textContent = '❌ API Key를 입력해주세요';
+                    apiKeyStatus.className = 'api-key-status error';
+                }
+                return;
+            }
+            localStorage.setItem('geminiApiKey', key);
+            if (apiKeyStatus) {
+                apiKeyStatus.textContent = '✅ 저장 완료!';
+                apiKeyStatus.className = 'api-key-status saved';
+            }
+            // 3초 후 상태 메시지 숨기기
+            setTimeout(() => {
+                if (apiKeyStatus) apiKeyStatus.textContent = '✅ API Key 저장됨';
+            }, 3000);
+        });
+    }
+
     loadSettings();
 }
 
@@ -604,6 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initTasks();
         initSettings();
         updateBuildTimestamp();
+        if (typeof initRabbitHole === 'function') initRabbitHole();
     }, 100);
 });
 
@@ -616,6 +654,7 @@ if (window.startApp) {
             initTasks();
             initSettings();
             updateBuildTimestamp();
+            if (typeof initRabbitHole === 'function') initRabbitHole();
         }, 700);
     };
 }

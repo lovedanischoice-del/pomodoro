@@ -254,7 +254,32 @@ function switchMode() {
         isWorkMode = false;
         rocketCountdownStarted = false; // 다음 휴식을 위해 리셋
 
-        // 💪 기능2: 워크 세션 종료 후 스트레칭 미션
+        // 🌊 기능3: 플로우 가드 (딥워크 감지 → 10분 연장 제안)
+        if (typeof checkFlowState === 'function') {
+            checkFlowState(
+                (extendSec) => {
+                    // 연장 선택
+                    isWorkMode = true; // 아직 워크 모드
+                    rocketCountdownStarted = false;
+                    timeLeft = extendSec;
+                    timerId = setInterval(tick, 1000);
+                    isRunning = true;
+                    document.body.classList.add('timer-running');
+                    document.body.classList.remove('timer-rest');
+                },
+                () => {
+                    // 거절 → 스트레칭 후 휴식 전환
+                    if (typeof startStretchMission === 'function') {
+                        startStretchMission(() => _finishSwitchMode());
+                    } else {
+                        _finishSwitchMode();
+                    }
+                }
+            );
+            return;
+        }
+
+        // 💪 기능2: 워크 세션 종료 후 스트레칭 미션 (플로우 가드 없을 때)
         if (typeof startStretchMission === 'function') {
             startStretchMission(() => {
                 _finishSwitchMode();
@@ -272,6 +297,14 @@ function switchMode() {
 }
 
 function _finishSwitchMode() {
+    // 🐇 토끼굴 → 휴식/종료 시 잠금 해제
+    if (typeof unlockRabbitHole === 'function') unlockRabbitHole();
+    // 🐧 펭귄 → 휴식 모드
+    if (window.penguinBuddy) window.penguinBuddy.startRest();
+    // 🐇 FAB 숨기기 (휴식 중)
+    const rfab = document.getElementById('rabbitHoleFab');
+    if (rfab) rfab.classList.add('hidden');
+
     // Auto-start 처리
     const autoStartEnabled = isAutoStart();
     if (!autoStartEnabled) {
@@ -369,6 +402,12 @@ function _startTimerNow() {
     if (isWorkMode) {
         document.body.classList.add('timer-running');
         document.body.classList.remove('timer-rest');
+        // 🐇 토끼굴 → 집중 시작 시 잠금 + FAB 표시
+        if (typeof lockRabbitHole === 'function') lockRabbitHole();
+        const rfab = document.getElementById('rabbitHoleFab');
+        if (rfab) rfab.classList.remove('hidden');
+        // 🐧 펭귄 → 집중 모드
+        if (window.penguinBuddy) window.penguinBuddy.startWork();
     } else {
         document.body.classList.add('timer-rest');
         document.body.classList.remove('timer-running');

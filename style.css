@@ -1717,3 +1717,835 @@ button {
         transform: translateX(-50%) translateY(0);
     }
 }
+
+/* ================================================
+   AI 브릿지: 쪼개기 버튼 + 결과 표시
+   ================================================ */
+
+/* AI 쪼개기 버튼 */
+.btn-ai-breakdown {
+    width: 100%;
+    padding: 11px 16px;
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(139, 92, 246, 0.12));
+    border: 1.5px solid rgba(167, 139, 250, 0.35);
+    border-radius: 12px;
+    color: #c4b5fd;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 12px;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex: unset;
+}
+
+.btn-ai-breakdown:hover:not(:disabled) {
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.28), rgba(139, 92, 246, 0.22));
+    border-color: rgba(167, 139, 250, 0.65);
+    color: #ddd6fe;
+    transform: translateY(-1px);
+}
+
+.btn-ai-breakdown:disabled,
+.btn-ai-breakdown.ai-loading {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    animation: aiPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes aiPulse {
+    from {
+        opacity: 0.5;
+    }
+
+    to {
+        opacity: 0.8;
+    }
+}
+
+/* AI 결과 컨테이너 */
+.ai-steps-container {
+    background: rgba(139, 92, 246, 0.08);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    animation: fadeInDown 0.3s ease-out;
+}
+
+.ai-steps-container.hidden {
+    display: none;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ai-steps-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #a78bfa;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.ai-steps-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 8px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ai-step-item {
+    padding: 9px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ai-step-item::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #7c3aed;
+    flex-shrink: 0;
+}
+
+.ai-step-item.ai-step-first {
+    background: rgba(139, 92, 246, 0.2);
+    border-color: rgba(139, 92, 246, 0.4);
+    color: #fff;
+    font-weight: 600;
+}
+
+.ai-step-item.ai-step-first::before {
+    background: #a78bfa;
+    box-shadow: 0 0 6px rgba(167, 139, 250, 0.8);
+}
+
+.ai-step-item:hover {
+    background: rgba(139, 92, 246, 0.25);
+    border-color: rgba(167, 139, 250, 0.5);
+    transform: translateX(3px);
+}
+
+.ai-steps-hint {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.3);
+    text-align: center;
+}
+
+.ai-error {
+    font-size: 13px;
+    color: #fca5a5;
+    text-align: center;
+    padding: 4px 0;
+}
+
+/* ================================================
+   Settings: API Key 입력 영역
+   ================================================ */
+
+.setting-column {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px;
+}
+
+.setting-row-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.api-key-input-wrap {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+.api-key-input {
+    flex: 1;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 13px;
+    font-family: 'Inter', monospace;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.api-key-input:focus {
+    border-color: #a78bfa;
+    background: rgba(139, 92, 246, 0.06);
+}
+
+.api-key-input::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+    letter-spacing: 1px;
+}
+
+.btn-save-api {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #7c3aed, #a78bfa);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+    flex: unset;
+}
+
+.btn-save-api:hover {
+    background: linear-gradient(135deg, #6d28d9, #9061ea);
+    transform: translateY(-1px);
+}
+
+.api-key-status {
+    font-size: 12px;
+    min-height: 18px;
+    transition: color 0.2s;
+}
+
+.api-key-status.saved {
+    color: #34d399;
+}
+
+.api-key-status.error {
+    color: #f87171;
+}
+
+/* ================================================
+   🐇 토끼굴 파킹
+   ================================================ */
+
+/* FAB 래퍼 */
+.rabbit-fab-wrap {
+    position: fixed;
+    bottom: 100px;
+    right: 18px;
+    z-index: 900;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.rabbit-fab-wrap.hidden {
+    display: none;
+}
+
+.rabbit-fab-tip {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+}
+
+/* FAB 버튼 */
+.rabbit-fab {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(30, 30, 50, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    font-size: 26px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    backdrop-filter: blur(8px);
+}
+
+.rabbit-fab:hover {
+    transform: scale(1.12);
+    border-color: rgba(167, 139, 250, 0.5);
+    box-shadow: 0 6px 28px rgba(0, 0, 0, 0.5);
+}
+
+.rabbit-fab.locked {
+    border-color: rgba(251, 146, 60, 0.5);
+    animation: rabbitPulse 2s ease-in-out infinite;
+}
+
+@keyframes rabbitPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 4px 28px rgba(251, 146, 60, 0.4);
+    }
+}
+
+/* 아이템 개수 배지 */
+.rabbit-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 18px;
+    height: 18px;
+    background: #f97316;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 빠른 입력 패널 */
+.rabbit-panel {
+    position: fixed;
+    bottom: 160px;
+    right: 14px;
+    z-index: 901;
+    width: min(300px, 90vw);
+    animation: slideInRight 0.25s ease-out;
+}
+
+.rabbit-panel.hidden {
+    display: none;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.rabbit-panel-inner {
+    background: rgba(22, 22, 38, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
+}
+
+.rabbit-panel-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #c4b5fd;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+.rabbit-input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.rabbit-input {
+    flex: 1;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.rabbit-input:focus {
+    border-color: #a78bfa;
+    background: rgba(139, 92, 246, 0.07);
+}
+
+.rabbit-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-rabbit-save {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #7c3aed, #a78bfa);
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    flex: unset;
+}
+
+.btn-rabbit-save:hover {
+    transform: scale(1.1);
+}
+
+.rabbit-hint {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* 보관함 패널 */
+.rabbit-vault {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(420px, 94vw);
+    z-index: 950;
+    animation: vaultSlideUp 0.3s ease-out;
+}
+
+.rabbit-vault.hidden {
+    display: none;
+}
+
+.rabbit-vault.active {
+    display: block;
+}
+
+@keyframes vaultSlideUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.rabbit-vault-inner {
+    background: rgba(18, 18, 32, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 16px 60px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(16px);
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.rabbit-vault-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.rabbit-vault-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #c4b5fd;
+}
+
+.rabbit-vault-close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0;
+    flex: unset;
+}
+
+.rabbit-vault-close:hover {
+    color: #fff;
+}
+
+.rabbit-vault-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 14px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rabbit-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.rabbit-item-text {
+    flex: 1;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+    word-break: break-word;
+}
+
+.rabbit-item-time {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.3);
+    white-space: nowrap;
+}
+
+.rabbit-item-del {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.25);
+    cursor: pointer;
+    font-size: 13px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: all 0.15s;
+    flex: unset;
+}
+
+.rabbit-item-del:hover {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.1);
+}
+
+.rabbit-empty {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 14px;
+    padding: 20px 0;
+}
+
+.btn-rabbit-clear {
+    width: 100%;
+    padding: 10px;
+    background: rgba(248, 113, 113, 0.1);
+    border: 1px solid rgba(248, 113, 113, 0.25);
+    border-radius: 10px;
+    color: #f87171;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+    flex: unset;
+}
+
+.btn-rabbit-clear:hover {
+    background: rgba(248, 113, 113, 0.2);
+}
+
+/* ================================================
+   🌊 플로우 가드
+   ================================================ */
+
+.flow-guard-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9996;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 10, 30, 0.92);
+    backdrop-filter: blur(14px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+
+.flow-guard-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.flow-guard-overlay.hidden {
+    display: none;
+}
+
+.flow-card {
+    background: linear-gradient(160deg, rgba(15, 23, 58, 0.98), rgba(10, 18, 48, 0.99));
+    border: 1px solid rgba(96, 165, 250, 0.25);
+    border-radius: 28px;
+    padding: 40px 32px 32px;
+    text-align: center;
+    max-width: 340px;
+    width: 90vw;
+    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6), 0 0 60px rgba(96, 165, 250, 0.08);
+    animation: flowCardIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes flowCardIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.flow-icon {
+    font-size: 56px;
+    margin-bottom: 12px;
+    animation: flowWave 2s ease-in-out infinite;
+}
+
+@keyframes flowWave {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(-3deg);
+    }
+
+    50% {
+        transform: translateY(-8px) rotate(3deg);
+    }
+}
+
+.flow-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: #93c5fd;
+    margin-bottom: 8px;
+    text-shadow: 0 0 30px rgba(147, 197, 253, 0.4);
+}
+
+.flow-desc {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.65);
+    margin-bottom: 28px;
+}
+
+.flow-btn-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.btn-flow-yes {
+    flex: 1;
+    padding: 16px 12px;
+    background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(59, 130, 246, 0.5);
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-flow-yes:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(59, 130, 246, 0.7);
+}
+
+.btn-flow-no {
+    flex: 1;
+    padding: 16px 12px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-flow-no:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+}
+
+.flow-progress-bar {
+    height: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.flow-progress-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #3b82f6, #93c5fd);
+    border-radius: 2px;
+    transition: width 1s linear;
+}
+
+.flow-countdown-txt {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.flow-countdown-txt span {
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* ================================================
+   🐧 뺑수 펭귄 바디 더블링
+   ================================================ */
+
+.penguin-buddy {
+    position: fixed;
+    bottom: 100px;
+    left: 16px;
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: default;
+    user-select: none;
+}
+
+.penguin-buddy.hidden {
+    display: none;
+}
+
+/* 스프라이트 */
+.penguin-sprite {
+    font-size: 38px;
+    line-height: 1;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+}
+
+/* 상태별 애니메이션 */
+.penguin-idle .penguin-sprite {
+    animation: penguinBob 2s ease-in-out infinite alternate;
+}
+
+.penguin-working .penguin-sprite {
+    animation: penguinWork 0.7s ease-in-out infinite alternate;
+}
+
+.penguin-watching .penguin-sprite {
+    animation: penguinStare 1.5s ease-in-out infinite;
+}
+
+.penguin-countdown .penguin-sprite {
+    animation: penguinUrgent 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes penguinBob {
+    from {
+        transform: translateY(0) rotate(-3deg);
+    }
+
+    to {
+        transform: translateY(-6px) rotate(3deg);
+    }
+}
+
+@keyframes penguinWork {
+    from {
+        transform: translateY(0) rotate(-5deg) scale(1);
+    }
+
+    to {
+        transform: translateY(-4px) rotate(5deg) scale(1.05);
+    }
+}
+
+@keyframes penguinStare {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
+}
+
+@keyframes penguinUrgent {
+    from {
+        transform: translateY(0) scale(1) rotate(-5deg);
+    }
+
+    to {
+        transform: translateY(-8px) scale(1.15) rotate(5deg);
+    }
+}
+
+/* 말풍선 */
+.penguin-bubble {
+    background: rgba(22, 22, 38, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px 12px 12px 4px;
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.87);
+    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    max-width: 160px;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.4;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+}
+
+.penguin-bubble.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.penguin-bubble.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* 카운트다운 중 말풍선 색상 */
+.penguin-countdown .penguin-bubble {
+    border-color: rgba(251, 146, 60, 0.5);
+    color: #fdba74;
+}
