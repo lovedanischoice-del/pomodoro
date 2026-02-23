@@ -249,3 +249,74 @@ function updateMicroActionBadge(text) {
 
 window.showMicroActionPopup = showMicroActionPopup;
 window.updateMicroActionBadge = updateMicroActionBadge;
+
+// ─────────────────────────────────────────────
+// 기능 4: 1분 맛보기 타이머 (벌떡 콤보)
+// 벌떡 스트레칭 완료 후 딱 1분 미니 세션 제안
+// ─────────────────────────────────────────────
+let tasteTimerId = null;
+
+function show1MinTaste(onDone) {
+    const overlay = document.getElementById('oneMinTasteOverlay');
+    if (!overlay) {
+        if (onDone) onDone();
+        return;
+    }
+
+    const countEl = document.getElementById('oneMinCountdown');
+    const ringEl = document.getElementById('oneMinRingFill');
+    const startBtn = document.getElementById('oneMinStartBtn');
+    const skipBtn = document.getElementById('oneMinSkipBtn');
+
+    const TOTAL = 60;
+    let remaining = TOTAL;
+    const CIRCUMFERENCE = 2 * Math.PI * 40; // r=40
+
+    overlay.classList.remove('hidden');
+    overlay.classList.add('active');
+    if (countEl) countEl.textContent = '1:00';
+
+    // SVG 링 초기화
+    if (ringEl) {
+        ringEl.style.strokeDasharray = CIRCUMFERENCE;
+        ringEl.style.strokeDashoffset = 0;
+    }
+
+    function updateRing() {
+        if (!ringEl) return;
+        const offset = CIRCUMFERENCE * (1 - remaining / TOTAL);
+        ringEl.style.strokeDashoffset = offset;
+    }
+
+    function formatTime(s) {
+        const m = Math.floor(s / 60);
+        const sec = s % 60;
+        return `${m}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    function dismiss(startWork) {
+        clearInterval(tasteTimerId);
+        tasteTimerId = null;
+        overlay.classList.remove('active');
+        overlay.classList.add('hidden');
+        if (startWork) {
+            // 1분 실제 집중으로 연결: 타이머를 1분으로 설정 후 시작
+            if (typeof timeLeft !== 'undefined') {
+                window._oneMinOverride = true;
+            }
+        }
+        if (onDone) onDone();
+    }
+
+    if (startBtn) startBtn.onclick = () => dismiss(true);
+    if (skipBtn) skipBtn.onclick = () => dismiss(false);
+
+    tasteTimerId = setInterval(() => {
+        remaining--;
+        if (countEl) countEl.textContent = formatTime(remaining);
+        updateRing();
+        if (remaining <= 0) dismiss(false);
+    }, 1000);
+}
+
+window.show1MinTaste = show1MinTaste;

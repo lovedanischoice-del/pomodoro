@@ -270,9 +270,15 @@ function switchMode() {
                     document.body.classList.remove('timer-rest');
                 },
                 () => {
-                    // 거절 → 스트레칭 후 휴식 전환
+                    // 거절 → 스트레칭 후 1분 맛보기 → 휴식 전환
                     if (typeof startStretchMission === 'function') {
-                        startStretchMission(() => _finishSwitchMode());
+                        startStretchMission(() => {
+                            if (typeof show1MinTaste === 'function') {
+                                show1MinTaste(() => _finishSwitchMode());
+                            } else {
+                                _finishSwitchMode();
+                            }
+                        });
                     } else {
                         _finishSwitchMode();
                     }
@@ -281,12 +287,16 @@ function switchMode() {
             return;
         }
 
-        // 💪 기능2: 워크 세션 종료 후 스트레칭 미션 (플로우 가드 없을 때)
+        // 💪 기능2: 워크 세션 종료 후 스트레칭 → 1분 맛보기 (플로우 가드 없을 때)
         if (typeof startStretchMission === 'function') {
             startStretchMission(() => {
-                _finishSwitchMode();
+                if (typeof show1MinTaste === 'function') {
+                    show1MinTaste(() => _finishSwitchMode());
+                } else {
+                    _finishSwitchMode();
+                }
             });
-            return; // 스트레칭 완료 후 콜백에서 계속
+            return;
         }
     } else {
         // 휴식 완료 → 워크 모드로

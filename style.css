@@ -2549,3 +2549,1035 @@ button {
     border-color: rgba(251, 146, 60, 0.5);
     color: #fdba74;
 }
+
+/* ================================================
+   🍱 도파민 메뉴 선택기
+   ================================================ */
+.dopamine-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9996;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 80px;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+
+.dopamine-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.dopamine-overlay.hidden {
+    display: none;
+}
+
+.dopamine-card {
+    width: calc(100% - 32px);
+    max-width: 480px;
+    background: linear-gradient(160deg, #1a1f35, #141828);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 28px 28px 20px 20px;
+    padding: 28px 20px 20px;
+    box-shadow: 0 -24px 60px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dopamine-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.dopamine-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+}
+
+.dopamine-subtitle {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 10px;
+}
+
+.dopamine-badge-wrap {
+    display: inline-block;
+    background: rgba(251, 191, 36, 0.12);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    color: #fcd34d;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 50px;
+}
+
+.dopamine-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.dopamine-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 18px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.09);
+    border-radius: 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: unset;
+    height: auto;
+    width: auto;
+}
+
+.dopamine-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.dopamine-item:active {
+    transform: scale(0.96);
+}
+
+.dopamine-emoji {
+    font-size: 36px;
+    line-height: 1;
+}
+
+.dopamine-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    text-align: center;
+    line-height: 1.3;
+}
+
+.btn-dopamine-skip {
+    width: 100%;
+    padding: 13px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50px;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    flex: unset;
+}
+
+.btn-dopamine-skip:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.65);
+}
+
+/* 칭찬 화면 */
+.dopamine-praise-wrap {
+    text-align: center;
+    padding: 16px 0;
+}
+
+.dopamine-praise-emoji {
+    font-size: 72px;
+    animation: praisePopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes praisePopIn {
+    from {
+        transform: scale(0.3) rotate(-15deg);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.dopamine-praise-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: #34d399;
+    margin: 12px 0 6px;
+    text-shadow: 0 0 24px rgba(52, 211, 153, 0.5);
+}
+
+.dopamine-praise-desc {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 14px;
+}
+
+.dopamine-badge-earned {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(251, 146, 60, 0.15));
+    border: 1px solid rgba(251, 191, 36, 0.4);
+    color: #fcd34d;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 8px 20px;
+    border-radius: 50px;
+    animation: badgePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+}
+
+@keyframes badgePop {
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ================================================
+   🐇 토끼굴 파킹
+   ================================================ */
+.rabbit-fab-wrap {
+    position: fixed;
+    bottom: 100px;
+    right: 16px;
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+.rabbit-fab-wrap.hidden {
+    display: none;
+}
+
+.rabbit-fab-tip {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.55);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 3px 10px;
+    border-radius: 50px;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.rabbit-fab {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #a78bfa, #7c3aed);
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(124, 58, 237, 0.5);
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex: unset;
+}
+
+.rabbit-fab:hover {
+    transform: scale(1.1) translateY(-2px);
+    box-shadow: 0 10px 32px rgba(124, 58, 237, 0.7);
+}
+
+.rabbit-fab.locked {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+}
+
+.rabbit-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 20px;
+    height: 20px;
+    background: #ef4444;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #0f0f1a;
+}
+
+/* 빠른 입력 패널 */
+.rabbit-panel {
+    position: fixed;
+    bottom: 165px;
+    right: 16px;
+    z-index: 501;
+    width: 280px;
+    background: linear-gradient(160deg, #252836, #1e2133);
+    border: 1px solid rgba(167, 139, 250, 0.25);
+    border-radius: 18px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    animation: rabbitPanelIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rabbit-panel.hidden {
+    display: none;
+}
+
+@keyframes rabbitPanelIn {
+    from {
+        transform: scale(0.85) translateY(16px);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.rabbit-panel-inner {
+    padding: 16px;
+}
+
+.rabbit-panel-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #a78bfa;
+    margin-bottom: 10px;
+}
+
+.rabbit-input-row {
+    display: flex;
+    gap: 8px;
+}
+
+.rabbit-input {
+    flex: 1;
+    padding: 10px 13px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.rabbit-input:focus {
+    border-color: #a78bfa;
+}
+
+.rabbit-input::placeholder {
+    color: rgba(255, 255, 255, 0.28);
+}
+
+.btn-rabbit-save {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #a78bfa, #7c3aed);
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    flex: unset;
+    transition: all 0.2s;
+}
+
+.btn-rabbit-save:hover {
+    transform: scale(1.1);
+}
+
+.rabbit-hint {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.3);
+    margin-top: 8px;
+    text-align: center;
+}
+
+/* 보관함 패널 */
+.rabbit-vault {
+    position: fixed;
+    inset: 0;
+    z-index: 9994;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.rabbit-vault.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.rabbit-vault.hidden {
+    display: none;
+}
+
+.rabbit-vault-inner {
+    width: calc(100% - 40px);
+    max-width: 400px;
+    max-height: 70vh;
+    background: linear-gradient(160deg, #1e2133, #161928);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    animation: vaultIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes vaultIn {
+    from {
+        transform: scale(0.92) translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.rabbit-vault-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.rabbit-vault-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #a78bfa;
+}
+
+.rabbit-vault-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    cursor: pointer;
+    flex: unset;
+    transition: all 0.2s;
+}
+
+.rabbit-vault-close:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.rabbit-vault-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px 0;
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rabbit-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.rabbit-item-text {
+    flex: 1;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+    word-break: break-all;
+}
+
+.rabbit-item-time {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.35);
+    white-space: nowrap;
+}
+
+.rabbit-item-del {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: rgba(239, 68, 68, 0.12);
+    border: none;
+    color: #f87171;
+    font-size: 11px;
+    cursor: pointer;
+    flex: unset;
+    transition: all 0.2s;
+    padding: 0;
+}
+
+.rabbit-item-del:hover {
+    background: rgba(239, 68, 68, 0.3);
+}
+
+.rabbit-empty {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 14px;
+    padding: 20px 0;
+}
+
+.btn-rabbit-clear {
+    width: 100%;
+    padding: 11px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 50px;
+    color: #fca5a5;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    flex: unset;
+}
+
+.btn-rabbit-clear:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+/* ================================================
+   🌊 플로우 가드 오버레이
+   ================================================ */
+.flow-guard-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9995;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(3, 15, 30, 0.9);
+    backdrop-filter: blur(14px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+
+.flow-guard-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.flow-guard-overlay.hidden {
+    display: none;
+}
+
+.flow-card {
+    width: calc(100% - 48px);
+    max-width: 360px;
+    background: linear-gradient(160deg, #0d1b2e, #091523);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 28px;
+    padding: 36px 28px 28px;
+    text-align: center;
+    box-shadow: 0 0 80px rgba(56, 189, 248, 0.12), 0 24px 60px rgba(0, 0, 0, 0.6);
+    animation: flowCardIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes flowCardIn {
+    from {
+        transform: scale(0.88) translateY(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.flow-icon {
+    font-size: 60px;
+    margin-bottom: 10px;
+    animation: flowWave 2s ease-in-out infinite alternate;
+}
+
+@keyframes flowWave {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-10px);
+    }
+}
+
+.flow-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: #38bdf8;
+    margin-bottom: 8px;
+    text-shadow: 0 0 30px rgba(56, 189, 248, 0.5);
+}
+
+.flow-desc {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.65);
+    margin-bottom: 24px;
+}
+
+.flow-btn-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.btn-flow-yes {
+    flex: 1;
+    padding: 16px;
+    background: linear-gradient(135deg, #0ea5e9, #0284c7);
+    border: none;
+    border-radius: 50px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(14, 165, 233, 0.5);
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-flow-yes:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(14, 165, 233, 0.7);
+}
+
+.btn-flow-no {
+    flex: 1;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-flow-no:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.flow-progress-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.flow-progress-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+    border-radius: 2px;
+    transition: width 1s linear;
+}
+
+.flow-countdown-txt {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.flow-countdown-txt span {
+    font-weight: 700;
+    color: #38bdf8;
+}
+
+/* ================================================
+   ⚡ 1분 맛보기 타이머
+   ================================================ */
+.one-min-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9993;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 8, 4, 0.88);
+    backdrop-filter: blur(14px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+
+.one-min-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.one-min-overlay.hidden {
+    display: none;
+}
+
+.one-min-card {
+    width: calc(100% - 48px);
+    max-width: 340px;
+    background: linear-gradient(160deg, #1c1608, #110e04);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    border-radius: 28px;
+    padding: 32px 24px 24px;
+    text-align: center;
+    box-shadow: 0 0 80px rgba(251, 146, 60, 0.1), 0 24px 60px rgba(0, 0, 0, 0.6);
+    animation: oneMinCardIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes oneMinCardIn {
+    from {
+        transform: scale(0.88) translateY(24px);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.one-min-header {
+    margin-bottom: 24px;
+}
+
+.one-min-emoji {
+    font-size: 52px;
+    display: block;
+    margin-bottom: 10px;
+    animation: oneMinBolt 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes oneMinBolt {
+    from {
+        transform: scale(1) rotate(-5deg);
+    }
+
+    to {
+        transform: scale(1.12) rotate(5deg);
+    }
+}
+
+.one-min-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: #fbbf24;
+    margin-bottom: 8px;
+    text-shadow: 0 0 30px rgba(251, 191, 36, 0.5);
+}
+
+.one-min-desc {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.6;
+}
+
+.one-min-hint-small {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.38);
+    font-style: italic;
+}
+
+/* SVG 링 카운트다운 */
+.one-min-ring-wrap {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 24px;
+}
+
+.one-min-ring-svg {
+    width: 130px;
+    height: 130px;
+    transform: rotate(-90deg);
+}
+
+.one-min-ring-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.06);
+    stroke-width: 8;
+}
+
+.one-min-ring-fill {
+    fill: none;
+    stroke: url(#oneMinGrad);
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear;
+}
+
+.one-min-countdown {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Outfit', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: #fbbf24;
+}
+
+/* SVG 그라디언트 정의 (인라인으로 넣기 어려우므로 CSS로 대체 처리) */
+.one-min-ring-fill {
+    stroke: #fb923c;
+}
+
+.one-min-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-one-min-start {
+    width: 100%;
+    padding: 17px;
+    background: linear-gradient(135deg, #f97316, #fbbf24);
+    border: none;
+    border-radius: 50px;
+    color: #1a0a00;
+    font-size: 17px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 28px rgba(249, 115, 22, 0.55);
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+    flex: unset;
+    letter-spacing: -0.3px;
+}
+
+.btn-one-min-start:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 36px rgba(249, 115, 22, 0.75);
+}
+
+.btn-one-min-start:active {
+    transform: scale(0.97);
+}
+
+.btn-one-min-skip {
+    width: 100%;
+    padding: 13px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    color: rgba(255, 255, 255, 0.38);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    flex: unset;
+}
+
+.btn-one-min-skip:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* ================================================
+   🐧 뺑수 펭귄 버디 (바디 더블링)
+   ================================================ */
+.penguin-buddy {
+    position: fixed;
+    bottom: 88px;
+    left: 16px;
+    z-index: 400;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.4s ease;
+}
+
+.penguin-buddy.hidden {
+    display: none;
+}
+
+/* 말풍선 */
+.penguin-bubble {
+    background: linear-gradient(135deg, #1e2133, #252836);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px 16px 16px 4px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: nowrap;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    max-width: 160px;
+    white-space: normal;
+    line-height: 1.4;
+    opacity: 0;
+    transform: translateY(6px) scale(0.92);
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+}
+
+.penguin-bubble.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.penguin-bubble.hidden {
+    display: none;
+}
+
+/* 펭귄 스프라이트 */
+.penguin-sprite {
+    font-size: 34px;
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+    transition: all 0.3s ease;
+}
+
+/* 상태별 애니메이션 */
+
+/* idle: 가볍게 흔들기 */
+.penguin-idle .penguin-sprite {
+    animation: penguinIdle 3s ease-in-out infinite;
+}
+
+@keyframes penguinIdle {
+
+    0%,
+    100% {
+        transform: rotate(-3deg) translateY(0);
+    }
+
+    50% {
+        transform: rotate(3deg) translateY(-4px);
+    }
+}
+
+/* working: 타이핑하듯 보빙 */
+.penguin-working .penguin-sprite {
+    animation: penguinWork 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes penguinWork {
+    from {
+        transform: translateY(0) scale(1);
+    }
+
+    to {
+        transform: translateY(-5px) scale(1.04);
+    }
+}
+
+/* watching: 좌우로 두리번 */
+.penguin-watching .penguin-sprite {
+    animation: penguinWatch 1.2s ease-in-out infinite;
+    filter: drop-shadow(0 4px 12px rgba(251, 191, 36, 0.4));
+}
+
+@keyframes penguinWatch {
+    0% {
+        transform: rotate(-12deg);
+    }
+
+    50% {
+        transform: rotate(12deg);
+    }
+
+    100% {
+        transform: rotate(-12deg);
+    }
+}
+
+/* countdown: 긴장! 빠른 진동 */
+.penguin-countdown .penguin-sprite {
+    animation: penguinCountdown 0.3s ease-in-out infinite alternate;
+    filter: drop-shadow(0 4px 14px rgba(239, 68, 68, 0.5));
+}
+
+@keyframes penguinCountdown {
+    from {
+        transform: scale(1) rotate(-5deg);
+    }
+
+    to {
+        transform: scale(1.1) rotate(5deg);
+    }
+}
+
+/* 목표 달성 축하 팝업 */
+.goal-celebration {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.6);
+    z-index: 9999;
+    background: linear-gradient(135deg, #34d399, #059669);
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    padding: 20px 36px;
+    border-radius: 50px;
+    box-shadow: 0 8px 40px rgba(52, 211, 153, 0.5);
+    animation: goalCelebrate 3.5s ease forwards;
+    pointer-events: none;
+    text-align: center;
+}
+
+@keyframes goalCelebrate {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.6);
+    }
+
+    15% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.08);
+    }
+
+    25% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    75% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -60%) scale(0.9);
+    }
+}

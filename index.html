@@ -717,6 +717,45 @@
         <div id="penguinSprite" class="penguin-sprite">🐧</div>
     </div>
 
+    <!-- ===== 🍱 도파민 메뉴 선택기 ===== -->
+    <div id="dopamineMenuOverlay" class="dopamine-overlay hidden">
+        <div class="dopamine-card" id="dopamineContent">
+            <div class="dopamine-header">
+                <div class="dopamine-title">🍱 휴식 에피타이저 고르기</div>
+                <div class="dopamine-subtitle">뺑수랑 같이 할 건강한 스낵 하나!</div>
+                <div class="dopamine-badge-wrap">
+                    🏅 <span id="dopamineBadgeCount">0</span>개 배지 획득 중
+                </div>
+            </div>
+            <div id="dopamineGrid" class="dopamine-grid"></div>
+            <button id="dopamineSkipBtn" class="btn-dopamine-skip">그냥 쉴게요 →</button>
+        </div>
+    </div>
+
+    <!-- ===== ⚡ 1분 맛보기 타이머 ===== -->
+    <div id="oneMinTasteOverlay" class="one-min-overlay hidden">
+        <div class="one-min-card">
+            <div class="one-min-header">
+                <div class="one-min-emoji">⚡</div>
+                <div class="one-min-title">딱 1분만 해볼까요?</div>
+                <div class="one-min-desc">코드 한 줄, 문장 하나면 충분해요<br><span class="one-min-hint-small">1분 후엔 꺼도 됩니다. 진짜로요
+                        😏</span></div>
+            </div>
+            <!-- SVG 링 카운트다운 -->
+            <div class="one-min-ring-wrap">
+                <svg class="one-min-ring-svg" viewBox="0 0 100 100">
+                    <circle class="one-min-ring-bg" cx="50" cy="50" r="40" />
+                    <circle class="one-min-ring-fill" id="oneMinRingFill" cx="50" cy="50" r="40" />
+                </svg>
+                <div class="one-min-countdown" id="oneMinCountdown">1:00</div>
+            </div>
+            <div class="one-min-btns">
+                <button id="oneMinStartBtn" class="btn-one-min-start">시작할게요! 🚀</button>
+                <button id="oneMinSkipBtn" class="btn-one-min-skip">그냥 쉴게요</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase SDK (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -746,6 +785,7 @@
     <script src="rocket-countdown.js"></script>
     <script src="ai-bridge.js"></script>
     <script src="rabbit-hole.js"></script>
+    <script src="dopamine-menu.js"></script>
     <script src="flow-guard.js"></script>
     <script src="penguin.js"></script>
 </body>
