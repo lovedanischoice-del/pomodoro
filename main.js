@@ -193,6 +193,8 @@ function init() {
 }
 
 // Timer Logic
+let rocketCountdownStarted = false; // 이번 휴식에서 이미 시작됐는지 체크
+
 function tick() {
     if (timeLeft > 0) {
         timeLeft--;
@@ -204,6 +206,21 @@ function tick() {
         // Update background rotation based on progress (0-360 degrees)
         const rotation = progress * 360;
         document.documentElement.style.setProperty('--bg-rotation', `${rotation}deg`);
+
+        // 🚀 기능1: 휴식 타이머 5초 남았을 때 로켓 카운트다운 트리거
+        if (!isWorkMode && timeLeft === 5 && !rocketCountdownStarted) {
+            rocketCountdownStarted = true;
+            clearInterval(timerId); // 타이머 일시 정지
+            isRunning = false;
+            if (typeof startRocketCountdown === 'function') {
+                startRocketCountdown(() => {
+                    // 카운트다운 끝나면 switchMode 실행
+                    switchMode();
+                });
+            } else {
+                switchMode();
+            }
+        }
     } else {
         switchMode();
     }
@@ -235,6 +252,15 @@ function switchMode() {
             timeLeft = getRestTime();
         }
         isWorkMode = false;
+        rocketCountdownStarted = false; // 다음 휴식을 위해 리셋
+
+        // 💪 기능2: 워크 세션 종료 후 스트레칭 미션
+        if (typeof startStretchMission === 'function') {
+            startStretchMission(() => {
+                _finishSwitchMode();
+            });
+            return; // 스트레칭 완료 후 콜백에서 계속
+        }
     } else {
         // 휴식 완료 → 워크 모드로
         isLongRest = false;
@@ -242,6 +268,10 @@ function switchMode() {
         timeLeft = getWorkTime();
     }
 
+    _finishSwitchMode();
+}
+
+function _finishSwitchMode() {
     // Auto-start 처리
     const autoStartEnabled = isAutoStart();
     if (!autoStartEnabled) {
@@ -249,6 +279,10 @@ function switchMode() {
         isRunning = false;
         if (toggleText) toggleText.textContent = 'START';
         document.body.classList.remove('timer-running', 'timer-rest');
+    } else {
+        // 자동 시작 시 타이머 재개
+        timerId = setInterval(tick, 1000);
+        isRunning = true;
     }
 
     // Update body classes for background animation
@@ -326,6 +360,25 @@ function handleSound() {
     }
 }
 
+function _startTimerNow() {
+    const playIcon = document.getElementById('playIcon');
+    timerId = setInterval(tick, 1000);
+    if (toggleText) toggleText.textContent = 'PAUSE';
+    if (playIcon) playIcon.textContent = '■';
+    isRunning = true;
+    if (isWorkMode) {
+        document.body.classList.add('timer-running');
+        document.body.classList.remove('timer-rest');
+    } else {
+        document.body.classList.add('timer-rest');
+        document.body.classList.remove('timer-running');
+    }
+    handleSound();
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
+}
+
 function toggleTimer() {
     const playIcon = document.getElementById('playIcon');
     if (isRunning) {
@@ -336,20 +389,13 @@ function toggleTimer() {
         document.body.classList.remove('timer-running', 'timer-rest');
         handleSound();
     } else {
-        timerId = setInterval(tick, 1000);
-        if (toggleText) toggleText.textContent = 'PAUSE';
-        if (playIcon) playIcon.textContent = '■';
-        isRunning = true;
-        if (isWorkMode) {
-            document.body.classList.add('timer-running');
-            document.body.classList.remove('timer-rest');
+        // 🎯 기능3: 워크 모드 시작 시 마이크로 액션 팝업
+        if (isWorkMode && typeof showMicroActionPopup === 'function') {
+            showMicroActionPopup(() => {
+                _startTimerNow();
+            });
         } else {
-            document.body.classList.add('timer-rest');
-            document.body.classList.remove('timer-running');
-        }
-        handleSound();
-        if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission();
+            _startTimerNow();
         }
     }
 }

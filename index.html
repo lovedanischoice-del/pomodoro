@@ -596,6 +596,43 @@
         </audio>
     </div>
 
+    <!-- ===== 기능1: 5-4-3-2-1 집중 로켓 오버레이 ===== -->
+    <div id="rocketOverlay" class="rocket-overlay hidden">
+        <div class="rocket-bg-particles"></div>
+        <div class="rocket-emoji" id="rocketEmoji">🚀</div>
+        <div id="rocketNumber" class="rocket-number count-5">5</div>
+        <div class="rocket-label">집중 모드 복귀!</div>
+    </div>
+
+    <!-- ===== 기능2: 5초 벌떡 스트레칭 오버레이 ===== -->
+    <div id="stretchOverlay" class="stretch-overlay hidden">
+        <div class="stretch-inner">
+            <div class="stretch-emoji">🏃</div>
+            <div class="stretch-title">벌떡 일어나세요!</div>
+            <div class="stretch-desc">자리에서 일어나 몸을 깨워주세요 💪</div>
+            <div id="stretchCountdown" class="stretch-countdown">5</div>
+            <button id="stretchDoneBtn" class="btn-stretch-done">일어났어요! ✅</button>
+            <div class="stretch-hint">또는 폰을 들고 흔들어도 됩니다</div>
+        </div>
+    </div>
+
+    <!-- ===== 기능3: 5초 마이크로 액션 팝업 ===== -->
+    <div id="microActionOverlay" class="micro-overlay hidden">
+        <div class="micro-card">
+            <div class="micro-title">🎯 지금 바로 할 딱 한 가지는?</div>
+            <input id="microActionInput" class="micro-input" type="text" placeholder="예: 이메일 답장 하나 쓰기" maxlength="50"
+                autocomplete="off">
+            <div class="micro-timer-bar">
+                <div id="microTimerFill" class="micro-timer-fill"></div>
+            </div>
+            <div class="micro-hint">5초 후 자동 시작...</div>
+            <button id="microStartBtn" class="btn-micro-start">시작 🚀</button>
+        </div>
+    </div>
+
+    <!-- 타이머 화면 상단 마이크로 액션 배지 -->
+    <div id="microActionBadge" class="micro-badge hidden"></div>
+
     <!-- Firebase SDK (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -622,6 +659,7 @@
     <script src="stats.js"></script>
     <script src="tasks-settings.js"></script>
     <script src="leaderboard.js"></script>
+    <script src="rocket-countdown.js"></script>
 </body>
 
 </html>

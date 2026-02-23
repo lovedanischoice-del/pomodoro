@@ -1304,3 +1304,416 @@ button {
     animation: fadeIn 0.4s ease-out;
     width: 100%;
 }
+
+/* ================================================
+   기능1: 5-4-3-2-1 집중 로켓 오버레이
+   ================================================ */
+.rocket-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 10, 20, 0.96);
+    backdrop-filter: blur(12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.rocket-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.rocket-overlay.hidden {
+    display: none;
+}
+
+.rocket-emoji {
+    font-size: 72px;
+    margin-bottom: 8px;
+    animation: rocketBob 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes rocketBob {
+    from {
+        transform: translateY(0) rotate(-5deg);
+    }
+
+    to {
+        transform: translateY(-12px) rotate(5deg);
+    }
+}
+
+.rocket-number {
+    font-family: 'Outfit', sans-serif;
+    font-size: 30vw;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -4px;
+    text-align: center;
+    animation: numPop 0.25s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+    transition: color 0.3s ease;
+}
+
+/* 카운트별 색상: 5→파랑, 4→보라, 3→주황, 2→빨강, 1→진빨강 */
+.rocket-number.count-5 {
+    color: #60a5fa;
+    text-shadow: 0 0 60px rgba(96, 165, 250, 0.6);
+}
+
+.rocket-number.count-4 {
+    color: #a78bfa;
+    text-shadow: 0 0 60px rgba(167, 139, 250, 0.6);
+}
+
+.rocket-number.count-3 {
+    color: #fb923c;
+    text-shadow: 0 0 60px rgba(251, 146, 60, 0.6);
+}
+
+.rocket-number.count-2 {
+    color: #f87171;
+    text-shadow: 0 0 60px rgba(248, 113, 113, 0.6);
+}
+
+.rocket-number.count-1 {
+    color: #ef4444;
+    text-shadow: 0 0 80px rgba(239, 68, 68, 0.8);
+}
+
+.rocket-number.launch {
+    font-size: 20vw;
+    animation: launchPop 0.5s ease-out;
+}
+
+@keyframes numPop {
+    0% {
+        transform: scale(1.4);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes launchPop {
+    0% {
+        transform: scale(0.5) rotate(-20deg);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.2) rotate(5deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+.rocket-label {
+    font-size: 20px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 16px;
+}
+
+/* ================================================
+   기능2: 5초 벌떡 스트레칭 오버레이
+   ================================================ */
+.stretch-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(4, 28, 20, 0.95);
+    backdrop-filter: blur(12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+
+.stretch-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+    animation: stretchPulse 1.5s ease-in-out infinite alternate;
+}
+
+.stretch-overlay.hidden {
+    display: none;
+}
+
+.stretch-overlay.done-flash {
+    background: rgba(16, 185, 129, 0.5) !important;
+    animation: none;
+}
+
+@keyframes stretchPulse {
+    from {
+        background: rgba(4, 28, 20, 0.95);
+    }
+
+    to {
+        background: rgba(6, 40, 28, 0.98);
+    }
+}
+
+.stretch-inner {
+    text-align: center;
+    padding: 32px;
+    max-width: 340px;
+}
+
+.stretch-emoji {
+    font-size: 80px;
+    display: block;
+    animation: stretchJump 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes stretchJump {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-20px);
+    }
+}
+
+.stretch-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: #34d399;
+    margin: 16px 0 8px;
+    text-shadow: 0 0 30px rgba(52, 211, 153, 0.6);
+}
+
+.stretch-desc {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 24px;
+}
+
+.stretch-countdown {
+    font-family: 'Outfit', sans-serif;
+    font-size: 100px;
+    font-weight: 900;
+    color: #10b981;
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(16, 185, 129, 0.8);
+    margin-bottom: 24px;
+    transition: color 0.3s;
+}
+
+.btn-stretch-done {
+    width: 100%;
+    padding: 18px 32px;
+    background: linear-gradient(135deg, #10b981, #34d399);
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5);
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+    flex: unset;
+}
+
+.btn-stretch-done:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(16, 185, 129, 0.7);
+}
+
+.btn-stretch-done:active {
+    transform: translateY(0);
+}
+
+.stretch-hint {
+    margin-top: 14px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+}
+
+/* ================================================
+   기능3: 5초 마이크로 액션 팝업
+   ================================================ */
+.micro-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9997;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0 0 90px;
+    /* 네비게이션 바 위 */
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.micro-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.micro-overlay.hidden {
+    display: none;
+}
+
+.micro-card {
+    width: 100%;
+    max-width: 480px;
+    background: linear-gradient(160deg, #252836, #1e2133);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px 24px 20px 20px;
+    padding: 28px 24px 24px;
+    box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.micro-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.micro-input {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    color: #fff;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.2s, background 0.2s;
+    outline: none;
+    margin-bottom: 14px;
+}
+
+.micro-input:focus {
+    border-color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.06);
+}
+
+.micro-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.micro-timer-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.micro-timer-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #ff6b6b, #ff8e53);
+    border-radius: 2px;
+}
+
+.micro-hint {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.35);
+    margin-bottom: 16px;
+}
+
+.btn-micro-start {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(90deg, #ff6b6b, #ff8e53);
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(255, 107, 107, 0.45);
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+    flex: unset;
+}
+
+.btn-micro-start:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(255, 107, 107, 0.6);
+}
+
+/* 타이머 화면 상단 마이크로 액션 배지 */
+.micro-badge {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    background: rgba(255, 193, 7, 0.15);
+    border: 1px solid rgba(255, 193, 7, 0.4);
+    color: #fcd34d;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 20px;
+    border-radius: 50px;
+    max-width: 90vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: badgeFadeIn 0.4s ease-out;
+}
+
+.micro-badge.hidden {
+    display: none;
+}
+
+.micro-badge.visible {
+    display: block;
+}
+
+@keyframes badgeFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
