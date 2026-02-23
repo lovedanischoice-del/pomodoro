@@ -192,6 +192,9 @@ function init() {
     if (volumeSlider) volumeSlider.value = savedVolume;
     // 🐇 토끼굴 파킹 초기화
     if (typeof initRabbitHole === 'function') initRabbitHole();
+
+    // 🌿 세로토닌 코지 모드 초기화
+    if (typeof initCozyMode === 'function') initCozyMode();
 }
 
 // Timer Logic
@@ -256,48 +259,75 @@ function switchMode() {
         isWorkMode = false;
         rocketCountdownStarted = false; // 다음 휴식을 위해 리셋
 
-        // 🌊 기능3: 플로우 가드 (딥워크 감지 → 10분 연장 제안)
-        if (typeof checkFlowState === 'function') {
-            checkFlowState(
-                (extendSec) => {
-                    // 연장 선택
-                    isWorkMode = true; // 아직 워크 모드
-                    rocketCountdownStarted = false;
-                    timeLeft = extendSec;
-                    timerId = setInterval(tick, 1000);
-                    isRunning = true;
-                    document.body.classList.add('timer-running');
-                    document.body.classList.remove('timer-rest');
-                },
-                () => {
-                    // 거절 → 스트레칭 후 1분 맛보기 → 휴식 전환
-                    if (typeof startStretchMission === 'function') {
-                        startStretchMission(() => {
-                            if (typeof show1MinTaste === 'function') {
-                                show1MinTaste(() => _finishSwitchMode());
-                            } else {
-                                _finishSwitchMode();
-                            }
-                        });
+        const continueRestFlow = () => {
+            // 💪 기능2: 워크 세션 종료 후 스트레칭 → 1분 맛보기
+            if (typeof startStretchMission === 'function') {
+                startStretchMission(() => {
+                    if (typeof show1MinTaste === 'function') {
+                        show1MinTaste(() => _finishSwitchMode());
                     } else {
                         _finishSwitchMode();
                     }
-                }
-            );
-            return;
-        }
+                });
+            } else {
+                _finishSwitchMode();
+            }
+        };
 
-        // 💪 기능2: 워크 세션 종료 후 스트레칭 → 1분 맛보기 (플로우 가드 없을 때)
-        if (typeof startStretchMission === 'function') {
-            startStretchMission(() => {
-                if (typeof show1MinTaste === 'function') {
-                    show1MinTaste(() => _finishSwitchMode());
+        const tryFlowGuard = () => {
+            // 🌊 기능3: 플로우 가드 (딥워크 감지 → 10분 연장 제안)
+            if (typeof checkFlowState === 'function') {
+                checkFlowState(
+                    (extendSec) => {
+                        // 연장 선택
+                        isWorkMode = true; // 아직 워크 모드
+                        rocketCountdownStarted = false;
+                        timeLeft = extendSec;
+                        timerId = setInterval(tick, 1000);
+                        isRunning = true;
+                        document.body.classList.add('timer-running');
+                        document.body.classList.remove('timer-rest');
+                    },
+                    () => { continueRestFlow(); }
+                );
+            } else {
+                continueRestFlow();
+            }
+        };
+
+        const runGachaThenNext = (skipFlowGuard = false) => {
+            // 🎁 랜덤 보상 가챠
+            if (typeof openGachaBox === 'function') {
+                openGachaBox(() => {
+                    if (skipFlowGuard) {
+                        continueRestFlow();
+                    } else {
+                        tryFlowGuard();
+                    }
+                });
+            } else {
+                if (skipFlowGuard) {
+                    continueRestFlow();
                 } else {
-                    _finishSwitchMode();
+                    tryFlowGuard();
                 }
+            }
+        };
+
+        // ⏱️ Flowmodoro (플로우모도로 연장)
+        if (typeof startFlowmodoro === 'function' && typeof isFlowmodoroEnabled === 'function' && isFlowmodoroEnabled()) {
+            clearInterval(timerId); // 타이머 일시 정지
+            isRunning = false;
+            startFlowmodoro(getWorkTime(), (breakSec) => {
+                isLongRest = false; // 연장했으므로 기본 긴 휴식 무시
+                timeLeft = breakSec > 0 ? breakSec : getRestTime();
+                runGachaThenNext(true); // 이미 연장했으니 플로우 가드는 생략
             });
             return;
         }
+
+        runGachaThenNext(false);
+        return;
     } else {
         // 휴식 완료 → 워크 모드로
         isLongRest = false;

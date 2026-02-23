@@ -340,6 +340,10 @@ function initNavigation() {
                 window.leaderboardManager.onEnterLeaderboard();
             }
 
+            if (targetViewId === 'collectionView' && typeof window.renderCollectionView === 'function') {
+                window.renderCollectionView();
+            }
+
             console.log('Switched to view:', targetViewId);
         });
     });
