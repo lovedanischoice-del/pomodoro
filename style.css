@@ -2140,9 +2140,7 @@ button {
     display: none;
 }
 
-.rabbit-vault.active {
-    display: block;
-}
+
 
 @keyframes vaultSlideUp {
     from {
