@@ -232,6 +232,9 @@ function tick() {
 }
 
 function switchMode() {
+    clearInterval(timerId);
+    isRunning = false;
+
     const workTimeMin = getWorkTime() / 60;
     const restTimeMin = isLongRest ? LONG_REST_TIME / 60 : getRestTime() / 60;
     const completedDuration = isWorkMode ? workTimeMin : restTimeMin;
@@ -283,6 +286,7 @@ function switchMode() {
                         isWorkMode = true; // 아직 워크 모드
                         rocketCountdownStarted = false;
                         timeLeft = extendSec;
+                        clearInterval(timerId);
                         timerId = setInterval(tick, 1000);
                         isRunning = true;
                         document.body.classList.add('timer-running');
@@ -365,6 +369,7 @@ function _finishSwitchModeCore() {
         document.body.classList.remove('timer-running', 'timer-rest');
     } else {
         // 자동 시작 시 타이머 재개
+        clearInterval(timerId);
         timerId = setInterval(tick, 1000);
         isRunning = true;
     }
@@ -446,6 +451,7 @@ function handleSound() {
 
 function _startTimerNow() {
     const playIcon = document.getElementById('playIcon');
+    clearInterval(timerId);
     timerId = setInterval(tick, 1000);
     if (toggleText) toggleText.textContent = 'PAUSE';
     if (playIcon) playIcon.textContent = '■';
