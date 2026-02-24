@@ -1,0 +1,495 @@
+/* ========================================
+   리더보드 화면 스타일
+   ======================================== */
+
+/* 리더보드 컨텐츠 레이아웃 */
+.leaderboard-content {
+    padding: 30px 20px;
+    padding-bottom: 100px;
+}
+
+.leaderboard-content header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.leaderboard-content .stats-title {
+    margin-bottom: 6px;
+}
+
+.lb-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* 기간 탭 */
+.lb-tabs {
+    display: flex;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 5px;
+    margin-bottom: 20px;
+    gap: 4px;
+}
+
+.lb-tab-btn {
+    flex: 1;
+    padding: 10px 8px;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.3px;
+}
+
+.lb-tab-btn.active {
+    background: linear-gradient(135deg, #ff6b6b, #a55eea);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.lb-tab-btn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-secondary);
+}
+
+/* 내 순위 카드 */
+.lb-my-rank {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(165, 94, 234, 0.2));
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    border-radius: 20px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.lb-my-rank::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 100px;
+    height: 100px;
+    background: rgba(99, 102, 241, 0.15);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.lb-my-rank-icon {
+    font-size: 32px;
+    flex-shrink: 0;
+}
+
+.lb-my-rank-info {
+    flex: 1;
+}
+
+.lb-my-rank-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(99, 102, 241, 0.9);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.lb-my-rank-time {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.lb-my-streak {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+#myRankValue {
+    font-family: 'Outfit', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -1px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+/* 섹션 헤더 */
+.lb-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.lb-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+}
+
+.lb-refresh-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0;
+    font-size: 18px;
+    transition: all 0.2s;
+    line-height: 1;
+}
+
+.lb-refresh-btn:hover {
+    color: var(--text-primary);
+    transform: rotate(180deg);
+}
+
+/* 리더보드 리스트 */
+#leaderboardList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* 개별 항목 */
+.lb-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    transition: all 0.2s ease;
+    animation: lbItemIn 0.4s ease both;
+}
+
+.lb-item:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.lb-item:nth-child(2) {
+    animation-delay: 0.10s;
+}
+
+.lb-item:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+.lb-item:nth-child(4) {
+    animation-delay: 0.20s;
+}
+
+.lb-item:nth-child(5) {
+    animation-delay: 0.25s;
+}
+
+.lb-item:nth-child(n+6) {
+    animation-delay: 0.30s;
+}
+
+@keyframes lbItemIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.lb-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(4px);
+}
+
+/* 순위별 특수 스타일 */
+.lb-item.rank-gold {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.12), rgba(255, 165, 0, 0.08));
+    border-color: rgba(255, 215, 0, 0.3);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+}
+
+.lb-item.rank-silver {
+    background: linear-gradient(135deg, rgba(192, 192, 192, 0.12), rgba(169, 169, 169, 0.08));
+    border-color: rgba(192, 192, 192, 0.3);
+}
+
+.lb-item.rank-bronze {
+    background: linear-gradient(135deg, rgba(205, 127, 50, 0.12), rgba(184, 115, 51, 0.08));
+    border-color: rgba(205, 127, 50, 0.3);
+}
+
+/* 내 항목 하이라이트 */
+.lb-item.lb-item-me {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(165, 94, 234, 0.1));
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+}
+
+/* 순위 번호 영역 */
+.lb-rank {
+    width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.lb-medal {
+    font-size: 24px;
+    line-height: 1;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.lb-rank-num {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-muted);
+    min-width: 24px;
+    text-align: center;
+}
+
+/* 아바타 */
+.lb-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.lb-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.lb-avatar-initials {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #6366f1, #a55eea);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    border-radius: 50%;
+}
+
+/* 이름 & 스트릭 */
+.lb-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.lb-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lb-me-badge {
+    background: linear-gradient(135deg, #6366f1, #a55eea);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.lb-streak {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* 집중 시간 */
+.lb-time {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.rank-gold .lb-time {
+    color: #ffd700;
+}
+
+.rank-silver .lb-time {
+    color: #c0c0c0;
+}
+
+.rank-bronze .lb-time {
+    color: #cd7f32;
+}
+
+/* 로딩 스피너 */
+.lb-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.lb-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top-color: #ff6b6b;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 빈 상태 */
+.lb-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.lb-empty-icon {
+    font-size: 48px;
+    margin-bottom: 8px;
+}
+
+.lb-empty-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.lb-empty-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.lb-retry-btn {
+    margin-top: 12px;
+    padding: 10px 20px;
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 12px;
+    color: #ff6b6b;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.lb-retry-btn:hover {
+    background: rgba(255, 107, 107, 0.2);
+    transform: translateY(-2px);
+}
+
+/* 로그인 유도 배너 */
+.lb-login-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.12), rgba(165, 94, 234, 0.12));
+    border: 1px dashed rgba(255, 107, 107, 0.3);
+    border-radius: 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.lb-login-banner:hover {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(165, 94, 234, 0.2));
+    transform: translateY(-2px);
+}
+
+.lb-login-banner-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+}
+
+.lb-login-banner-text {
+    flex: 1;
+}
+
+.lb-login-banner-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.lb-login-banner-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.lb-login-banner-arrow {
+    font-size: 18px;
+    color: var(--text-muted);
+}
+
+/* 반응형 */
+@media (max-width: 380px) {
+    .lb-time {
+        font-size: 15px;
+    }
+
+    .lb-name {
+        font-size: 13px;
+    }
+
+    .lb-item {
+        padding: 12px 12px;
+        gap: 10px;
+    }
+
+    .lb-avatar {
+        width: 34px;
+        height: 34px;
+    }
+}
