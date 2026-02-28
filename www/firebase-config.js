@@ -20,6 +20,10 @@ function initFirebase() {
             app = firebase.initializeApp(firebaseConfig);
             auth = firebase.auth();
             db = firebase.firestore();
+
+            window.auth = auth;
+            window.db = db;
+
             console.log("Firebase initialized successfully");
 
             auth.onAuthStateChanged((user) => {
@@ -81,12 +85,26 @@ function initFirebase() {
                     }
 
                     loadFromFirestore(user.uid);
+
+                    const lbLoginBanner = document.getElementById('lbLoginBanner');
+                    if (lbLoginBanner) lbLoginBanner.style.display = 'none';
+
+                    if (window.leaderboardManager && document.getElementById('leaderboardView')?.classList.contains('active')) {
+                        window.leaderboardManager.onEnterLeaderboard();
+                    }
                 } else {
                     window.currentUser = null;
                     console.log("User logged out");
                     if (loginBtn) loginBtn.style.display = 'flex';
                     if (userProfile) userProfile.style.display = 'none';
                     if (mainTopProfile) mainTopProfile.style.display = 'none';
+
+                    const lbLoginBanner = document.getElementById('lbLoginBanner');
+                    if (lbLoginBanner) lbLoginBanner.style.display = 'flex';
+
+                    if (window.leaderboardManager && document.getElementById('leaderboardView')?.classList.contains('active')) {
+                        window.leaderboardManager.onEnterLeaderboard();
+                    }
                 }
             });
 
