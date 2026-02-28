@@ -206,20 +206,44 @@ class LeaderboardManager {
         const myRankEl = document.getElementById('myRankValue');
         const myTimeEl = document.getElementById('myRankTime');
         const myStreakEl = document.getElementById('myRankStreak');
+        const myRankNameEl = document.getElementById('myRankName');
+        const myRankAvatarContainerEl = document.getElementById('myRankAvatarContainer');
 
         if (myRankEl) {
             if (!currentUserUid) {
                 myRankEl.textContent = '-';
                 if (myTimeEl) myTimeEl.textContent = '로그인 필요';
                 if (myStreakEl) myStreakEl.textContent = '';
+                if (myRankNameEl) myRankNameEl.textContent = '내 순위';
+                if (myRankAvatarContainerEl) myRankAvatarContainerEl.innerHTML = '🎯';
             } else if (myData) {
                 myRankEl.textContent = `#${myRank}`;
                 if (myTimeEl) myTimeEl.textContent = this.formatTime(this.getFieldByPeriod(myData, period));
                 if (myStreakEl) myStreakEl.textContent = myData.streak ? `🔥 ${myData.streak}일 연속` : '';
+
+                if (myRankNameEl) myRankNameEl.textContent = myData.displayName || '내 순위';
+                if (myRankAvatarContainerEl) {
+                    if (myData.photoURL) {
+                        myRankAvatarContainerEl.innerHTML = `<img src="${myData.photoURL}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                    } else {
+                        const initial = (myData.displayName || '?').charAt(0).toUpperCase();
+                        myRankAvatarContainerEl.innerHTML = `<div style="width: 100%; height: 100%; border-radius: 50%; background: #6366f1; color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;">${initial}</div>`;
+                    }
+                }
             } else {
                 myRankEl.textContent = '-';
                 if (myTimeEl) myTimeEl.textContent = '아직 기록 없음';
                 if (myStreakEl) myStreakEl.textContent = '';
+
+                if (myRankNameEl) myRankNameEl.textContent = window.auth?.currentUser?.displayName || '내 순위';
+                if (myRankAvatarContainerEl && window.auth?.currentUser) {
+                    if (window.auth.currentUser.photoURL) {
+                        myRankAvatarContainerEl.innerHTML = `<img src="${window.auth.currentUser.photoURL}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                    } else {
+                        const initial = (window.auth.currentUser.displayName || '?').charAt(0).toUpperCase();
+                        myRankAvatarContainerEl.innerHTML = `<div style="width: 100%; height: 100%; border-radius: 50%; background: #6366f1; color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;">${initial}</div>`;
+                    }
+                }
             }
         }
 
