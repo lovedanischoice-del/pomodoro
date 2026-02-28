@@ -2577,6 +2577,7 @@ button {
     font-size: 18px;
     cursor: pointer;
     flex: unset;
+    flex-shrink: 0;
     transition: all 0.2s;
 }
 

@@ -26,6 +26,8 @@ function initFirebase() {
                 const loginBtn = document.getElementById('googleLoginBtn');
                 const userProfile = document.getElementById('userProfile');
                 const userName = document.getElementById('userName');
+                const userInitial = document.getElementById('userInitial');
+                const userAvatar = document.getElementById('userAvatar');
 
                 window.currentUser = user;
 
@@ -35,6 +37,21 @@ function initFirebase() {
                     if (userProfile) {
                         userProfile.style.display = 'flex';
                         if (userName) userName.textContent = user.displayName;
+
+                        // 아바타 혹은 이니셜 표시
+                        if (user.photoURL && userAvatar) {
+                            userAvatar.src = user.photoURL;
+                            userAvatar.style.display = 'block';
+                            if (userInitial) userInitial.style.display = 'none';
+                        } else {
+                            if (userAvatar) userAvatar.style.display = 'none';
+                            if (userInitial) {
+                                userInitial.style.display = 'flex';
+                                if (user.displayName) {
+                                    userInitial.textContent = user.displayName.charAt(0).toUpperCase();
+                                }
+                            }
+                        }
                     }
                     loadFromFirestore(user.uid);
                 } else {
