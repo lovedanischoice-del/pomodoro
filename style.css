@@ -56,6 +56,12 @@ body[data-theme="cozy"] {
     --text-muted: #d4a373;
 }
 
+/* 세로토닌 코지 모드 활성화 시 전체 그레이스케일 처리 */
+body.cozy-mode {
+    filter: grayscale(70%) sepia(20%) brightness(85%);
+    transition: filter 0.8s ease;
+}
+
 /* 귀여운 솜사탕 테마 (Cute) */
 body[data-theme="cute"] {
     --bg-primary: #2d1b36;
@@ -508,6 +514,8 @@ button {
 .delete-todo {
     width: 28px;
     height: 28px;
+    flex-shrink: 0;
+    aspect-ratio: 1;
     padding: 0;
     background: rgba(255, 107, 107, 0.1);
     color: var(--accent-work);
