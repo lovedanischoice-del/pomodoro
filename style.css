@@ -46,17 +46,89 @@ body[data-theme="cozy"] {
     --bg-primary: #2d2a26;
     --bg-secondary: #3b3530;
     --bg-card: #453e38;
-
     --gradient-neon: linear-gradient(135deg, #d4a373 0%, #faedcd 25%, #e9edc9 50%, #ccd5ae 75%, #a3b18a 100%);
     --gradient-button: linear-gradient(90deg, #d4a373 0%, #ccd5ae 100%);
-
     --accent-work: #d4a373;
     --accent-rest: #a3b18a;
     --accent-glow: rgba(212, 163, 115, 0.4);
-
     --text-primary: #fefae0;
     --text-secondary: #e9edc9;
     --text-muted: #d4a373;
+}
+
+/* 귀여운 솜사탕 테마 (Cute) */
+body[data-theme="cute"] {
+    --bg-primary: #2d1b36;
+    --bg-secondary: #3d2547;
+    --bg-card: #4d3257;
+    --gradient-neon: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+    --gradient-button: linear-gradient(90deg, #ff7eb3 0%, #ff758c 100%);
+    --accent-work: #ff7eb3;
+    --accent-rest: #a18cd1;
+    --accent-glow: rgba(255, 126, 179, 0.5);
+    --text-primary: #fff0f5;
+    --text-secondary: #ffb6c1;
+    --text-muted: #d8bfd8;
+}
+
+/* 파스텔 드림 테마 (Pastel) */
+body[data-theme="pastel"] {
+    --bg-primary: #1e2749;
+    --bg-secondary: #273469;
+    --bg-card: #30343f;
+    --gradient-neon: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+    --gradient-button: linear-gradient(90deg, #84fab0 0%, #8fd3f4 100%);
+    --accent-work: #fbc2eb;
+    --accent-rest: #8fd3f4;
+    --accent-glow: rgba(251, 194, 235, 0.4);
+    --text-primary: #f4f4f9;
+    --text-secondary: #b2b2b2;
+    --text-muted: #8d99ae;
+}
+
+/* 리얼 블랙 테마 (Black - OLED 최적화) */
+body[data-theme="black"] {
+    --bg-primary: #000000;
+    --bg-secondary: #111111;
+    --bg-card: #1a1a1a;
+    --gradient-neon: linear-gradient(135deg, #ffffff 0%, #aaaaaa 100%);
+    --gradient-button: linear-gradient(90deg, #444444 0%, #888888 100%);
+    --accent-work: #ffffff;
+    --accent-rest: #888888;
+    --accent-glow: rgba(255, 255, 255, 0.2);
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-muted: #666666;
+}
+
+/* 모던 그레이 테마 (Gray) */
+body[data-theme="gray"] {
+    --bg-primary: #2b2d42;
+    --bg-secondary: #3b3d52;
+    --bg-card: #4a4e69;
+    --gradient-neon: linear-gradient(135deg, #8d99ae 0%, #edf2f4 100%);
+    --gradient-button: linear-gradient(90deg, #8d99ae 0%, #bfc0c0 100%);
+    --accent-work: #edf2f4;
+    --accent-rest: #8d99ae;
+    --accent-glow: rgba(141, 153, 174, 0.3);
+    --text-primary: #ffffff;
+    --text-secondary: #edf2f4;
+    --text-muted: #8d99ae;
+}
+
+/* 딥 오션 테마 (Melancholy) */
+body[data-theme="melancholy"] {
+    --bg-primary: #0b132b;
+    --bg-secondary: #1c2541;
+    --bg-card: #3a506b;
+    --gradient-neon: linear-gradient(135deg, #3a506b 0%, #5bc0be 100%);
+    --gradient-button: linear-gradient(90deg, #1c2541 0%, #3a506b 100%);
+    --accent-work: #5bc0be;
+    --accent-rest: #3a506b;
+    --accent-glow: rgba(91, 192, 190, 0.3);
+    --text-primary: #e0fbfc;
+    --text-secondary: #98c1d9;
+    --text-muted: #3a506b;
 }
 
 
