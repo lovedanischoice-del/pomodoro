@@ -9,10 +9,15 @@ const RABBIT_STORAGE_KEY = 'rabbitHoleItems';
 let rabbitLocked = false;
 let rabbitInputVisible = false;
 
+let isRabbitHoleInitialized = false;
+
 /**
  * 토끼굴 파킹 초기화 - DOMContentLoaded 후 호출
  */
 function initRabbitHole() {
+    if (isRabbitHoleInitialized) return;
+    isRabbitHoleInitialized = true;
+
     const fab = document.getElementById('rabbitHoleBtn');
     const fabWrap = document.getElementById('rabbitHoleFab');
     const panel = document.getElementById('rabbitHolePanel');
