@@ -421,8 +421,9 @@ button {
     background: rgba(255, 107, 107, 0.1);
     color: var(--accent-work);
     border: none;
-    border-radius: 8px;
+    border-radius: 50%;
     font-size: 16px;
+    line-height: 1;
     cursor: pointer;
     transition: var(--transition);
     display: flex;
@@ -2659,12 +2660,17 @@ button {
     height: 32px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.08);
+    line-height: 1;
     border: none;
     color: rgba(255, 255, 255, 0.6);
     font-size: 16px;
     cursor: pointer;
     flex: unset;
     transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
 }
 
 .rabbit-vault-close:hover {

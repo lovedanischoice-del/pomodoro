@@ -3,13 +3,13 @@
 // ==============================================
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCGiyVZpjrakDsayNjrJ9JIgLw_uxgxbYk",
-    authDomain: "test-26c63.firebaseapp.com",
-    projectId: "test-26c63",
-    storageBucket: "test-26c63.firebasestorage.app",
-    messagingSenderId: "204778617628",
-    appId: "1:204778617628:web:408c9725ffef5a4bb158d9",
-    measurementId: "G-Q0JZEH1SQS"
+    apiKey: "AIzaSyAn1qWE99a04gmFAYZjzJi4FNBs-mh_Vbg",
+    authDomain: "pomodoro-7dd18.firebaseapp.com",
+    projectId: "pomodoro-7dd18",
+    storageBucket: "pomodoro-7dd18.firebasestorage.app",
+    messagingSenderId: "934908066988",
+    appId: "1:934908066988:web:cccaef99a882ca4c163309",
+    measurementId: "G-68QV08GBVQ"
 };
 
 let app, auth, db;
