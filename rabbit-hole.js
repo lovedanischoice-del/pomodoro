@@ -23,6 +23,7 @@ function initRabbitHole() {
     const panel = document.getElementById('rabbitHolePanel');
     const inputEl = document.getElementById('rabbitInput');
     const saveBtn = document.getElementById('rabbitSaveBtn');
+    const closeBtn = document.getElementById('rabbitCloseBtn');
     const vault = document.getElementById('rabbitVaultPanel');
     const vaultList = document.getElementById('rabbitVaultList');
     const clearBtn = document.getElementById('rabbitClearBtn');
@@ -47,6 +48,12 @@ function initRabbitHole() {
 
     // 저장 버튼
     saveBtn?.addEventListener('click', () => saveRabbitItem(inputEl, panel, badge));
+
+    // 닫기 버튼
+    closeBtn?.addEventListener('click', () => {
+        panel?.classList.add('hidden');
+        rabbitInputVisible = false;
+    });
 
     // Enter 키
     inputEl?.addEventListener('keydown', (e) => {

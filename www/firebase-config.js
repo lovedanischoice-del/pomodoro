@@ -29,6 +29,12 @@ function initFirebase() {
                 const userInitial = document.getElementById('userInitial');
                 const userAvatar = document.getElementById('userAvatar');
 
+                // Main Top Profile elements
+                const mainTopProfile = document.getElementById('mainTopProfile');
+                const mainTopName = document.getElementById('mainTopName');
+                const mainTopInitial = document.getElementById('mainTopInitial');
+                const mainTopAvatar = document.getElementById('mainTopAvatar');
+
                 window.currentUser = user;
 
                 if (user) {
@@ -53,12 +59,34 @@ function initFirebase() {
                             }
                         }
                     }
+
+                    // Main Top Profile Update
+                    if (mainTopProfile) {
+                        mainTopProfile.style.display = 'flex';
+                        if (mainTopName) mainTopName.textContent = user.displayName;
+
+                        if (user.photoURL && mainTopAvatar) {
+                            mainTopAvatar.src = user.photoURL;
+                            mainTopAvatar.style.display = 'block';
+                            if (mainTopInitial) mainTopInitial.style.display = 'none';
+                        } else {
+                            if (mainTopAvatar) mainTopAvatar.style.display = 'none';
+                            if (mainTopInitial) {
+                                mainTopInitial.style.display = 'flex';
+                                if (user.displayName) {
+                                    mainTopInitial.textContent = user.displayName.charAt(0).toUpperCase();
+                                }
+                            }
+                        }
+                    }
+
                     loadFromFirestore(user.uid);
                 } else {
                     window.currentUser = null;
                     console.log("User logged out");
                     if (loginBtn) loginBtn.style.display = 'flex';
                     if (userProfile) userProfile.style.display = 'none';
+                    if (mainTopProfile) mainTopProfile.style.display = 'none';
                 }
             });
 
