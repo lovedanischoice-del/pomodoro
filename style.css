@@ -2456,6 +2456,10 @@ button {
 .rabbit-fab {
     width: 52px;
     height: 52px;
+    padding: 0;
+    box-sizing: border-box;
+    aspect-ratio: 1 / 1;
+    min-width: 52px;
     border-radius: 50%;
     background: linear-gradient(135deg, #a78bfa, #7c3aed);
     border: none;
