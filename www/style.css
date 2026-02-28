@@ -41,6 +41,25 @@
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* 코지 테마 (어스 톤) */
+body[data-theme="cozy"] {
+    --bg-primary: #2d2a26;
+    --bg-secondary: #3b3530;
+    --bg-card: #453e38;
+
+    --gradient-neon: linear-gradient(135deg, #d4a373 0%, #faedcd 25%, #e9edc9 50%, #ccd5ae 75%, #a3b18a 100%);
+    --gradient-button: linear-gradient(90deg, #d4a373 0%, #ccd5ae 100%);
+
+    --accent-work: #d4a373;
+    --accent-rest: #a3b18a;
+    --accent-glow: rgba(212, 163, 115, 0.4);
+
+    --text-primary: #fefae0;
+    --text-secondary: #e9edc9;
+    --text-muted: #d4a373;
+}
+
+
 /* 리셋 */
 * {
     margin: 0;

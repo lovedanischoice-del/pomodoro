@@ -157,6 +157,7 @@ function initTasks() {
 
 // Settings View Logic
 function initSettings() {
+    const themeSelect = document.getElementById('themeSelect');
     const workDuration = document.getElementById('workDuration');
     const restDuration = document.getElementById('restDuration');
     const autoStart = document.getElementById('autoStart');
@@ -294,6 +295,13 @@ function initSettings() {
     function loadSettings() {
         const settings = JSON.parse(localStorage.getItem('settings') || '{}');
 
+        if (themeSelect) {
+            themeSelect.value = settings.theme || 'neon';
+            document.body.dataset.theme = themeSelect.value;
+        } else {
+            document.body.dataset.theme = settings.theme || 'neon';
+        }
+
         if (workDuration) workDuration.value = settings.workDuration || 20;
         if (restDuration) restDuration.value = settings.restDuration || 5;
         if (autoStart) autoStart.checked = settings.autoStart !== false;
@@ -329,6 +337,9 @@ function initSettings() {
     function saveSettings() {
         const settings = JSON.parse(localStorage.getItem('settings') || '{}');
         // Update other fields
+        settings.theme = themeSelect?.value || 'neon';
+        document.body.dataset.theme = settings.theme;
+
         settings.workDuration = parseInt(workDuration?.value || 20);
         settings.restDuration = parseInt(restDuration?.value || 5);
         settings.autoStart = autoStart?.checked !== false;
@@ -531,6 +542,12 @@ function initSettings() {
     if (volumeSettings) {
         volumeSettings.addEventListener('input', (e) => {
             updateVolumeDisplay(e.target.value);
+            saveSettings();
+        });
+    }
+
+    if (themeSelect) {
+        themeSelect.addEventListener('change', () => {
             saveSettings();
         });
     }

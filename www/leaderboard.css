@@ -129,7 +129,8 @@
 .lb-section-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    position: relative;
     margin-bottom: 12px;
 }
 
@@ -141,6 +142,9 @@
 }
 
 .lb-refresh-btn {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     background: none;
     border: none;
     color: var(--text-muted);
@@ -153,7 +157,7 @@
 
 .lb-refresh-btn:hover {
     color: var(--text-primary);
-    transform: rotate(180deg);
+    transform: translateX(-50%) rotate(180deg);
 }
 
 /* 리더보드 리스트 */
