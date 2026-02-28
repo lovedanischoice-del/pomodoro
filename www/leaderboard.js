@@ -295,11 +295,14 @@ class LeaderboardManager {
 
     // 리더보드 뷰 진입 시
     async onEnterLeaderboard() {
+        this.isLoading = true;
+        this.renderLoadingState();
+
         // 로그인 상태면 자신의 데이터 업로드
         if (window.auth?.currentUser) {
             await this.uploadUserStats();
         }
-        this.fetchLeaderboard(this.currentPeriod);
+        await this.fetchLeaderboard(this.currentPeriod);
     }
 }
 
