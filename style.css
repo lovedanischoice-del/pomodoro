@@ -240,10 +240,25 @@ body[data-theme="malibu"] .sound-select-btn,
 body[data-theme="pool"] .sound-select-btn,
 body[data-theme="gelato"] .btn-preview,
 body[data-theme="malibu"] .btn-preview,
-body[data-theme="pool"] .btn-preview {
+body[data-theme="pool"] .btn-preview,
+body[data-theme="gelato"] .btn-dopamine-skip,
+body[data-theme="malibu"] .btn-dopamine-skip,
+body[data-theme="pool"] .btn-dopamine-skip,
+body[data-theme="gelato"] .rabbit-vault-close,
+body[data-theme="malibu"] .rabbit-vault-close,
+body[data-theme="pool"] .rabbit-vault-close,
+body[data-theme="gelato"] .btn-flow-no,
+body[data-theme="malibu"] .btn-flow-no,
+body[data-theme="pool"] .btn-flow-no,
+body[data-theme="gelato"] .btn-one-min-skip,
+body[data-theme="malibu"] .btn-one-min-skip,
+body[data-theme="pool"] .btn-one-min-skip,
+body[data-theme="gelato"] .rabbit-input,
+body[data-theme="malibu"] .rabbit-input,
+body[data-theme="pool"] .rabbit-input {
     background: rgba(255, 255, 255, 0.4);
     color: var(--text-primary);
-    border-color: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.15) !important;
 }
 
 /* !important to overrides inline styling */
@@ -2857,8 +2872,8 @@ button {
     width: calc(100% - 40px);
     max-width: 400px;
     max-height: 70vh;
-    background: linear-gradient(160deg, #1e2133, #161928);
-    border: 1px solid rgba(167, 139, 250, 0.2);
+    background: var(--bg-card);
+    border: 1px solid rgba(167, 139, 250, 0.4);
     border-radius: 24px;
     padding: 24px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
@@ -2932,15 +2947,19 @@ button {
     align-items: center;
     gap: 10px;
     padding: 10px 12px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(var(--text-primary-rgb, 100, 100, 100), 0.08);
+    /* fallback if rgb var not set, or we can just use another approach */
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    /* slightly visible border for light themes */
 }
+
+/* If dark theme, revert to lighter border via simple override implicitly below */
 
 .rabbit-item-text {
     flex: 1;
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--text-primary);
     word-break: break-all;
 }
 
@@ -2970,7 +2989,7 @@ button {
 
 .rabbit-empty {
     text-align: center;
-    color: rgba(255, 255, 255, 0.3);
+    color: var(--text-muted);
     font-size: 14px;
     padding: 20px 0;
 }
@@ -2979,9 +2998,9 @@ button {
     width: 100%;
     padding: 11px;
     background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.3);
     border-radius: 50px;
-    color: #fca5a5;
+    color: #ef4444;
     font-size: 13px;
     cursor: pointer;
     transition: all 0.2s;
@@ -3022,8 +3041,8 @@ button {
 .flow-card {
     width: calc(100% - 48px);
     max-width: 360px;
-    background: linear-gradient(160deg, #0d1b2e, #091523);
-    border: 1px solid rgba(56, 189, 248, 0.2);
+    background: var(--bg-card);
+    border: 1px solid rgba(56, 189, 248, 0.4);
     border-radius: 28px;
     padding: 36px 28px 28px;
     text-align: center;
@@ -3173,8 +3192,8 @@ button {
 .one-min-card {
     width: calc(100% - 48px);
     max-width: 340px;
-    background: linear-gradient(160deg, #1c1608, #110e04);
-    border: 1px solid rgba(251, 191, 36, 0.2);
+    background: var(--bg-card);
+    border: 1px solid rgba(251, 191, 36, 0.4);
     border-radius: 28px;
     padding: 32px 24px 24px;
     text-align: center;
@@ -3317,9 +3336,9 @@ button {
     width: 100%;
     padding: 13px;
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--text-muted);
     border-radius: 50px;
-    color: rgba(255, 255, 255, 0.38);
+    color: var(--text-primary);
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
