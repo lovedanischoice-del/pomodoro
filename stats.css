@@ -474,20 +474,30 @@
 
 .setting-item {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: nowrap;
     padding: 16px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 12px;
 }
 
 .setting-item:last-child {
     border-bottom: none;
 }
 
-.setting-item label {
+/* 일반 텍스트 label은 늘어나게 */
+.setting-item>label:not(.toggle) {
     font-size: 14px;
     color: var(--text-primary);
     flex: 1;
+    min-width: 0;
+}
+
+/* toggle label은 크기 고정 */
+.setting-item>label.toggle {
+    flex: 0 0 auto;
 }
 
 .setting-control {
@@ -525,6 +535,7 @@
     width: 50px;
     height: 26px;
     cursor: pointer;
+    flex-shrink: 0;
 }
 
 .toggle input {
@@ -631,4 +642,39 @@
     margin-top: 16px;
     font-size: 12px !important;
     color: var(--text-muted) !important;
+}
+
+/* ─── 언어 선택 ──────────────────────────────── */
+.lang-selector {
+    display: flex;
+    gap: 10px;
+    padding: 4px 0;
+}
+
+.lang-btn {
+    flex: 1;
+    padding: 12px 0;
+    border-radius: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.3px;
+}
+
+.lang-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+.lang-btn.active {
+    background: var(--gradient-button);
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 4px 16px rgba(255, 107, 107, 0.35);
 }

@@ -183,6 +183,11 @@ function init() {
 
     // 🌿 세로토닌 코지 모드 초기화
     if (typeof initCozyMode === 'function') initCozyMode();
+
+    // 🔥 스트릭 + 레벨 배너 초기 업데이트
+    setTimeout(() => {
+        if (typeof statsManager !== 'undefined') statsManager.updateTodayCards();
+    }, 200);
 }
 
 // Timer Logic
@@ -379,13 +384,15 @@ function _finishSwitchModeCore() {
     }
 
     if (statusBadge) {
-        let badgeText = isWorkMode ? 'WORK' : (isLongRest ? 'LONG REST' : 'REST');
-        statusBadge.textContent = badgeText;
+        const _t = (typeof window.t === 'function') ? window.t : (k) => k;
+        let badgeKey = isWorkMode ? 'status.work' : (isLongRest ? 'status.longRest' : 'status.rest');
+        statusBadge.textContent = _t(badgeKey);
         statusBadge.style.background = isWorkMode ? 'var(--accent-work)' : 'var(--accent-rest)';
         statusBadge.style.boxShadow = isWorkMode ? '0 0 20px rgba(255, 107, 107, 0.4)' : '0 0 20px rgba(78, 205, 196, 0.4)';
     }
     if (timeSub) {
-        timeSub.textContent = isWorkMode ? 'WORK SESSION' : (isLongRest ? 'LONG BREAK ☕' : 'REST BREAK');
+        const _t = (typeof window.t === 'function') ? window.t : (k) => k;
+        timeSub.textContent = isWorkMode ? _t('timeSub.work') : (isLongRest ? _t('timeSub.longRest') : _t('timeSub.rest'));
     }
     if (timerProgress) {
         if (isWorkMode) {
@@ -396,10 +403,11 @@ function _finishSwitchModeCore() {
     }
 
     if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification('Bbangmodoro', {
-            body: isWorkMode ? `🍅 Work time! (Session #${pomodoroCount + 1})` : (isLongRest ? '☕ Long break! 15 minutes' : '😌 Rest time!'),
-            icon: 'icon-192.png'
-        });
+        const _t = (typeof window.t === 'function') ? window.t : (k, v) => k;
+        const body = isWorkMode
+            ? _t('notif.work', { n: pomodoroCount + 1 })
+            : (isLongRest ? _t('notif.longRest') : _t('notif.rest'));
+        new Notification('Bbangmodoro', { body, icon: 'icon-192.png' });
     }
 
     handleSound();

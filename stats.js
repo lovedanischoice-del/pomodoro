@@ -118,14 +118,38 @@ class StatsManager {
         return streak;
     }
 
+    // ─── 레벨 시스템 ───────────────────────────────
+    getLevelInfo() {
+        const LEVELS = [
+            { lv: 1, min: 0, titleKey: 'level.1', next: 10 },
+            { lv: 2, min: 10, titleKey: 'level.2', next: 25 },
+            { lv: 3, min: 25, titleKey: 'level.3', next: 50 },
+            { lv: 4, min: 50, titleKey: 'level.4', next: 100 },
+            { lv: 5, min: 100, titleKey: 'level.5', next: 200 },
+            { lv: 6, min: 200, titleKey: 'level.6', next: null },
+        ];
+        const _t = (typeof window.t === 'function') ? window.t : (k) => k;
+        const total = this.sessions.filter(s => s.type === 'work').length;
+        let current = LEVELS[0];
+        for (const lvl of LEVELS) {
+            if (total >= lvl.min) current = lvl;
+        }
+        const prevMin = current.min;
+        const nextMin = current.next;
+        const xpPct = nextMin
+            ? Math.min(((total - prevMin) / (nextMin - prevMin)) * 100, 100)
+            : 100;
+        return { lv: current.lv, titleKey: current.titleKey, title: _t(current.titleKey), xpPct, total, nextMin };
+    }
+
     updateTodayCards() {
         const today = this.getTodayStats();
         const streak = this.getStreak();
+        const lvInfo = this.getLevelInfo();
 
         const todaySessionsEl = document.getElementById('todaySessions');
         const todayMinutesEl = document.getElementById('todayMinutes');
         const streakDaysEl = document.getElementById('streakDays');
-        const streakDisplayEl = document.getElementById('streakDisplay');
 
         if (todaySessionsEl) todaySessionsEl.textContent = today.count;
         if (todayMinutesEl) {
@@ -137,10 +161,66 @@ class StatsManager {
             const fire = streak >= 7 ? '🔥🔥' : streak >= 3 ? '🔥' : '';
             streakDaysEl.textContent = `${streak}${fire}`;
         }
-        // 타이머 화면 스트릭 표시
-        if (streakDisplayEl && streak > 0) {
-            streakDisplayEl.textContent = `🔥 ${streak}일 연속`;
+
+        // ─── 타이머 화면 스트릭+레벨 배너 업데이트 ───
+        this._updateStreakBanner(streak, today, lvInfo);
+    }
+
+    _updateStreakBanner(streak, today, lvInfo) {
+        const oldLv = parseInt(localStorage.getItem('_streakBannerLv') || '1');
+
+        // 스트릭 값
+        const _t = (typeof window.t === 'function') ? window.t : (k, v) => k;
+        const sVal = document.getElementById('slbStreakVal');
+        if (sVal) {
+            sVal.textContent = streak > 0 ? `🔥 ${streak}${_t('common.days') || '일'}` : '—';
+            sVal.classList.toggle('hot', streak >= 7);
         }
+
+        // 오늘 세션 값
+        const tVal = document.getElementById('slbSessionVal');
+        if (tVal) tVal.textContent = `${today.count}${_t('common.times') || '회'}`;
+
+        // 레벨 값
+        const lVal = document.getElementById('slbLevelVal');
+        if (lVal) lVal.textContent = `Lv.${lvInfo.lv}`;
+
+        // 레벨 칭호 (data-i18n 속성 업데이트 + textContent)
+        const lTitle = document.getElementById('slbLevelTitle');
+        if (lTitle) {
+            if (lvInfo.titleKey) {
+                lTitle.setAttribute('data-i18n', lvInfo.titleKey);
+            }
+            lTitle.textContent = lvInfo.title;
+        }
+
+        // XP 게이지
+        const xpFill = document.getElementById('xpBarFill');
+        if (xpFill) xpFill.style.width = lvInfo.xpPct + '%';
+
+        const xpNext = document.getElementById('xpBarNext');
+        if (xpNext) {
+            xpNext.textContent = lvInfo.nextMin
+                ? _t('streak.xpNext', { n: lvInfo.nextMin - lvInfo.total })
+                : _t('streak.xpMax');
+        }
+
+        // 레벨업 감지
+        if (lvInfo.lv > oldLv) {
+            this._showLevelUpBurst(lvInfo);
+        }
+        localStorage.setItem('_streakBannerLv', String(lvInfo.lv));
+    }
+
+    _showLevelUpBurst(lvInfo) {
+        const el = document.createElement('div');
+        el.className = 'levelup-burst';
+        el.innerHTML = `
+            <div class="levelup-burst-emoji">${lvInfo.title.split(' ')[0]}</div>
+            <div class="levelup-burst-text">LEVEL UP! Lv.${lvInfo.lv}</div>
+        `;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2400);
     }
 
     updateDailyGoalBar() {
