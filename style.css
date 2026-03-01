@@ -137,6 +137,130 @@ body[data-theme="melancholy"] {
     --text-muted: #3a506b;
 }
 
+/* 젤라토 데이즈 테마 (Gelato Days) - 라이트 파스텔 */
+body[data-theme="gelato"] {
+    --bg-primary: #F9E1A8;
+    --bg-secondary: #DCCCEC;
+    --bg-card: rgba(255, 255, 255, 0.6);
+    --gradient-neon: linear-gradient(135deg, #FFCBE1 0%, #D6E5BD 25%, #F9E1A8 50%, #BCD8EC 75%, #DCCCEC 100%);
+    --gradient-button: linear-gradient(90deg, #FFCBE1 0%, #BCD8EC 100%);
+    --accent-work: #FFCBE1;
+    --accent-rest: #D6E5BD;
+    --accent-glow: rgba(255, 203, 225, 0.8);
+    --text-primary: #374151;
+    --text-secondary: #4b5563;
+    --text-muted: #6b7280;
+}
+
+/* 말리부 에스케이프 테마 (Malibu Escape) - 라이트 파스텔 */
+body[data-theme="malibu"] {
+    --bg-primary: #FFE5E7;
+    --bg-secondary: #F9E6E4;
+    --bg-card: rgba(255, 255, 255, 0.6);
+    --gradient-neon: linear-gradient(135deg, #FFB0B5 0%, #FFC6CA 25%, #FFD3D6 50%, #F9DCC0 75%, #FFE5E7 100%);
+    --gradient-button: linear-gradient(90deg, #FFC6CA 0%, #F9DCC0 100%);
+    --accent-work: #FFB0B5;
+    --accent-rest: #F9DCC0;
+    --accent-glow: rgba(255, 176, 181, 0.8);
+    --text-primary: #4a3b3c;
+    --text-secondary: #6b5c5d;
+    --text-muted: #8c7d7e;
+}
+
+/* 풀 파티 테마 (Pool Party) - 라이트 파스텔 */
+body[data-theme="pool"] {
+    --bg-primary: #E7F1F9;
+    --bg-secondary: #F9EDEF;
+    --bg-card: rgba(255, 255, 255, 0.6);
+    --gradient-neon: linear-gradient(135deg, #B6D8F7 0%, #CBE6FF 25%, #F7DAE0 50%, #E8DAF0 75%, #F9EDEF 100%);
+    --gradient-button: linear-gradient(90deg, #B6D8F7 0%, #E8DAF0 100%);
+    --accent-work: #B6D8F7;
+    --accent-rest: #F7DAE0;
+    --accent-glow: rgba(182, 216, 247, 0.8);
+    --text-primary: #2d3748;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+}
+
+/* -------------------------------------
+   Light Theme Contrast Fixes (Gelato, Malibu, Pool)
+   ------------------------------------- */
+body[data-theme="gelato"] .content,
+body[data-theme="malibu"] .content,
+body[data-theme="pool"] .content {
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+}
+
+body[data-theme="gelato"] .btn-primary,
+body[data-theme="malibu"] .btn-primary,
+body[data-theme="pool"] .btn-primary,
+body[data-theme="gelato"] .status-badge,
+body[data-theme="malibu"] .status-badge,
+body[data-theme="pool"] .status-badge {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+body[data-theme="gelato"] .btn-secondary,
+body[data-theme="malibu"] .btn-secondary,
+body[data-theme="pool"] .btn-secondary {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-secondary);
+}
+
+body[data-theme="gelato"] .bottom-nav,
+body[data-theme="malibu"] .bottom-nav,
+body[data-theme="pool"] .bottom-nav {
+    background: rgba(255, 255, 255, 0.85);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body[data-theme="gelato"] .nav-item,
+body[data-theme="malibu"] .nav-item,
+body[data-theme="pool"] .nav-item {
+    color: var(--text-secondary);
+}
+
+body[data-theme="gelato"] .nav-item.active,
+body[data-theme="malibu"] .nav-item.active,
+body[data-theme="pool"] .nav-item.active {
+    color: var(--text-primary);
+}
+
+body[data-theme="gelato"] input,
+body[data-theme="malibu"] input,
+body[data-theme="pool"] input,
+body[data-theme="gelato"] .btn-setting,
+body[data-theme="malibu"] .btn-setting,
+body[data-theme="pool"] .btn-setting,
+body[data-theme="gelato"] .sound-select-btn,
+body[data-theme="malibu"] .sound-select-btn,
+body[data-theme="pool"] .sound-select-btn,
+body[data-theme="gelato"] .btn-preview,
+body[data-theme="malibu"] .btn-preview,
+body[data-theme="pool"] .btn-preview {
+    background: rgba(255, 255, 255, 0.4);
+    color: var(--text-primary);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* !important to overrides inline styling */
+body[data-theme="gelato"] #themeSelect,
+body[data-theme="malibu"] #themeSelect,
+body[data-theme="pool"] #themeSelect {
+    background: rgba(255, 255, 255, 0.5) !important;
+    color: var(--text-primary) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body[data-theme="gelato"] ::placeholder,
+body[data-theme="malibu"] ::placeholder,
+body[data-theme="pool"] ::placeholder {
+    color: var(--text-muted);
+}
+
 
 /* 리셋 */
 * {
