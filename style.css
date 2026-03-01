@@ -187,9 +187,40 @@ body[data-theme="pool"] {
    ------------------------------------- */
 body[data-theme="gelato"] .content,
 body[data-theme="malibu"] .content,
-body[data-theme="pool"] .content {
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+body[data-theme="pool"] .content,
+body[data-theme="gelato"] .settings-section,
+body[data-theme="malibu"] .settings-section,
+body[data-theme="pool"] .settings-section,
+body[data-theme="gelato"] .chart-container,
+body[data-theme="malibu"] .chart-container,
+body[data-theme="pool"] .chart-container,
+body[data-theme="gelato"] .heatmap-container,
+body[data-theme="malibu"] .heatmap-container,
+body[data-theme="pool"] .heatmap-container,
+body[data-theme="gelato"] .tasks-filter,
+body[data-theme="malibu"] .tasks-filter,
+body[data-theme="pool"] .tasks-filter,
+body[data-theme="gelato"] .dopamine-item,
+body[data-theme="malibu"] .dopamine-item,
+body[data-theme="pool"] .dopamine-item,
+body[data-theme="gelato"] .leaderboard-container,
+body[data-theme="malibu"] .leaderboard-container,
+body[data-theme="pool"] .leaderboard-container,
+body[data-theme="gelato"] .ranking-item,
+body[data-theme="malibu"] .ranking-item,
+body[data-theme="pool"] .ranking-item {
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+}
+
+body[data-theme="gelato"] .setting-item,
+body[data-theme="malibu"] .setting-item,
+body[data-theme="pool"] .setting-item,
+body[data-theme="gelato"] .tasks-summary,
+body[data-theme="malibu"] .tasks-summary,
+body[data-theme="pool"] .tasks-summary {
+    border-color: rgba(0, 0, 0, 0.1) !important;
 }
 
 body[data-theme="gelato"] .btn-primary,
@@ -227,6 +258,12 @@ body[data-theme="gelato"] .nav-item.active,
 body[data-theme="malibu"] .nav-item.active,
 body[data-theme="pool"] .nav-item.active {
     color: var(--text-primary);
+}
+
+body[data-theme="gelato"] .toggle-slider,
+body[data-theme="malibu"] .toggle-slider,
+body[data-theme="pool"] .toggle-slider {
+    background: rgba(0, 0, 0, 0.15);
 }
 
 body[data-theme="gelato"] input,
