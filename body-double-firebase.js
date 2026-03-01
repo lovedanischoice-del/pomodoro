@@ -118,7 +118,24 @@ function listenToSessionMembers(sessionId) {
         // Filter out current user from the visual list if you only want to see *others*
         // Or keep current user in the list? Usually seeing yourself is good feedback.
         // If keeping, you can sort so current user is first.
-        const myUid = window.auth.currentUser.uid;
+        const myUid = window.auth?.currentUser?.uid || 'temp-uid';
+
+        // Add dummy members if < 5
+        const dummyNames = ['집중하는 펭귄', '열공 메이트', '딥 워커', '뽀모 마스터', '조용한 스터디러'];
+        const dummyStatuses = ['focusing', 'focusing', 'break', 'waiting', 'focusing'];
+        let dummyCount = 0;
+
+        while (members.length < 5) {
+            members.push({
+                userId: `dummy-${dummyCount}`,
+                name: dummyNames[dummyCount % dummyNames.length],
+                avatarUrl: "", // Will use penguin since isAnonymous is true
+                isAnonymous: true,
+                status: dummyStatuses[dummyCount % dummyStatuses.length],
+                updatedAt: { toDate: () => new Date() }
+            });
+            dummyCount++;
+        }
 
         // Sort: me first, then by recent updates
         members.sort((a, b) => {
