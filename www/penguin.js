@@ -32,6 +32,8 @@ class PenguinBuddy {
         document.addEventListener('mousemove', this._boundActivity, { passive: true });
         document.addEventListener('keydown', this._boundActivity, { passive: true });
         document.addEventListener('click', this._boundActivity, { passive: true });
+        document.addEventListener('touchstart', this._boundActivity, { passive: true });
+        document.addEventListener('scroll', this._boundActivity, { passive: true });
     }
 
     _onActivity() {
