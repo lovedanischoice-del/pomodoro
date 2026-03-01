@@ -154,15 +154,15 @@
             <main class="content" style="position: relative;">
                 <!-- 메인 페이지 우상단 프로필 -->
                 <div id="mainTopProfile"
-                    style="display: none; position: absolute; top: 20px; right: 20px; align-items: center; gap: 8px; cursor: pointer; z-index: 10;"
+                    style="display: none; position: absolute; top: 24px; right: 24px; align-items: center; gap: 8px; cursor: pointer; z-index: 10;"
                     onclick="document.querySelector('[data-view=\'settingsView\']').click();">
                     <span id="mainTopName"
                         style="font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.8);"></span>
-                    <div style="position: relative; width: 28px; height: 28px; border-radius: 50%; overflow: hidden;">
+                    <div style="position: relative; width: 44px; height: 44px; border-radius: 50%; overflow: hidden;">
                         <img id="mainTopAvatar" src="" alt="Profile"
                             style="width: 100%; height: 100%; object-fit: cover; display: none;">
                         <div id="mainTopInitial"
-                            style="width: 100%; height: 100%; background: #6366f1; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold;">
+                            style="width: 100%; height: 100%; background: #6366f1; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;">
                             U</div>
                     </div>
                 </div>
@@ -229,6 +229,21 @@
                         </div>
                     </div>
                 </footer>
+
+                <!-- ===== 🐇 토끼굴 파킹 ===== -->
+                <div id="rabbitHoleFab" class="rabbit-fab-wrap">
+                    <div id="rabbitFabTip" class="rabbit-fab-tip">생각 던지기</div>
+                    <div style="position:relative;">
+                        <button id="rabbitHoleBtn" class="rabbit-fab" title="집중 중 — 생각 파킹하기">🐇</button>
+                        <span id="rabbitBadge" class="rabbit-badge" style="display:none;">0</span>
+                    </div>
+                </div>
+
+                <!-- ===== 🐧 뺑수 펭귄 ===== -->
+                <div id="penguinBuddy" class="penguin-buddy hidden">
+                    <div id="penguinBubble" class="penguin-bubble hidden"></div>
+                    <div id="penguinSprite" class="penguin-sprite">🐧</div>
+                </div>
             </main>
         </div>
 
@@ -818,16 +833,7 @@
     <!-- 타이머 화면 상단 마이크로 액션 배지 -->
     <div id="microActionBadge" class="micro-badge hidden"></div>
 
-    <!-- ===== 🐇 토끼굴 파킹 ===== -->
-    <!-- FAB 버튼 -->
-    <div id="rabbitHoleFab" class="rabbit-fab-wrap">
-        <div id="rabbitFabTip" class="rabbit-fab-tip">생각 던지기</div>
-        <div style="position:relative;">
-            <button id="rabbitHoleBtn" class="rabbit-fab" title="집중 중 — 생각 파킹하기">🐇</button>
-            <span id="rabbitBadge" class="rabbit-badge" style="display:none;">0</span>
-        </div>
-    </div>
-
+    <!-- ===== 🐇 토끼굴 파킹 (이동됨) ===== -->
     <!-- 빠른 입력 패널 (집중 중) -->
     <div id="rabbitHolePanel" class="rabbit-panel hidden">
         <div class="rabbit-panel-inner">
@@ -874,11 +880,7 @@
         </div>
     </div>
 
-    <!-- ===== 🐧 뺑수 펭귄 ===== -->
-    <div id="penguinBuddy" class="penguin-buddy hidden">
-        <div id="penguinBubble" class="penguin-bubble hidden"></div>
-        <div id="penguinSprite" class="penguin-sprite">🐧</div>
-    </div>
+    <!-- ===== 🐧 뺑수 펭귄 (이동됨) ===== -->
 
     <!-- ===== 🍱 도파민 메뉴 선택기 ===== -->
     <div id="dopamineMenuOverlay" class="dopamine-overlay hidden">
