@@ -282,8 +282,9 @@ header {
 
 .timer-bg {
     fill: none;
-    stroke: transparent;
+    stroke: url(#gradient);
     stroke-width: 8;
+    opacity: 0.18;
 }
 
 .timer-progress {

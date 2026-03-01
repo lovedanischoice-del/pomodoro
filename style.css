@@ -458,8 +458,10 @@ header {
 
 .timer-bg {
     fill: none;
-    stroke: transparent;
+    stroke: url(#gradient);
     stroke-width: 8;
+    opacity: 0.18;
+    /* 못함으로 배경 그라디언트가 비치는 효과 */
 }
 
 .timer-progress {
