@@ -153,6 +153,9 @@ function initTasks() {
         renderTasksList();
     };
     window.renderTasksList = renderTasksList;
+
+    // 초기 목록 렌더링
+    renderTasksList();
 }
 
 // Settings View Logic

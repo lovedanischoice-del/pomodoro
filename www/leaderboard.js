@@ -298,11 +298,15 @@ class LeaderboardManager {
         this.isLoading = true;
         this.renderLoadingState();
 
-        // 로그인 상태면 자신의 데이터 업로드
+        // 데이터 불러오기를 즉시 실행하여 체감 속도 향상 (블로킹 방지)
+        const fetchPromise = this.fetchLeaderboard(this.currentPeriod);
+
+        // 로그인 상태면 자신의 데이터 백그라운드 업로드
         if (window.auth?.currentUser) {
-            await this.uploadUserStats();
+            this.uploadUserStats().catch(console.error);
         }
-        await this.fetchLeaderboard(this.currentPeriod);
+
+        await fetchPromise;
     }
 }
 
