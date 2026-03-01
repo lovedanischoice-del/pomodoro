@@ -1,6 +1,7 @@
 // body-double.js - Body Doubling feature logic
 
-const PENGUIN_IMG = "assets/penguin.png"; // Fallback/anonymous image path
+// Penguin emoji rendered as an SVG data URI (no external file needed)
+const PENGUIN_IMG = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐧</text></svg>`;
 const MAX_VISIBLE_AVATARS = 4;
 
 const OVERLAY_CONFIG = {
