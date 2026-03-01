@@ -151,6 +151,7 @@ function isAutoStart() {
 var timeLeft = getWorkTime();
 var isRunning = false;
 var isWorkMode = true;
+window.currentMode = 'work'; // For body doubling feature
 var timerId = null;
 var pomodoroCount = 0; // 완료한 뽀모도로 수
 var isLongRest = false; // 긴 휴식 중인지
@@ -366,10 +367,15 @@ function _finishSwitchModeCore() {
         if (isWorkMode) {
             document.body.classList.add('timer-running');
             document.body.classList.remove('timer-rest');
+            if (window.updateBodyDoubleStatus) window.updateBodyDoubleStatus('focusing');
         } else {
             document.body.classList.add('timer-rest');
             document.body.classList.remove('timer-running');
+            if (window.updateBodyDoubleStatus) window.updateBodyDoubleStatus('break');
         }
+    } else {
+        // Paused intentionally or stopped
+        if (window.updateBodyDoubleStatus) window.updateBodyDoubleStatus('waiting');
     }
 
     if (statusBadge) {
@@ -444,6 +450,7 @@ function _startTimerNow() {
     if (playIcon) playIcon.textContent = '■';
     isRunning = true;
     if (isWorkMode) {
+        window.currentMode = 'work';
         document.body.classList.add('timer-running');
         document.body.classList.remove('timer-rest');
         // 🐇 토끼굴 → 집중 시작 시 잠금 + FAB 표시
@@ -452,9 +459,14 @@ function _startTimerNow() {
         if (rfab) rfab.classList.remove('hidden');
         // 🐧 펭귄 → 집중 모드
         if (window.penguinBuddy) window.penguinBuddy.startWork();
+        // 👨‍👩‍👦 바디더블 상태 업데이트
+        if (window.updateBodyDoubleStatus) window.updateBodyDoubleStatus('focusing');
     } else {
+        window.currentMode = 'rest';
         document.body.classList.add('timer-rest');
         document.body.classList.remove('timer-running');
+        // 👨‍👩‍👦 바디더블 상태 업데이트
+        if (window.updateBodyDoubleStatus) window.updateBodyDoubleStatus('break');
     }
     handleSound();
     if ('Notification' in window && Notification.permission === 'default') {
@@ -470,6 +482,8 @@ function toggleTimer() {
         if (playIcon) playIcon.textContent = '▶';
         isRunning = false;
         document.body.classList.remove('timer-running', 'timer-rest');
+        // 👨‍👩‍👦 바디더블 상태 업데이트 일시정지
+        if (window.updateBodyDoubleStatus) window.updateBodyDoubleStatus('waiting');
         handleSound();
     } else {
         // 🎯 기능3: 워크 모드 시작 시 마이크로 액션 팝업
@@ -487,6 +501,7 @@ function resetTimer() {
     clearInterval(timerId);
     isRunning = false;
     isWorkMode = true;
+    window.currentMode = 'work';
     isLongRest = false;
     pomodoroCount = 0;
     timeLeft = getWorkTime();
@@ -494,6 +509,9 @@ function resetTimer() {
     // Reset background
     document.body.classList.remove('timer-running', 'timer-rest');
     document.documentElement.style.setProperty('--bg-rotation', '0deg');
+
+    // 👨‍👩‍👦 바디더블 상태 업데이트 
+    if (window.updateBodyDoubleStatus) window.updateBodyDoubleStatus('waiting');
 
     if (toggleText) toggleText.textContent = 'START';
     if (statusBadge) {

@@ -23,6 +23,14 @@ class PenguinBuddy {
         this._watchActivity();
         this._show();
         this.setState('idle');
+
+        // 바디 더블 세션 참가 버튼 역할
+        this.el.addEventListener('click', () => {
+            if (window.joinBodyDoubleSession) {
+                window.joinBodyDoubleSession();
+                this._showBubble('같이 공부할 친구들을 불렀어요! 🐧', 3000);
+            }
+        });
     }
 
     _show() { this.el.classList.remove('hidden'); }

@@ -311,6 +311,12 @@ function initSettings() {
         if (soundEnabled) soundEnabled.checked = settings.soundEnabled !== false;
         if (dailyGoalEl) dailyGoalEl.value = settings.dailyGoal || 0;
 
+        const anonymousMode = document.getElementById('anonymousMode');
+        const autoJoinBodyDouble = document.getElementById('autoJoinBodyDouble');
+        if (anonymousMode) anonymousMode.checked = settings.anonymousMode === true;
+        if (autoJoinBodyDouble) autoJoinBodyDouble.checked = settings.autoJoinBodyDouble !== false;
+
+
         // Load initial button texts
         updateSoundDisplay('bgm', settings.bgmId || 'crackle');
         updateSoundDisplay('bell', settings.bellId || 'chime');
@@ -350,6 +356,11 @@ function initSettings() {
         settings.volume = parseFloat(volumeSettings?.value || 0.5);
         settings.notificationSound = notificationSound?.checked !== false;
         settings.dailyGoal = parseFloat(dailyGoalEl?.value || 0);
+
+        const anonymousMode = document.getElementById('anonymousMode');
+        const autoJoinBodyDouble = document.getElementById('autoJoinBodyDouble');
+        if (anonymousMode) settings.anonymousMode = anonymousMode.checked;
+        if (autoJoinBodyDouble) settings.autoJoinBodyDouble = autoJoinBodyDouble.checked;
 
         localStorage.setItem('settings', JSON.stringify(settings));
         applyTimerSettings(settings);
@@ -432,6 +443,11 @@ function initSettings() {
     if (restDuration) restDuration.addEventListener('change', saveSettings);
     if (autoStart) autoStart.addEventListener('change', saveSettings);
     if (dailyGoalEl) dailyGoalEl.addEventListener('change', saveSettings);
+
+    const anonymousMode = document.getElementById('anonymousMode');
+    const autoJoinBodyDouble = document.getElementById('autoJoinBodyDouble');
+    if (anonymousMode) anonymousMode.addEventListener('change', saveSettings);
+    if (autoJoinBodyDouble) autoJoinBodyDouble.addEventListener('change', saveSettings);
 
     if (bgmBtn) {
         bgmBtn.addEventListener('click', () => openSoundModal('bgm'));
