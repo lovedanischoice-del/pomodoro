@@ -83,6 +83,41 @@ async function updateBodyDoubleStatus(status) {
     }
 }
 
+function getDummyMembers(realMembers = []) {
+    const myUid = window.auth?.currentUser?.uid || 'temp-uid';
+
+    // Add dummy members if < 5
+    const dummyNames = ['집중하는 펭귄', '열공 메이트', '딥 워커', '뽀모 마스터', '조용한 스터디러'];
+    const dummyStatuses = ['focusing', 'focusing', 'break', 'waiting', 'focusing'];
+    let dummyCount = 0;
+
+    let members = [...realMembers];
+
+    while (members.length < 5) {
+        members.push({
+            userId: `dummy-${dummyCount}`,
+            name: dummyNames[dummyCount % dummyNames.length],
+            avatarUrl: "", // Will use penguin since isAnonymous is true
+            isAnonymous: true,
+            status: dummyStatuses[dummyCount % dummyStatuses.length],
+            updatedAt: { toDate: () => new Date() }
+        });
+        dummyCount++;
+    }
+
+    // Sort: me first, then by recent updates
+    members.sort((a, b) => {
+        if (a.userId === myUid) return -1;
+        if (b.userId === myUid) return 1;
+
+        const timeA = a.updatedAt?.toDate ? a.updatedAt.toDate().getTime() : 0;
+        const timeB = b.updatedAt?.toDate ? b.updatedAt.toDate().getTime() : 0;
+        return timeB - timeA;
+    });
+
+    return members;
+}
+
 /**
  * Listen for changes in the active session
  */
@@ -91,6 +126,11 @@ function listenToSessionMembers(sessionId) {
 
     if (bodyDoubleUnsubscribe) {
         bodyDoubleUnsubscribe(); // Stop any previous listeners
+    }
+
+    // 즉시 더미 멤버들을 먼저 화면에 렌더링 (DB 지연이나 오류 대비)
+    if (window.renderAvatarRow) {
+        window.renderAvatarRow(getDummyMembers([]));
     }
 
     const membersRef = window.db.collection('sessions').doc(sessionId).collection('members');
@@ -115,41 +155,11 @@ function listenToSessionMembers(sessionId) {
             }
         });
 
-        // Filter out current user from the visual list if you only want to see *others*
-        // Or keep current user in the list? Usually seeing yourself is good feedback.
-        // If keeping, you can sort so current user is first.
-        const myUid = window.auth?.currentUser?.uid || 'temp-uid';
-
-        // Add dummy members if < 5
-        const dummyNames = ['집중하는 펭귄', '열공 메이트', '딥 워커', '뽀모 마스터', '조용한 스터디러'];
-        const dummyStatuses = ['focusing', 'focusing', 'break', 'waiting', 'focusing'];
-        let dummyCount = 0;
-
-        while (members.length < 5) {
-            members.push({
-                userId: `dummy-${dummyCount}`,
-                name: dummyNames[dummyCount % dummyNames.length],
-                avatarUrl: "", // Will use penguin since isAnonymous is true
-                isAnonymous: true,
-                status: dummyStatuses[dummyCount % dummyStatuses.length],
-                updatedAt: { toDate: () => new Date() }
-            });
-            dummyCount++;
-        }
-
-        // Sort: me first, then by recent updates
-        members.sort((a, b) => {
-            if (a.userId === myUid) return -1;
-            if (b.userId === myUid) return 1;
-
-            const timeA = a.updatedAt?.toDate ? a.updatedAt.toDate().getTime() : 0;
-            const timeB = b.updatedAt?.toDate ? b.updatedAt.toDate().getTime() : 0;
-            return timeB - timeA;
-        });
-
         if (window.renderAvatarRow) {
-            window.renderAvatarRow(members);
+            window.renderAvatarRow(getDummyMembers(members));
         }
+    }, (error) => {
+        console.error("Firebase listen error:", error);
     });
 }
 
