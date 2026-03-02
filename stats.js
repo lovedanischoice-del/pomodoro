@@ -147,22 +147,7 @@ class StatsManager {
         const streak = this.getStreak();
         const lvInfo = this.getLevelInfo();
 
-        const todaySessionsEl = document.getElementById('todaySessions');
-        const todayMinutesEl = document.getElementById('todayMinutes');
-        const streakDaysEl = document.getElementById('streakDays');
-
-        if (todaySessionsEl) todaySessionsEl.textContent = today.count;
-        if (todayMinutesEl) {
-            const h = Math.floor(today.minutes / 60);
-            const m = today.minutes % 60;
-            todayMinutesEl.textContent = h > 0 ? `${h}h ${m}m` : `${m}m`;
-        }
-        if (streakDaysEl) {
-            const fire = streak >= 7 ? '🔥🔥' : streak >= 3 ? '🔥' : '';
-            streakDaysEl.textContent = `${streak}${fire}`;
-        }
-
-        // ─── 타이머 화면 스트릭+레벨 배너 업데이트 ───
+        // ─── Stats 화면 스트릭+레벨 배너 업데이트 ───
         this._updateStreakBanner(streak, today, lvInfo);
     }
 
