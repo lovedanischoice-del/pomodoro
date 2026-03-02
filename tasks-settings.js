@@ -316,6 +316,10 @@ function initSettings() {
         if (anonymousMode) anonymousMode.checked = settings.anonymousMode === true;
         if (autoJoinBodyDouble) autoJoinBodyDouble.checked = settings.autoJoinBodyDouble !== false;
 
+        // AI 쪼개기 팝업 토글 로드
+        const showMicroActionEl = document.getElementById('showMicroAction');
+        if (showMicroActionEl) showMicroActionEl.checked = settings.showMicroAction !== false;
+
 
         // Load initial button texts
         updateSoundDisplay('bgm', settings.bgmId || 'crackle');
@@ -361,6 +365,10 @@ function initSettings() {
         const autoJoinBodyDouble = document.getElementById('autoJoinBodyDouble');
         if (anonymousMode) settings.anonymousMode = anonymousMode.checked;
         if (autoJoinBodyDouble) settings.autoJoinBodyDouble = autoJoinBodyDouble.checked;
+
+        // AI 쪼개기 팝업 토글 저장
+        const showMicroActionEl = document.getElementById('showMicroAction');
+        if (showMicroActionEl) settings.showMicroAction = showMicroActionEl.checked;
 
         localStorage.setItem('settings', JSON.stringify(settings));
         applyTimerSettings(settings);
@@ -448,6 +456,9 @@ function initSettings() {
     const autoJoinBodyDouble = document.getElementById('autoJoinBodyDouble');
     if (anonymousMode) anonymousMode.addEventListener('change', saveSettings);
     if (autoJoinBodyDouble) autoJoinBodyDouble.addEventListener('change', saveSettings);
+
+    const showMicroActionEl = document.getElementById('showMicroAction');
+    if (showMicroActionEl) showMicroActionEl.addEventListener('change', saveSettings);
 
     if (bgmBtn) {
         bgmBtn.addEventListener('click', () => openSoundModal('bgm'));

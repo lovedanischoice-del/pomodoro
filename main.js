@@ -495,7 +495,9 @@ function toggleTimer() {
         handleSound();
     } else {
         // 🎯 기능3: 워크 모드 시작 시 마이크로 액션 팝업
-        if (isWorkMode && typeof showMicroActionPopup === 'function') {
+        const _settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const _showMicro = _settings.showMicroAction !== false; // 기본값 true
+        if (isWorkMode && _showMicro && typeof showMicroActionPopup === 'function') {
             showMicroActionPopup(() => {
                 _startTimerNow();
             });
