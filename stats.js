@@ -166,6 +166,23 @@ class StatsManager {
         this._updateStreakBanner(streak, today, lvInfo);
     }
 
+    // ─── Share Card 데이터 ─────────────────────────────
+    getShareData() {
+        const today = this.getTodayStats();
+        const streak = this.getStreak();
+        const lvInfo = this.getLevelInfo();
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const nickname = settings.nickname || localStorage.getItem('userName') || 'Bbangmodoro';
+        return {
+            nickname,
+            minutesTotal: today.minutes,
+            sessions: today.count,
+            streak,
+            level: lvInfo.lv,
+            levelTitle: lvInfo.title,
+        };
+    }
+
     _updateStreakBanner(streak, today, lvInfo) {
         const oldLv = parseInt(localStorage.getItem('_streakBannerLv') || '1');
 

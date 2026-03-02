@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="features.css">
     <link rel="stylesheet" href="body-double.css">
     <link rel="stylesheet" href="streak-level.css">
+    <link rel="stylesheet" href="share-card.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -289,6 +290,11 @@
                 <header>
                     <h1 class="stats-title" data-i18n="stats.title">집중 기록</h1>
                 </header>
+
+                <!-- 📤 Share 버튼 -->
+                <button id="shareCardBtn" onclick="_openShareCard()">
+                    📤 Share Today
+                </button>
 
                 <!-- Today Summary -->
                 <section class="stats-today">
@@ -1030,6 +1036,29 @@
     <script src="gacha.js"></script>
     <script src="cozy-mode.js"></script>
     <script src="schedule-start.js"></script>
+    <script src="share-card.js"></script>
+
+    <!-- 📤 Share Card Modal -->
+    <div id="shareCardModal">
+        <div class="sc-canvas-wrap">
+            <canvas id="shareCanvas" width="1200" height="600"></canvas>
+            <button id="scCloseBtn" title="닫기">✕</button>
+        </div>
+        <div class="sc-actions">
+            <button id="scTweetBtn" class="sc-btn">🐦 Tweet</button>
+            <button id="scDownloadBtn" class="sc-btn">⬇️ Download PNG</button>
+        </div>
+        <p class="sc-hint">캔버스를 길게 눌러 직접 저장할 수도 있습니다</p>
+    </div>
+
+    <script>
+        // Share Card 연결 함수
+        function _openShareCard() {
+            if (typeof statsManager === 'undefined' || typeof shareCard === 'undefined') return;
+            const data = statsManager.getShareData();
+            shareCard.open(data);
+        }
+    </script>
 </body>
 
 </html>
