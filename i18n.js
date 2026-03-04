@@ -30,7 +30,7 @@
             'btn.start': 'START',
             'btn.pause': 'PAUSE',
             'btn.reset': 'RESET',
-            'btn.schedule': '⏰ 시작 예약',
+            'btn.schedule': '⏰ 예약',
 
             // 스트릭 배너
             'streak.days': '연속 일수',
@@ -143,7 +143,7 @@
             'btn.start': 'START',
             'btn.pause': 'PAUSE',
             'btn.reset': 'RESET',
-            'btn.schedule': '⏰ Schedule',
+            'btn.schedule': '⏰ Reserve',
 
             // 스트릭 배너
             'streak.days': 'Streak Days',
