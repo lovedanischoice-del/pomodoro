@@ -1,10 +1,10 @@
-/* ============================================
+﻿/* ============================================
    Streak & Level Visualization + Schedule Start
    ============================================ */
 
-/* ────────────────────────────────────────────
-   스트릭 + 레벨 배너 (타이머 화면)
-   ──────────────────────────────────────────── */
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   ?�트�?+ ?�벨 배너 (?�?�머 ?�면)
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
 .streak-level-banner {
     display: flex;
     align-items: center;
@@ -22,6 +22,13 @@
     animation: bannerFadeIn 0.5s ease;
 }
 
+/* Stats ?�이지?�서???�단 ?�백 ?�이 */
+.stats-content .streak-level-banner {
+    margin: 0 auto 16px;
+    max-width: 100%;
+}
+
+
 @keyframes bannerFadeIn {
     from {
         opacity: 0;
@@ -34,7 +41,7 @@
     }
 }
 
-/* 개별 스탯 셀 */
+/* 개별 ?�탯 ?� */
 .slb-cell {
     display: flex;
     flex-direction: column;
@@ -67,7 +74,7 @@
     letter-spacing: 0.8px;
 }
 
-/* 스트릭 강조 색상 */
+/* ?�트�?강조 ?�상 */
 .slb-streak .slb-value {
     color: #ff9f43;
 }
@@ -77,16 +84,16 @@
     text-shadow: 0 0 12px rgba(255, 107, 107, 0.6);
 }
 
-/* 레벨 강조 색상 */
+/* ?�벨 강조 ?�상 */
 .slb-level .slb-value {
     color: #a78bfa;
 }
 
-/* ────────────────────────────────────────────
-   XP 레벨 게이지
-   ──────────────────────────────────────────── */
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   XP ?�벨 게이지
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
 .xp-bar-wrap {
-    margin: 6px auto 0;
+    margin: 6px auto 24px;
     max-width: 320px;
     padding: 0 4px;
 }
@@ -128,9 +135,9 @@
     padding: 0 2px;
 }
 
-/* ────────────────────────────────────────────
-   레벨업 애니메이션 오버레이
-   ──────────────────────────────────────────── */
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   ?�벨???�니메이???�버?�이
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
 .levelup-burst {
     position: fixed;
     inset: 0;
@@ -190,36 +197,14 @@
     }
 }
 
-/* ────────────────────────────────────────────
-   시작 예약 버튼 (controls 섹션)
-   ──────────────────────────────────────────── */
-.btn-schedule {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 22px;
-    border-radius: 14px;
-    border: 1.5px solid rgba(255, 255, 255, 0.18);
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.85);
-    font-family: 'Outfit', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(8px);
-}
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   ?�작 ?�약 버튼 (controls ?�션)
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
 
-.btn-schedule:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px);
-}
 
-/* ────────────────────────────────────────────
-   시작 예약 오버레이
-   ──────────────────────────────────────────── */
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   ?�작 ?�약 ?�버?�이
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
 .schedule-overlay {
     position: fixed;
     inset: 0;
@@ -243,8 +228,10 @@
 .schedule-sheet {
     width: 100%;
     max-width: 480px;
-    background: linear-gradient(160deg, #1e1b3a 0%, #16213e 100%);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(128, 128, 128, 0.12);
     border-radius: 24px 24px 0 0;
     padding: 28px 24px 40px;
     transform: translateY(100%);
@@ -260,14 +247,14 @@
     font-family: 'Outfit', sans-serif;
     font-size: 1.1rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-primary);
     margin: 0 0 20px;
 }
 
 .schedule-sheet-handle {
     width: 40px;
     height: 4px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(128, 128, 128, 0.3);
     border-radius: 99px;
     margin: 0 auto 20px;
 }
@@ -284,9 +271,9 @@
     gap: 14px;
     padding: 16px 20px;
     border-radius: 16px;
-    border: 1.5px solid rgba(255, 255, 255, 0.12);
-    background: rgba(255, 255, 255, 0.06);
-    color: #fff;
+    border: 1.5px solid rgba(128, 128, 128, 0.12);
+    background: rgba(128, 128, 128, 0.06);
+    color: var(--text-primary);
     font-family: 'Outfit', sans-serif;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -295,8 +282,8 @@
 }
 
 .schedule-choice-btn:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(128, 128, 128, 0.12);
+    border-color: rgba(128, 128, 128, 0.25);
     transform: translateX(3px);
 }
 
@@ -314,7 +301,7 @@
 
 .sch-btn-desc {
     font-size: 0.78rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-secondary);
     display: block;
 }
 
@@ -335,7 +322,7 @@
     border-radius: 12px;
     border: none;
     background: transparent;
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--text-muted);
     font-family: 'Outfit', sans-serif;
     font-size: 0.85rem;
     cursor: pointer;
@@ -343,12 +330,12 @@
 }
 
 .schedule-cancel-btn:hover {
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-secondary);
 }
 
-/* ────────────────────────────────────────────
-   15분 대기 플로팅 배지
-   ──────────────────────────────────────────── */
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   15�??��??�로??배�?
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
 .schedule-badge {
     position: fixed;
     top: 16px;
@@ -397,9 +384,9 @@
     }
 }
 
-/* ────────────────────────────────────────────
-   5-4-3-2-1 카운트다운 오버레이 재활용 스타일 보완
-   ──────────────────────────────────────────── */
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   5-4-3-2-1 카운?�다???�버?�이 ?�활???��???보완
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
 .schedule-countdown-overlay {
     position: fixed;
     inset: 0;
@@ -443,30 +430,43 @@
     letter-spacing: 2px;
 }
 
-/* ────────────────────────────────────────────
-   Controls 레이아웃 조정 (예약 버튼 추가 대응)
-   ──────────────────────────────────────────── */
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   Controls ?�이?�웃 조정 (?�약 버튼 추�? ?�??
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
 .controls {
-    flex-wrap: wrap;
-    gap: 12px !important;
-    margin-bottom: 16px !important;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px !important;
+    margin: 28px 0 36px !important;
+    /* 위아래 균등한 여백 */
+    align-items: stretch;
 }
 
-/* START 버튼은 넓게, RESET은 적당히, 예약 버튼은 전체폭 */
+/* START 버튼?� ?�게, RESET?� ?�당?? ?�약 버튼?� ?�체??*/
 .controls .btn-primary {
-    flex: 2 1 140px;
+    flex: 2 1 120px;
 }
 
 .controls .btn-secondary {
-    flex: 1 1 80px;
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
 }
 
 .controls .btn-schedule {
-    flex: 0 0 auto !important;
-    width: 100%;
-    justify-content: center;
-    border-radius: 14px !important;
-    padding: 10px 22px !important;
-    font-size: 0.82rem !important;
-    margin-bottom: 4px;
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    white-space: nowrap !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.controls .btn-schedule:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-primary) !important;
+    transform: translateY(-2px);
 }

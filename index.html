@@ -202,10 +202,9 @@
                         <span class="icon" id="playIcon">▶</span>
                         <span class="text" id="toggleText">START</span>
                     </button>
+                    <button id="scheduleBtn" class="btn-secondary btn-schedule"
+                        onclick="window.scheduleStart && window.scheduleStart.open()">⏰ 예약</button>
                     <button id="resetBtn" class="btn-secondary" data-i18n="btn.reset">RESET</button>
-                    <button id="scheduleBtn" class="btn-schedule"
-                        onclick="window.scheduleStart && window.scheduleStart.open()" data-i18n="btn.schedule">⏰ 시작
-                        예약</button>
                 </section>
 
                 <!-- 뽀모도로 카운터 -->
@@ -213,26 +212,7 @@
                     <div id="pomodoroCounter" class="pomodoro-counter"></div>
                 </div>
 
-                <!-- ===== 🔥 스트릭 + 레벨 배너 ===== -->
-                <div class="streak-level-banner">
-                    <!-- 연속 일수 -->
-                    <div class="slb-cell slb-streak">
-                        <div class="slb-value" id="slbStreakVal">— </div>
-                        <div class="slb-label" data-i18n="streak.days">연속 일수</div>
-                    </div>
-                    <div class="slb-divider"></div>
-                    <!-- 오늘 세션 -->
-                    <div class="slb-cell">
-                        <div class="slb-value" id="slbSessionVal">0회</div>
-                        <div class="slb-label" data-i18n="streak.sessions">오늘 세션</div>
-                    </div>
-                    <div class="slb-divider"></div>
-                    <!-- 레벨 -->
-                    <div class="slb-cell slb-level">
-                        <div class="slb-value" id="slbLevelVal">Lv.1</div>
-                        <div class="slb-label" id="slbLevelTitle" data-i18n="level.1">🌱 새싹</div>
-                    </div>
-                </div>
+
                 <!-- XP 게이지 -->
                 <div class="xp-bar-wrap">
                     <div class="xp-bar-track">
@@ -296,23 +276,26 @@
                     📤 Share Today
                 </button>
 
-                <!-- Today Summary -->
-                <section class="stats-today">
-                    <div class="today-cards">
-                        <div class="today-card">
-                            <div class="today-value" id="todaySessions">0</div>
-                            <div class="today-label">오늘 세션</div>
-                        </div>
-                        <div class="today-card">
-                            <div class="today-value" id="todayMinutes">0m</div>
-                            <div class="today-label">집중 시간</div>
-                        </div>
-                        <div class="today-card">
-                            <div class="today-value" id="streakDays">0🔥</div>
-                            <div class="today-label">연속 일수</div>
-                        </div>
+                <!-- ===== 🔥 스트릭 + 레벨 배너 (Stats 최상단) ===== -->
+                <div class="streak-level-banner">
+                    <!-- 연속 일수 -->
+                    <div class="slb-cell slb-streak">
+                        <div class="slb-value" id="slbStreakVal">— </div>
+                        <div class="slb-label" data-i18n="streak.days">연속 일수</div>
                     </div>
-                </section>
+                    <div class="slb-divider"></div>
+                    <!-- 오늘 세션 -->
+                    <div class="slb-cell">
+                        <div class="slb-value" id="slbSessionVal">0회</div>
+                        <div class="slb-label" data-i18n="streak.sessions">오늘 세션</div>
+                    </div>
+                    <div class="slb-divider"></div>
+                    <!-- 레벨 -->
+                    <div class="slb-cell slb-level">
+                        <div class="slb-value" id="slbLevelVal">Lv.1</div>
+                        <div class="slb-label" id="slbLevelTitle" data-i18n="level.1">🌱 새싹</div>
+                    </div>
+                </div>
 
                 <!-- Weekly Summary -->
                 <section class="stats-summary">

@@ -331,6 +331,21 @@ body {
     justify-content: center;
     padding: 20px;
     overflow-x: hidden;
+
+    /* 드래그 및 텍스트 선택 방지 (앱처럼 동작되도록) */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* 입력 필드에서는 텍스트 선택이 가능하도록 예외 처리 */
+input,
+textarea {
+    -webkit-user-select: auto;
+    -moz-user-select: auto;
+    -ms-user-select: auto;
+    user-select: auto;
 }
 
 /* 배경 그라데이션 효과 - 타이머 진행 표시 */

@@ -28,17 +28,21 @@
 
     // ── 배경 렌더 ──────────────────────────────────────────────
     function drawBackground(ctx) {
-        // 어두운 라디얼 그라데이션
+        const style = getComputedStyle(document.body);
+        const bg1 = style.getPropertyValue('--bg-primary').trim() || '#130828';
+        const bg2 = style.getPropertyValue('--bg-secondary').trim() || '#0d0720';
+        const accent = style.getPropertyValue('--accent-work').trim() || '#b450ff';
+
+        // 테마 배경 라디얼 그라데이션 대신 리니어
         const bg = ctx.createLinearGradient(0, 0, W, H);
-        bg.addColorStop(0, '#06020f');
-        bg.addColorStop(0.45, '#0d0720');
-        bg.addColorStop(1, '#130828');
+        bg.addColorStop(0, bg2);
+        bg.addColorStop(1, bg1);
         ctx.fillStyle = bg;
         ctx.fillRect(0, 0, W, H);
 
         // 미묘한 노이즈 레이어 (투명 사각 패턴)
         ctx.save();
-        ctx.globalAlpha = 0.03;
+        ctx.globalAlpha = 0.05;
         for (let x = 0; x < W; x += 40) {
             for (let y = 0; y < H; y += 40) {
                 if ((x + y) % 80 === 0) {
@@ -49,9 +53,10 @@
         }
         ctx.restore();
 
-        // 네온 그리드 선 (가로/세로)
+        // 테마 포인트 색상 기반 그리드 선
         ctx.save();
-        ctx.strokeStyle = 'rgba(120,60,255,0.12)';
+        ctx.strokeStyle = accent;
+        ctx.globalAlpha = 0.15;
         ctx.lineWidth = 1;
         for (let x = 0; x < W; x += 60) {
             ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
