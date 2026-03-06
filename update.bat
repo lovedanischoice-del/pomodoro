@@ -1,72 +1,56 @@
 @echo off
+chcp 65001 >nul
 echo ========================================
-echo Bbangmodoro - Quick Update
+echo Bbangmodoro - 직접 동기화 도구 (Vite 미사용)
 echo ========================================
 echo.
 
-REM 1. 동기화
-echo [1/3] Syncing files...
-call npm run sync
+REM 1. 빌드 없이 바로 동기화 (www 폴더 내용을 복사)
+echo [1/3] Capacitor 동기화 중... (www -> Android)
+call npx cap sync android
 if errorlevel 1 (
-    echo Error: Sync failed
+    echo.
+    echo [에러] 동기화에 실패했습니다.
+    echo 1. 'capacitor.config.json' 파일의 webDir이 "www"인지 확인하세요.
+    echo 2. 'www' 폴더 안에 index.html 파일이 있는지 확인하세요.
     pause
     exit /b 1
 )
-echo ✓ Sync complete
+echo ✓ 동기화 완료!
 
 echo.
-echo [2/3] Files updated in android/app/src/main/assets/public/
+echo [2/3] 다음 작업 선택:
+echo.
+echo 1. 안드로이드 스튜디오 열기
+echo 2. 즉시 Debug APK 생성 (Gradle 빌드)
+echo 3. 종료
 echo.
 
-REM 2. 빌드 옵션
-echo [3/3] Choose next step:
-echo.
-echo 1. Test in Android Studio (recommended)
-echo 2. Build Debug APK
-echo 3. Skip (manual build later)
-echo.
-
-set /p choice="Enter choice (1-3): "
+set /p choice="번호 입력 (1-3): "
 
 if "%choice%"=="1" (
     echo.
-    echo Opening Android Studio...
-    echo After it opens:
-    echo - Wait for Gradle sync
-    echo - Click green ▶️ button
-    echo.
+    echo 안드로이드 스튜디오를 실행합니다...
     start "" "C:\Program Files\Android\Android Studio\bin\studio64.exe" "%~dp0android"
-    if errorlevel 1 (
-        echo Could not find Android Studio
-        echo Please open manually: %~dp0android
-        start "" explorer "%~dp0android"
-    )
 )
 
 if "%choice%"=="2" (
     echo.
-    echo Building Debug APK...
+    echo APK 빌드 시작... (이 과정은 안드로이드 스튜디오 없이 진행됩니다)
     cd android
-    call gradlew assembleDebug
+    call gradlew.bat assembleDebug
     if errorlevel 1 (
-        echo Build failed!
+        echo [에러] Gradle 빌드 실패! JAVA_HOME 설정을 확인하세요.
         pause
         exit /b 1
     )
     echo.
-    echo ✓ APK built successfully!
-    echo Location: android\app\build\outputs\apk\debug\app-debug.apk
-    echo.
+    echo ✓ APK 생성 성공!
     start "" explorer "app\build\outputs\apk\debug"
 )
 
-if "%choice%"=="3" (
-    echo.
-    echo Skipped. You can build later in Android Studio.
-)
+if "%choice%"=="3" exit
 
 echo.
-echo ========================================
-echo Update process complete!
 echo ========================================
 pause

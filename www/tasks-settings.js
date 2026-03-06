@@ -168,7 +168,6 @@ function initSettings() {
     const volumeSettings = document.getElementById('volumeSettings');
     const volumeValue = document.getElementById('volumeValue');
     const notificationSound = document.getElementById('notificationSound');
-    const particleEffects = document.getElementById('particleEffects');
     const exportData = document.getElementById('exportData');
     const bgmBtn = document.getElementById('bgmBtn');
     const bellBtn = document.getElementById('bellBtn');
@@ -312,6 +311,16 @@ function initSettings() {
         if (soundEnabled) soundEnabled.checked = settings.soundEnabled !== false;
         if (dailyGoalEl) dailyGoalEl.value = settings.dailyGoal || 0;
 
+        const anonymousMode = document.getElementById('anonymousMode');
+        const autoJoinBodyDouble = document.getElementById('autoJoinBodyDouble');
+        if (anonymousMode) anonymousMode.checked = settings.anonymousMode === true;
+        if (autoJoinBodyDouble) autoJoinBodyDouble.checked = settings.autoJoinBodyDouble !== false;
+
+        // AI 쪼개기 팝업 토글 로드
+        const showMicroActionEl = document.getElementById('showMicroAction');
+        if (showMicroActionEl) showMicroActionEl.checked = settings.showMicroAction !== false;
+
+
         // Load initial button texts
         updateSoundDisplay('bgm', settings.bgmId || 'crackle');
         updateSoundDisplay('bell', settings.bellId || 'chime');
@@ -321,7 +330,6 @@ function initSettings() {
             updateVolumeDisplay(settings.volume || 0.5);
         }
         if (notificationSound) notificationSound.checked = settings.notificationSound !== false;
-        if (particleEffects) particleEffects.checked = settings.particleEffects !== false;
 
         // Update audio sources based on loaded settings
         updateAudioSource('fireSound', settings.bgmId);
@@ -351,8 +359,16 @@ function initSettings() {
         settings.soundEnabled = soundEnabled?.checked !== false;
         settings.volume = parseFloat(volumeSettings?.value || 0.5);
         settings.notificationSound = notificationSound?.checked !== false;
-        settings.particleEffects = particleEffects?.checked !== false;
         settings.dailyGoal = parseFloat(dailyGoalEl?.value || 0);
+
+        const anonymousMode = document.getElementById('anonymousMode');
+        const autoJoinBodyDouble = document.getElementById('autoJoinBodyDouble');
+        if (anonymousMode) settings.anonymousMode = anonymousMode.checked;
+        if (autoJoinBodyDouble) settings.autoJoinBodyDouble = autoJoinBodyDouble.checked;
+
+        // AI 쪼개기 팝업 토글 저장
+        const showMicroActionEl = document.getElementById('showMicroAction');
+        if (showMicroActionEl) settings.showMicroAction = showMicroActionEl.checked;
 
         localStorage.setItem('settings', JSON.stringify(settings));
         applyTimerSettings(settings);
@@ -435,6 +451,14 @@ function initSettings() {
     if (restDuration) restDuration.addEventListener('change', saveSettings);
     if (autoStart) autoStart.addEventListener('change', saveSettings);
     if (dailyGoalEl) dailyGoalEl.addEventListener('change', saveSettings);
+
+    const anonymousMode = document.getElementById('anonymousMode');
+    const autoJoinBodyDouble = document.getElementById('autoJoinBodyDouble');
+    if (anonymousMode) anonymousMode.addEventListener('change', saveSettings);
+    if (autoJoinBodyDouble) autoJoinBodyDouble.addEventListener('change', saveSettings);
+
+    const showMicroActionEl = document.getElementById('showMicroAction');
+    if (showMicroActionEl) showMicroActionEl.addEventListener('change', saveSettings);
 
     if (bgmBtn) {
         bgmBtn.addEventListener('click', () => openSoundModal('bgm'));
@@ -561,17 +585,8 @@ function initSettings() {
     if (notificationSound) {
         notificationSound.addEventListener('change', (e) => {
             saveSettings();
-            // Note: removed automatic test play on toggle to avoid annoyance,
+            // Note: removed automatic test play on toggle to avoid annoyance, 
             // but user can use sound selector change to test.
-        });
-    }
-
-    if (particleEffects) {
-        particleEffects.addEventListener('change', (e) => {
-            saveSettings();
-            if (!e.target.checked) {
-                window.CozyParticles?.deactivateAll();
-            }
         });
     }
 

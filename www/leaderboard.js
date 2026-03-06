@@ -100,58 +100,10 @@ class LeaderboardManager {
             this.isLoading = false;
             this.renderLeaderboard(period);
 
-            // 50위 밖 사용자라면 별도로 순위 조회
-            const currentUserUid = window.auth?.currentUser?.uid;
-            const inTop50 = this.leaderboardData.some(item => item.uid === currentUserUid);
-            if (currentUserUid && !inTop50) {
-                this.fetchMyRank(period, sortField);
-            }
-
         } catch (error) {
             console.error('리더보드 로드 오류:', error);
             this.isLoading = false;
             this.renderErrorState(error);
-        }
-    }
-
-    // 50위 밖 사용자의 실제 순위 조회
-    async fetchMyRank(period, sortField) {
-        const currentUserUid = window.auth?.currentUser?.uid;
-        if (!currentUserUid || !window.db) return;
-
-        try {
-            const myDoc = await window.db.collection('leaderboard').doc(currentUserUid).get();
-            if (!myDoc.exists) return;
-
-            const myScore = myDoc.data()[sortField] || 0;
-            const aboveSnapshot = await window.db.collection('leaderboard')
-                .where(sortField, '>', myScore)
-                .get();
-
-            this.currentUserRank = aboveSnapshot.size + 1;
-            this.currentUserData = myDoc.data();
-
-            // UI 업데이트
-            const myRankEl = document.getElementById('myRankValue');
-            const myTimeEl = document.getElementById('myRankTime');
-            const myStreakEl = document.getElementById('myRankStreak');
-            const myRankNameEl = document.getElementById('myRankName');
-            const myRankAvatarContainerEl = document.getElementById('myRankAvatarContainer');
-
-            if (myRankEl) myRankEl.textContent = `#${this.currentUserRank}`;
-            if (myTimeEl) myTimeEl.textContent = this.formatTime(myScore);
-            if (myStreakEl) myStreakEl.textContent = this.currentUserData.streak ? `🔥 ${this.currentUserData.streak}일 연속` : '';
-            if (myRankNameEl) myRankNameEl.textContent = this.currentUserData.displayName || '내 순위';
-            if (myRankAvatarContainerEl) {
-                if (this.currentUserData.photoURL) {
-                    myRankAvatarContainerEl.innerHTML = `<img src="${this.currentUserData.photoURL}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-                } else {
-                    const initial = (this.currentUserData.displayName || '?').charAt(0).toUpperCase();
-                    myRankAvatarContainerEl.innerHTML = `<div style="width:100%;height:100%;border-radius:50%;background:#6366f1;color:white;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;">${initial}</div>`;
-                }
-            }
-        } catch (e) {
-            console.warn('내 순위 조회 실패:', e);
         }
     }
 
@@ -279,8 +231,7 @@ class LeaderboardManager {
                     }
                 }
             } else {
-                // 50위 밖: 비동기 fetchMyRank 결과 기다리는 동안 '계산 중' 표시
-                myRankEl.textContent = this.currentUserRank ? `#${this.currentUserRank}` : '계산 중...';
+                myRankEl.textContent = '-';
                 if (myTimeEl) myTimeEl.textContent = '아직 기록 없음';
                 if (myStreakEl) myStreakEl.textContent = '';
 

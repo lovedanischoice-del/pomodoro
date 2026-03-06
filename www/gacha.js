@@ -60,8 +60,7 @@ function saveToCollection(item) {
  * @param {Function} onClose 닫기 후 콜백
  */
 function openGachaBox(onClose) {
-    const overlay = document.getElementById('gachaOverlay');
-    if (!overlay) {
+    if (!window.modalManager) {
         if (onClose) onClose();
         return;
     }
@@ -74,8 +73,7 @@ function openGachaBox(onClose) {
     if (boxEl) boxEl.classList.remove('open');
     if (resultCard) resultCard.classList.add('hidden');
 
-    overlay.classList.remove('hidden');
-    overlay.classList.add('active');
+    window.modalManager.openModal('gachaOverlay');
 
     // 1초 후 상자 열기
     setTimeout(() => {
@@ -95,8 +93,7 @@ function openGachaBox(onClose) {
     const closeBtn = document.getElementById('gachaCloseBtn');
     if (closeBtn) {
         closeBtn.onclick = () => {
-            overlay.classList.remove('active');
-            overlay.classList.add('hidden');
+            window.modalManager.closeModal('gachaOverlay');
             if (onClose) onClose();
         };
     }
@@ -105,8 +102,7 @@ function openGachaBox(onClose) {
     const colBtn = document.getElementById('gachaToCollectionBtn');
     if (colBtn) {
         colBtn.onclick = () => {
-            overlay.classList.remove('active');
-            overlay.classList.add('hidden');
+            window.modalManager.closeModal('gachaOverlay');
             // 컬렉션 탭으로 이동
             const navItem = document.querySelector('.nav-item[data-view="collectionView"]');
             if (navItem) navItem.click();

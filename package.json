@@ -4,8 +4,8 @@
   "description": "장작 타는 소리와 함께하는 몰입형 포모도로 타이머",
   "main": "main.js",
   "scripts": {
-    "build": "echo Build complete - files are in www folder",
-    "sync": "npx cap sync",
+    "build": "vite build",  
+    "sync": "npx cap sync android",
     "open:android": "npx cap open android",
     "run:android": "npx cap run android",
     "copy": "npx cap copy",

@@ -26,7 +26,7 @@ function initFirebase() {
 
             console.log("Firebase initialized successfully");
 
-            auth.onAuthStateChanged(async (user) => {
+            auth.onAuthStateChanged((user) => {
                 const loginBtn = document.getElementById('googleLoginBtn');
                 const userProfile = document.getElementById('userProfile');
                 const userName = document.getElementById('userName');
@@ -84,14 +84,7 @@ function initFirebase() {
                         }
                     }
 
-                    showFirestoreLoading(true);
-                    try {
-                        await loadFromFirestore(user.uid);
-                    } catch (e) {
-                        console.warn('Firestore 로드 실패, 로컬 데이터 사용:', e);
-                    } finally {
-                        showFirestoreLoading(false);
-                    }
+                    loadFromFirestore(user.uid);
 
                     const lbLoginBanner = document.getElementById('lbLoginBanner');
                     if (lbLoginBanner) lbLoginBanner.style.display = 'none';
@@ -123,19 +116,6 @@ function initFirebase() {
     }
 }
 
-function showFirestoreLoading(visible) {
-    let overlay = document.getElementById('firestoreLoadingOverlay');
-    if (!overlay && visible) {
-        overlay = document.createElement('div');
-        overlay.id = 'firestoreLoadingOverlay';
-        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:9999;display:flex;align-items:center;justify-content:center;';
-        overlay.innerHTML = '<div style="color:#fff;font-size:15px;background:rgba(255,255,255,0.1);padding:16px 24px;border-radius:12px;backdrop-filter:blur(8px);">☁️ 데이터 동기화 중...</div>';
-        document.body.appendChild(overlay);
-    } else if (overlay) {
-        overlay.style.display = visible ? 'flex' : 'none';
-    }
-}
-
 async function saveToFirestore(collectionName, data) {
     if (!auth || !auth.currentUser) return;
 
@@ -161,41 +141,44 @@ async function saveToFirestore(collectionName, data) {
 
 async function loadFromFirestore(uid) {
     console.log("Loading data from Firestore...");
-
-    const userRef = db.collection('users').doc(uid);
-    const [todoDoc, settingsDoc, sessionDoc] = await Promise.all([
-        userRef.collection('todos').doc('data').get().catch(() => null),
-        userRef.collection('settings').doc('data').get().catch(() => null),
-        userRef.collection('sessions').doc('data').get().catch(() => null),
-    ]);
-
-    if (todoDoc && todoDoc.exists) {
-        const todos = todoDoc.data().items || [];
-        localStorage.setItem('todos', JSON.stringify(todos));
-        if (window.renderTodos) window.renderTodos();
-        if (window.renderTasksList) window.renderTasksList();
-        if (typeof updateGlobalTodos === 'function') updateGlobalTodos(todos);
-        console.log("Loaded todos");
-    }
-
-    if (settingsDoc && settingsDoc.exists) {
-        const settings = settingsDoc.data().items || {};
-        localStorage.setItem('settings', JSON.stringify(settings));
-        if (window.initSettings) window.initSettings();
-        console.log("Loaded settings");
-    }
-
-    if (sessionDoc && sessionDoc.exists) {
-        const sessions = sessionDoc.data().items || [];
-        localStorage.setItem('focusSessions', JSON.stringify(sessions));
-        if (window.statsManager) {
-            window.statsManager.sessions = sessions;
-            window.statsManager.updateStats();
+    try {
+        const todoDoc = await db.collection('users').doc(uid).collection('todos').doc('data').get();
+        if (todoDoc.exists) {
+            const data = todoDoc.data();
+            const todos = data.items || [];
+            localStorage.setItem('todos', JSON.stringify(todos));
+            if (window.renderTodos) window.renderTodos();
+            if (window.renderTasksList) window.renderTasksList();
+            if (typeof updateGlobalTodos === 'function') updateGlobalTodos(todos);
+            console.log("Loaded todos");
         }
-        console.log("Loaded sessions");
-    }
 
-    console.log("Data sync complete");
+        const settingsDoc = await db.collection('users').doc(uid).collection('settings').doc('data').get();
+        if (settingsDoc.exists) {
+            const data = settingsDoc.data();
+            const settings = data.items || {};
+            localStorage.setItem('settings', JSON.stringify(settings));
+            if (window.initSettings) window.initSettings();
+            console.log("Loaded settings");
+        }
+
+        const sessionDoc = await db.collection('users').doc(uid).collection('sessions').doc('data').get();
+        if (sessionDoc.exists) {
+            const data = sessionDoc.data();
+            const sessions = data.items || [];
+            localStorage.setItem('focusSessions', JSON.stringify(sessions));
+            if (window.statsManager) {
+                window.statsManager.sessions = sessions;
+                window.statsManager.updateStats();
+            }
+            console.log("Loaded sessions");
+        }
+
+        console.log("Data sync complete");
+
+    } catch (error) {
+        console.error("Error loading data:", error);
+    }
 }
 
 function googleLogin() {

@@ -25,6 +25,16 @@ const SOUND_CONFIG = {
             id: 'library',
             name: '도서관 (Library)',
             file: 'sounds/bgm/Library.mp3'
+        },
+        {
+            id: 'om',
+            name: '옴 명상 (Om Chant)',
+            file: 'sounds/bgm/om.mp3'
+        },
+        {
+            id: 'singingbowl',
+            name: '싱잉볼 (Singing Bowl)',
+            file: 'sounds/bgm/singing_bowl.mp3'
         }
     ],
 

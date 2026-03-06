@@ -108,8 +108,7 @@ function startStretchMission(onComplete) {
     }
 
     let count = 5;
-    overlay.classList.remove('hidden');
-    overlay.classList.add('active');
+    window.modalManager?.openModal('stretchOverlay');
     if (countdownEl) countdownEl.textContent = count;
 
     // 완료 처리
@@ -119,8 +118,8 @@ function startStretchMission(onComplete) {
         removeMotionListener();
         overlay.classList.add('done-flash');
         setTimeout(() => {
-            overlay.classList.remove('active', 'done-flash');
-            overlay.classList.add('hidden');
+            window.modalManager?.closeModal('stretchOverlay');
+            overlay.classList.remove('done-flash');
             if (onComplete) onComplete();
         }, 600);
     }
@@ -181,8 +180,7 @@ function showMicroActionPopup(onStart) {
     }
 
     let countdown = 5;
-    overlay.classList.remove('hidden');
-    overlay.classList.add('active');
+    window.modalManager?.openModal('microActionOverlay');
     if (input) { input.value = ''; setTimeout(() => input.focus(), 100); }
 
     // 타이머 바 애니메이션
@@ -198,8 +196,7 @@ function showMicroActionPopup(onStart) {
     function finishPopup() {
         clearInterval(microTimerId);
         microTimerId = null;
-        overlay.classList.remove('active');
-        overlay.classList.add('hidden');
+        window.modalManager?.closeModal('microActionOverlay');
 
         const actionText = input ? input.value.trim() : '';
 

@@ -18,11 +18,15 @@ function initRabbitHole() {
     if (isRabbitHoleInitialized) return;
     isRabbitHoleInitialized = true;
 
+    const fab = document.getElementById('rabbitHoleBtn');
     const fabWrap = document.getElementById('rabbitHoleFab');
     const panel = document.getElementById('rabbitHolePanel');
     const inputEl = document.getElementById('rabbitInput');
     const saveBtn = document.getElementById('rabbitSaveBtn');
     const closeBtn = document.getElementById('rabbitCloseBtn');
+    const vault = document.getElementById('rabbitVaultPanel');
+    const vaultList = document.getElementById('rabbitVaultList');
+    const clearBtn = document.getElementById('rabbitClearBtn');
     const badge = document.getElementById('rabbitBadge');
 
     if (!fabWrap) return;
@@ -31,23 +35,30 @@ function initRabbitHole() {
     fabWrap.addEventListener('click', () => {
         if (rabbitLocked) {
             // 집중 중 → 빠른 입력 패널 토글
-            rabbitInputVisible = !rabbitInputVisible;
-            panel?.classList.toggle('hidden', !rabbitInputVisible);
-            if (rabbitInputVisible) {
-                inputEl?.focus();
+            const panelInner = document.getElementById('rabbitHolePanel');
+            const overlay = document.getElementById('rabbitModalOverlay');
+            if (overlay && overlay.classList.contains('active')) {
+                window.modalManager?.closeModal('rabbitHolePanel');
+                rabbitInputVisible = false;
+            } else {
+                // 주의: modal-manager.js는 파라미터를 사용해서 DOM의 가장 가까운 .modal-overlay를 찾음
+                // ID를 rabbitHolePanel로 넘깁니다. 
+                window.modalManager?.openModal('rabbitHolePanel');
+                rabbitInputVisible = true;
+                setTimeout(() => inputEl?.focus(), 50);
             }
         } else {
             // 휴식/정지 중 → 보관함 열기
-            openRabbitVault();
+            openRabbitVault(vault, vaultList);
         }
     });
 
     // 저장 버튼
     saveBtn?.addEventListener('click', () => saveRabbitItem(inputEl, panel, badge));
 
-    // 닫기 버튼
+    // 닫기 버튼 (모달 안에 포함되므로, 수동 연동 제거해도 되지만, 일단 유지하며 modalManager 연동)
     closeBtn?.addEventListener('click', () => {
-        panel?.classList.add('hidden');
+        window.modalManager?.closeModal('rabbitHolePanel');
         rabbitInputVisible = false;
     });
 
@@ -55,9 +66,16 @@ function initRabbitHole() {
     inputEl?.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') saveRabbitItem(inputEl, panel, badge);
         if (e.key === 'Escape') {
-            panel?.classList.add('hidden');
+            window.modalManager?.closeModal('rabbitHolePanel');
             rabbitInputVisible = false;
         }
+    });
+
+    // 모두 삭제 버튼
+    clearBtn?.addEventListener('click', () => {
+        localStorage.removeItem(RABBIT_STORAGE_KEY);
+        renderVaultList(vaultList);
+        updateRabbitBadge(badge);
     });
 
     // 초기 배지
@@ -74,36 +92,17 @@ function saveRabbitItem(inputEl, panel, badge) {
     localStorage.setItem(RABBIT_STORAGE_KEY, JSON.stringify(items));
 
     inputEl.value = '';
-    panel?.classList.add('hidden');
+    window.modalManager?.closeModal('rabbitHolePanel');
     rabbitInputVisible = false;
 
     updateRabbitBadge(badge);
     showRabbitSaveFeedback();
 }
 
-function openRabbitVault() {
-    BbangModal.show({
-        position: 'center',
-        content: `
-            <div class="bbang-modal-header">
-                <span class="bbang-modal-title">🐇 파킹해 둔 생각들</span>
-                <button class="bbang-modal-close" onclick="BbangModal.hide()">✕</button>
-            </div>
-            <ul id="rabbitVaultList" class="rabbit-vault-list"></ul>
-            <button id="rabbitClearBtn" class="btn-rabbit-clear">모두 삭제</button>
-        `,
-        onReady: () => {
-            renderVaultList(document.getElementById('rabbitVaultList'));
-            const clearBtn = document.getElementById('rabbitClearBtn');
-            if (clearBtn) {
-                clearBtn.addEventListener('click', () => {
-                    localStorage.removeItem(RABBIT_STORAGE_KEY);
-                    renderVaultList(document.getElementById('rabbitVaultList'));
-                    updateRabbitBadge(null);
-                });
-            }
-        },
-    });
+function openRabbitVault(vault, vaultList) {
+    if (!vault) return;
+    renderVaultList(vaultList);
+    window.modalManager?.openModal('rabbitVaultPanel');
 }
 
 function renderVaultList(listEl) {
@@ -154,14 +153,12 @@ window.deleteRabbitItem = function (index) {
     const items = getItems();
     items.splice(index, 1);
     localStorage.setItem(RABBIT_STORAGE_KEY, JSON.stringify(items));
-    // BbangModal 내부의 목록 갱신
-    const listEl = document.getElementById('rabbitVaultList');
-    if (listEl) renderVaultList(listEl);
+    renderVaultList(document.getElementById('rabbitVaultList'));
     updateRabbitBadge(null);
 };
 
 window.closeRabbitVault = function () {
-    BbangModal.hide();
+    window.modalManager?.closeModal('rabbitVaultPanel');
 };
 
 /**
@@ -173,14 +170,14 @@ function lockRabbitHole() {
     const fab_tip = document.getElementById('rabbitFabTip');
     if (fab) {
         fab.classList.add('locked');
+        fab.innerHTML = '🔒';
         fab.title = '집중 중 — 생각 파킹하기';
     }
     if (fab_tip) fab_tip.textContent = '생각 던지기';
 
     // 혹시 열려있던 패널/보관함 닫기
-    document.getElementById('rabbitHolePanel')?.classList.add('hidden');
-    document.getElementById('rabbitVaultPanel')?.classList.remove('active');
-    document.getElementById('rabbitVaultPanel')?.classList.add('hidden');
+    window.modalManager?.closeModal('rabbitHolePanel');
+    window.modalManager?.closeModal('rabbitVaultPanel');
     rabbitInputVisible = false;
 }
 
@@ -193,6 +190,7 @@ function unlockRabbitHole() {
     const fab_tip = document.getElementById('rabbitFabTip');
     if (fab) {
         fab.classList.remove('locked');
+        fab.innerHTML = '🐇';
         fab.title = '파킹한 생각 보기';
     }
     if (fab_tip) fab_tip.textContent = '보관함 열기';
@@ -200,7 +198,12 @@ function unlockRabbitHole() {
     // 저장된 아이템이 있으면 자동으로 보관함 팝업
     const items = getItems();
     if (items.length > 0) {
-        setTimeout(() => openRabbitVault(), 800);
+        setTimeout(() => {
+            openRabbitVault(
+                document.getElementById('rabbitVaultPanel'),
+                document.getElementById('rabbitVaultList')
+            );
+        }, 800);
     }
 }
 

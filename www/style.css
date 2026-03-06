@@ -57,7 +57,9 @@ body[data-theme="cozy"] {
 }
 
 /* 세로토닌 코지 모드 활성화 시 전체 그레이스케일 처리 */
-body.cozy-mode #app {
+/* body 대신 #app과 bottom-nav에 적용 - body에 filter 적용 시 position:fixed 하단바 깨짐 */
+body.cozy-mode #app,
+body.cozy-mode .bottom-nav {
     filter: grayscale(70%) sepia(20%) brightness(85%);
     transition: filter 0.8s ease;
 }
@@ -137,6 +139,182 @@ body[data-theme="melancholy"] {
     --text-muted: #3a506b;
 }
 
+/* 젤라토 데이즈 테마 (Gelato Days) - 라이트 파스텔 */
+body[data-theme="gelato"] {
+    --bg-primary: #F9E1A8;
+    --bg-secondary: #DCCCEC;
+    --bg-card: rgba(255, 255, 255, 0.6);
+    --gradient-neon: linear-gradient(135deg, #FFCBE1 0%, #D6E5BD 25%, #F9E1A8 50%, #BCD8EC 75%, #DCCCEC 100%);
+    --gradient-button: linear-gradient(90deg, #FFCBE1 0%, #BCD8EC 100%);
+    --accent-work: #FFCBE1;
+    --accent-rest: #D6E5BD;
+    --accent-glow: rgba(255, 203, 225, 0.8);
+    --text-primary: #374151;
+    --text-secondary: #4b5563;
+    --text-muted: #6b7280;
+}
+
+/* 말리부 에스케이프 테마 (Malibu Escape) - 라이트 파스텔 */
+body[data-theme="malibu"] {
+    --bg-primary: #FFE5E7;
+    --bg-secondary: #F9E6E4;
+    --bg-card: rgba(255, 255, 255, 0.6);
+    --gradient-neon: linear-gradient(135deg, #FFB0B5 0%, #FFC6CA 25%, #FFD3D6 50%, #F9DCC0 75%, #FFE5E7 100%);
+    --gradient-button: linear-gradient(90deg, #FFC6CA 0%, #F9DCC0 100%);
+    --accent-work: #FFB0B5;
+    --accent-rest: #F9DCC0;
+    --accent-glow: rgba(255, 176, 181, 0.8);
+    --text-primary: #4a3b3c;
+    --text-secondary: #6b5c5d;
+    --text-muted: #8c7d7e;
+}
+
+/* 풀 파티 테마 (Pool Party) - 라이트 파스텔 */
+body[data-theme="pool"] {
+    --bg-primary: #E7F1F9;
+    --bg-secondary: #F9EDEF;
+    --bg-card: rgba(255, 255, 255, 0.6);
+    --gradient-neon: linear-gradient(135deg, #B6D8F7 0%, #CBE6FF 25%, #F7DAE0 50%, #E8DAF0 75%, #F9EDEF 100%);
+    --gradient-button: linear-gradient(90deg, #B6D8F7 0%, #E8DAF0 100%);
+    --accent-work: #B6D8F7;
+    --accent-rest: #F7DAE0;
+    --accent-glow: rgba(182, 216, 247, 0.8);
+    --text-primary: #2d3748;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+}
+
+/* -------------------------------------
+   Light Theme Contrast Fixes (Gelato, Malibu, Pool)
+   ------------------------------------- */
+body[data-theme="gelato"] .content,
+body[data-theme="malibu"] .content,
+body[data-theme="pool"] .content,
+body[data-theme="gelato"] .settings-section,
+body[data-theme="malibu"] .settings-section,
+body[data-theme="pool"] .settings-section,
+body[data-theme="gelato"] .chart-container,
+body[data-theme="malibu"] .chart-container,
+body[data-theme="pool"] .chart-container,
+body[data-theme="gelato"] .heatmap-container,
+body[data-theme="malibu"] .heatmap-container,
+body[data-theme="pool"] .heatmap-container,
+body[data-theme="gelato"] .tasks-filter,
+body[data-theme="malibu"] .tasks-filter,
+body[data-theme="pool"] .tasks-filter,
+body[data-theme="gelato"] .dopamine-item,
+body[data-theme="malibu"] .dopamine-item,
+body[data-theme="pool"] .dopamine-item,
+body[data-theme="gelato"] .leaderboard-container,
+body[data-theme="malibu"] .leaderboard-container,
+body[data-theme="pool"] .leaderboard-container,
+body[data-theme="gelato"] .ranking-item,
+body[data-theme="malibu"] .ranking-item,
+body[data-theme="pool"] .ranking-item {
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+}
+
+body[data-theme="gelato"] .setting-item,
+body[data-theme="malibu"] .setting-item,
+body[data-theme="pool"] .setting-item,
+body[data-theme="gelato"] .tasks-summary,
+body[data-theme="malibu"] .tasks-summary,
+body[data-theme="pool"] .tasks-summary {
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body[data-theme="gelato"] .btn-primary,
+body[data-theme="malibu"] .btn-primary,
+body[data-theme="pool"] .btn-primary,
+body[data-theme="gelato"] .status-badge,
+body[data-theme="malibu"] .status-badge,
+body[data-theme="pool"] .status-badge {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+body[data-theme="gelato"] .btn-secondary,
+body[data-theme="malibu"] .btn-secondary,
+body[data-theme="pool"] .btn-secondary {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-secondary);
+}
+
+body[data-theme="gelato"] .bottom-nav,
+body[data-theme="malibu"] .bottom-nav,
+body[data-theme="pool"] .bottom-nav {
+    background: rgba(255, 255, 255, 0.85);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body[data-theme="gelato"] .nav-item,
+body[data-theme="malibu"] .nav-item,
+body[data-theme="pool"] .nav-item {
+    color: var(--text-secondary);
+}
+
+body[data-theme="gelato"] .nav-item.active,
+body[data-theme="malibu"] .nav-item.active,
+body[data-theme="pool"] .nav-item.active {
+    color: var(--text-primary);
+}
+
+body[data-theme="gelato"] .toggle-slider,
+body[data-theme="malibu"] .toggle-slider,
+body[data-theme="pool"] .toggle-slider {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+body[data-theme="gelato"] input,
+body[data-theme="malibu"] input,
+body[data-theme="pool"] input,
+body[data-theme="gelato"] .btn-setting,
+body[data-theme="malibu"] .btn-setting,
+body[data-theme="pool"] .btn-setting,
+body[data-theme="gelato"] .sound-select-btn,
+body[data-theme="malibu"] .sound-select-btn,
+body[data-theme="pool"] .sound-select-btn,
+body[data-theme="gelato"] .btn-preview,
+body[data-theme="malibu"] .btn-preview,
+body[data-theme="pool"] .btn-preview,
+body[data-theme="gelato"] .btn-dopamine-skip,
+body[data-theme="malibu"] .btn-dopamine-skip,
+body[data-theme="pool"] .btn-dopamine-skip,
+body[data-theme="gelato"] .rabbit-vault-close,
+body[data-theme="malibu"] .rabbit-vault-close,
+body[data-theme="pool"] .rabbit-vault-close,
+body[data-theme="gelato"] .btn-flow-no,
+body[data-theme="malibu"] .btn-flow-no,
+body[data-theme="pool"] .btn-flow-no,
+body[data-theme="gelato"] .btn-one-min-skip,
+body[data-theme="malibu"] .btn-one-min-skip,
+body[data-theme="pool"] .btn-one-min-skip,
+body[data-theme="gelato"] .rabbit-input,
+body[data-theme="malibu"] .rabbit-input,
+body[data-theme="pool"] .rabbit-input {
+    background: rgba(255, 255, 255, 0.4);
+    color: var(--text-primary);
+    border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+/* !important to overrides inline styling */
+body[data-theme="gelato"] #themeSelect,
+body[data-theme="malibu"] #themeSelect,
+body[data-theme="pool"] #themeSelect {
+    background: rgba(255, 255, 255, 0.5) !important;
+    color: var(--text-primary) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body[data-theme="gelato"] ::placeholder,
+body[data-theme="malibu"] ::placeholder,
+body[data-theme="pool"] ::placeholder {
+    color: var(--text-muted);
+}
+
 
 /* 리셋 */
 * {
@@ -155,6 +333,21 @@ body {
     justify-content: center;
     padding: 20px;
     overflow-x: hidden;
+
+    /* 드래그 및 텍스트 선택 방지 (앱처럼 동작되도록) */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* 입력 필드에서는 텍스트 선택이 가능하도록 예외 처리 */
+input,
+textarea {
+    -webkit-user-select: auto;
+    -moz-user-select: auto;
+    -ms-user-select: auto;
+    user-select: auto;
 }
 
 /* 배경 그라데이션 효과 - 타이머 진행 표시 */
@@ -284,7 +477,8 @@ header {
     fill: none;
     stroke: url(#gradient);
     stroke-width: 8;
-    opacity: 0.18;
+    opacity: 0.4;
+    /* 못함으로 배경 그라디언트가 비치는 효과 */
 }
 
 .timer-progress {
@@ -555,15 +749,19 @@ button {
     letter-spacing: 1px;
 }
 
-/* 사운드 컨트롤 */
+/* 볼륨 및 하단 요소 중앙 정렬 수정 */
 .sound-controls {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 16px;
+    position: relative;
+    padding-bottom: 20px;
 }
 
 .sound-indicator {
+    position: absolute;
+    left: 20px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -571,6 +769,7 @@ button {
     color: var(--text-secondary);
     opacity: 0;
     transition: var(--transition);
+    pointer-events: none;
 }
 
 .sound-indicator.visible {
@@ -597,9 +796,9 @@ button {
 .volume-control {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
-    flex: 1;
-    max-width: 200px;
+    width: 200px;
 }
 
 .volume-control span {
@@ -1533,29 +1732,7 @@ button {
 /* ================================================
    기능2: 5초 벌떡 스트레칭 오버레이
    ================================================ */
-.stretch-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 9998;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(4, 28, 20, 0.95);
-    backdrop-filter: blur(12px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.35s ease;
-}
-
-.stretch-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
-    animation: stretchPulse 1.5s ease-in-out infinite alternate;
-}
-
-.stretch-overlay.hidden {
-    display: none;
-}
+/* 공통 모달 시스템 (.modal-overlay, .modal-container)으로 대체됨 */
 
 .stretch-overlay.done-flash {
     background: rgba(16, 185, 129, 0.5) !important;
@@ -1655,30 +1832,7 @@ button {
 /* ================================================
    기능3: 5초 마이크로 액션 팝업
    ================================================ */
-.micro-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 9997;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 0 0 90px;
-    /* 네비게이션 바 위 */
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(6px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-.micro-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.micro-overlay.hidden {
-    display: none;
-}
+/* 공통 모달 시스템 (.modal-overlay, .modal-container)으로 대체됨 */
 
 .micro-card {
     width: 100%;
@@ -2215,6 +2369,7 @@ button {
     z-index: 500;
     cursor: pointer;
     user-select: none;
+    /* position: relative 로 bubble이 이 안에서 absolute 위치를 잡음 */
 }
 
 .penguin-buddy.hidden {
@@ -2288,7 +2443,7 @@ button {
     }
 }
 
-/* 말풍선 — 펭귄 오른쪽에 절대위치로 화정 */
+/* 말풍선 — 펭귄 오른쪽에 절대 위치로 고정 */
 .penguin-bubble {
     position: absolute;
     bottom: 0;
@@ -2532,14 +2687,16 @@ button {
    🐇 토끼굴 파킹
    ================================================ */
 .rabbit-fab-wrap {
-    position: fixed;
-    bottom: 100px;
-    right: 16px;
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
     z-index: 500;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
 }
 
 .rabbit-fab-wrap.hidden {
@@ -2554,16 +2711,26 @@ button {
     padding: 3px 10px;
     border-radius: 50px;
     white-space: nowrap;
+    position: absolute;
+    bottom: 60px;
+    /* 버튼 위쪽으로 배치 */
+    left: 50%;
+    transform: translateX(-50%);
     pointer-events: none;
+    z-index: 500;
 }
 
 .rabbit-fab {
-    width: 52px;
-    height: 52px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    box-sizing: border-box;
+    aspect-ratio: 1 / 1;
+    min-width: 44px;
     border-radius: 50%;
     background: linear-gradient(135deg, #a78bfa, #7c3aed);
     border: none;
-    font-size: 24px;
+    font-size: 20px;
     cursor: pointer;
     box-shadow: 0 6px 24px rgba(124, 58, 237, 0.5);
     transition: all 0.25s ease;
@@ -2600,177 +2767,7 @@ button {
     border: 2px solid #0f0f1a;
 }
 
-/* 빠른 입력 패널 */
-.rabbit-panel {
-    position: fixed;
-    bottom: 165px;
-    right: 16px;
-    z-index: 501;
-    width: 280px;
-    background: linear-gradient(160deg, #252836, #1e2133);
-    border: 1px solid rgba(167, 139, 250, 0.25);
-    border-radius: 18px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-    animation: rabbitPanelIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.rabbit-panel.hidden {
-    display: none;
-}
-
-@keyframes rabbitPanelIn {
-    from {
-        transform: scale(0.85) translateY(16px);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1) translateY(0);
-        opacity: 1;
-    }
-}
-
-.rabbit-panel-inner {
-    padding: 16px;
-}
-
-.rabbit-panel-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: #a78bfa;
-    margin-bottom: 10px;
-}
-
-.rabbit-input-row {
-    display: flex;
-    gap: 8px;
-}
-
-.rabbit-input {
-    flex: 1;
-    padding: 10px 13px;
-    background: rgba(255, 255, 255, 0.07);
-    border: 1.5px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    color: #fff;
-    font-size: 13px;
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: border-color 0.2s;
-}
-
-.rabbit-input:focus {
-    border-color: #a78bfa;
-}
-
-.rabbit-input::placeholder {
-    color: rgba(255, 255, 255, 0.28);
-}
-
-.btn-rabbit-save {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #a78bfa, #7c3aed);
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    flex: unset;
-    transition: all 0.2s;
-}
-
-.btn-rabbit-save:hover {
-    transform: scale(1.1);
-}
-
-.rabbit-hint {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.3);
-    margin-top: 8px;
-    text-align: center;
-}
-
-/* 보관함 패널 */
-.rabbit-vault {
-    position: fixed;
-    inset: 0;
-    z-index: 9994;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(8px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-.rabbit-vault.active {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.rabbit-vault.hidden {
-    display: none;
-}
-
-.rabbit-vault-inner {
-    width: calc(100% - 40px);
-    max-width: 400px;
-    max-height: 70vh;
-    background: linear-gradient(160deg, #1e2133, #161928);
-    border: 1px solid rgba(167, 139, 250, 0.2);
-    border-radius: 24px;
-    padding: 24px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-    display: flex;
-    flex-direction: column;
-    animation: vaultIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@keyframes vaultIn {
-    from {
-        transform: scale(0.92) translateY(20px);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1) translateY(0);
-        opacity: 1;
-    }
-}
-
-.rabbit-vault-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-}
-
-.rabbit-vault-title {
-    font-family: 'Outfit', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: #a78bfa;
-}
-
-.rabbit-vault-close {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    border: none;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 16px;
-    cursor: pointer;
-    flex: unset;
-    transition: all 0.2s;
-}
-
-.rabbit-vault-close:hover {
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
-}
+/* 공통 모달 시스템 사용으로 대체됨 */
 
 .rabbit-vault-list {
     list-style: none;
@@ -2788,15 +2785,19 @@ button {
     align-items: center;
     gap: 10px;
     padding: 10px 12px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(var(--text-primary-rgb, 100, 100, 100), 0.08);
+    /* fallback if rgb var not set, or we can just use another approach */
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    /* slightly visible border for light themes */
 }
+
+/* If dark theme, revert to lighter border via simple override implicitly below */
 
 .rabbit-item-text {
     flex: 1;
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--text-primary);
     word-break: break-all;
 }
 
@@ -2826,7 +2827,7 @@ button {
 
 .rabbit-empty {
     text-align: center;
-    color: rgba(255, 255, 255, 0.3);
+    color: var(--text-muted);
     font-size: 14px;
     padding: 20px 0;
 }
@@ -2835,9 +2836,9 @@ button {
     width: 100%;
     padding: 11px;
     background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.3);
     border-radius: 50px;
-    color: #fca5a5;
+    color: #ef4444;
     font-size: 13px;
     cursor: pointer;
     transition: all 0.2s;
@@ -2878,8 +2879,8 @@ button {
 .flow-card {
     width: calc(100% - 48px);
     max-width: 360px;
-    background: linear-gradient(160deg, #0d1b2e, #091523);
-    border: 1px solid rgba(56, 189, 248, 0.2);
+    background: var(--bg-card);
+    border: 1px solid rgba(56, 189, 248, 0.4);
     border-radius: 28px;
     padding: 36px 28px 28px;
     text-align: center;
@@ -3029,8 +3030,8 @@ button {
 .one-min-card {
     width: calc(100% - 48px);
     max-width: 340px;
-    background: linear-gradient(160deg, #1c1608, #110e04);
-    border: 1px solid rgba(251, 191, 36, 0.2);
+    background: var(--bg-card);
+    border: 1px solid rgba(251, 191, 36, 0.4);
     border-radius: 28px;
     padding: 32px 24px 24px;
     text-align: center;
@@ -3173,9 +3174,9 @@ button {
     width: 100%;
     padding: 13px;
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--text-muted);
     border-radius: 50px;
-    color: rgba(255, 255, 255, 0.38);
+    color: var(--text-primary);
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -3194,14 +3195,17 @@ button {
    ================================================ */
 .penguin-buddy {
     position: fixed;
-    bottom: 88px;
-    left: 16px;
+    bottom: 24px;
+    left: 24px;
     z-index: 400;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     transition: all 0.4s ease;
+    width: 44px;
+    height: 44px;
 }
 
 .penguin-buddy.hidden {
@@ -3363,119 +3367,80 @@ button {
     }
 }
 
-/* ================================================
-   🍞 BbangModal - 통합 팝업 모달 시스템
-   ================================================ */
-.bbang-overlay {
+/* ==============================================
+ * 📦 Common Modal / Popup System
+ * ============================================== */
+.modal-overlay {
     position: fixed;
     inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
     z-index: 9990;
+    /* base z-index for modals */
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.72);
-    backdrop-filter: blur(10px);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
 }
 
-.bbang-overlay.active {
+.modal-overlay.active {
     opacity: 1;
     pointer-events: auto;
 }
 
-.bbang-overlay.hidden {
-    display: none;
-}
-
-.bbang-overlay.position-bottom {
-    align-items: flex-end;
-    padding-bottom: 90px;
-}
-
-.bbang-card {
-    width: calc(100% - 40px);
-    max-width: 400px;
+.modal-container {
     background: var(--bg-card);
-    color: var(--text-primary);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    padding: 28px 24px;
+    border-radius: 20px;
+    padding: 24px;
+    width: 90%;
+    max-width: 320px;
+    /* default width, can be overridden */
+    max-height: 80vh;
+    overflow-y: auto;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    animation: bbangCardIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    color: var(--text-primary);
+    transform: scale(0.95) translateY(10px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.bbang-overlay.position-bottom .bbang-card {
-    border-radius: 24px 24px 16px 16px;
+.modal-overlay.active .modal-container {
+    transform: scale(1) translateY(0);
+    opacity: 1;
 }
 
-@keyframes bbangCardIn {
-    from {
-        transform: scale(0.92) translateY(16px);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1) translateY(0);
-        opacity: 1;
-    }
-}
-
-.bbang-modal-header {
+.modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
 }
 
-.bbang-modal-title {
-    font-family: 'Outfit', sans-serif;
+.modal-header h3 {
+    margin: 0;
     font-size: 18px;
     font-weight: 700;
-    color: var(--text-primary);
-    margin: 0;
 }
 
-.bbang-modal-close {
-    background: rgba(255, 255, 255, 0.08);
+.modal-close-btn {
+    background: none;
     border: none;
-    color: var(--text-secondary);
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 24px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-    flex: unset;
+    line-height: 1;
+    padding: 0 4px;
+    transition: var(--transition);
 }
 
-.bbang-modal-close:hover {
-    background: rgba(255, 255, 255, 0.15);
-    color: var(--text-primary);
+.modal-close-btn:hover {
+    color: var(--accent-work);
+    transform: scale(1.1);
 }
 
-/* ================================================
-   안드로이드 앱 전체화면 모드
-   Capacitor 네이티브 환경에서 배경이 화면을 꽉 채움
-   ================================================ */
-body.native-app {
-    padding: 0;
-    align-items: stretch;
-}
-
-body.native-app #app {
-    max-width: 100%;
-    min-height: 100vh;
-}
-
-body.native-app .content {
-    border-radius: 0;
-    box-shadow: none;
-    border: none;
-    background: transparent;
-    min-height: 100vh;
+.modal-body {
+    position: relative;
 }

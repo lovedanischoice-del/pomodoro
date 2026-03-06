@@ -3,5 +3,6 @@
     "allow": [
       "Bash(grep:*)"
     ]
-  }
+  },
+  "prefersReducedMotion": true
 }

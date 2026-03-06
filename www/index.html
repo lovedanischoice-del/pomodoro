@@ -15,11 +15,17 @@
     <link rel="stylesheet" href="stats.css">
     <link rel="stylesheet" href="leaderboard.css">
     <link rel="stylesheet" href="features.css">
+    <link rel="stylesheet" href="body-double.css">
+    <link rel="stylesheet" href="streak-level.css">
+    <link rel="stylesheet" href="share-card.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@300;500;700;800&display=swap"
         rel="stylesheet">
+    <!-- i18n: 다국어 지원 (가장 먼저 로드) -->
+    <script src="i18n.js"></script>
+    <script src="modal-manager.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -154,15 +160,15 @@
             <main class="content" style="position: relative;">
                 <!-- 메인 페이지 우상단 프로필 -->
                 <div id="mainTopProfile"
-                    style="display: none; position: absolute; top: 20px; right: 20px; align-items: center; gap: 8px; cursor: pointer; z-index: 10;"
+                    style="display: none; position: absolute; top: 24px; right: 24px; align-items: center; gap: 8px; cursor: pointer; z-index: 10;"
                     onclick="document.querySelector('[data-view=\'settingsView\']').click();">
                     <span id="mainTopName"
                         style="font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.8);"></span>
-                    <div style="position: relative; width: 28px; height: 28px; border-radius: 50%; overflow: hidden;">
+                    <div style="position: relative; width: 44px; height: 44px; border-radius: 50%; overflow: hidden;">
                         <img id="mainTopAvatar" src="" alt="Profile"
                             style="width: 100%; height: 100%; object-fit: cover; display: none;">
                         <div id="mainTopInitial"
-                            style="width: 100%; height: 100%; background: #6366f1; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold;">
+                            style="width: 100%; height: 100%; background: #6366f1; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;">
                             U</div>
                     </div>
                 </div>
@@ -189,6 +195,7 @@
                         <div class="time-main" id="timeMain">20:00</div>
                     </div>
                     <div class="time-sub" id="timeSub">WORK SESSION</div>
+                    <div id="bodyDoubleContainer"></div>
                 </section>
 
                 <section class="controls">
@@ -196,19 +203,32 @@
                         <span class="icon" id="playIcon">▶</span>
                         <span class="text" id="toggleText">START</span>
                     </button>
-                    <button id="resetBtn" class="btn-secondary">RESET</button>
+                    <button id="scheduleBtn" class="btn-secondary btn-schedule"
+                        onclick="window.scheduleStart && window.scheduleStart.open()">⏰ 예약</button>
+                    <button id="resetBtn" class="btn-secondary" data-i18n="btn.reset">RESET</button>
                 </section>
 
                 <!-- 뽀모도로 카운터 -->
                 <div class="pomodoro-counter-wrap">
                     <div id="pomodoroCounter" class="pomodoro-counter"></div>
-                    <div class="pomodoro-streak" id="streakDisplay"></div>
+                </div>
+
+
+                <!-- XP 게이지 -->
+                <div class="xp-bar-wrap">
+                    <div class="xp-bar-track">
+                        <div class="xp-bar-fill" id="xpBarFill" style="width:0%"></div>
+                    </div>
+                    <div class="xp-bar-label">
+                        <span>XP</span>
+                        <span id="xpBarNext">다음 레벨까지 10세션</span>
+                    </div>
                 </div>
 
                 <!-- 하루 목표 게이지 -->
                 <div class="daily-goal-bar" id="dailyGoalBar" style="display:none">
                     <div class="goal-label">
-                        <span>오늘 목표</span>
+                        <span data-i18n="goal.label">오늘 목표</span>
                         <span id="goalProgress">0 / 0h</span>
                     </div>
                     <div class="goal-track">
@@ -224,11 +244,26 @@
                             <span class="icon-sound">🔥</span> 소리 재생 중
                         </div>
                         <div class="volume-control">
-                            <span>vol</span>
+                            <span>VOL</span>
                             <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.5">
                         </div>
                     </div>
                 </footer>
+
+                <!-- ===== 🐇 토끼굴 파킹 ===== -->
+                <div id="rabbitHoleFab" class="rabbit-fab-wrap">
+                    <div id="rabbitFabTip" class="rabbit-fab-tip">생각 던지기</div>
+                    <div style="position:relative;">
+                        <button id="rabbitHoleBtn" class="rabbit-fab" title="집중 중 — 생각 파킹하기">🐇</button>
+                        <span id="rabbitBadge" class="rabbit-badge" style="display:none;">0</span>
+                    </div>
+                </div>
+
+                <!-- ===== 🐧 뺑수 펭귄 ===== -->
+                <div id="penguinBuddy" class="penguin-buddy hidden">
+                    <div id="penguinBubble" class="penguin-bubble hidden"></div>
+                    <div id="penguinSprite" class="penguin-sprite">🐧</div>
+                </div>
             </main>
         </div>
 
@@ -236,26 +271,34 @@
         <div id="statsView" class="view">
             <main class="content stats-content">
                 <header>
-                    <h1 class="stats-title">Focus Session Statistics</h1>
+                    <h1 class="stats-title" data-i18n="stats.title">집중 기록</h1>
                 </header>
 
-                <!-- Today Summary -->
-                <section class="stats-today">
-                    <div class="today-cards">
-                        <div class="today-card">
-                            <div class="today-value" id="todaySessions">0</div>
-                            <div class="today-label">오늘 세션</div>
-                        </div>
-                        <div class="today-card">
-                            <div class="today-value" id="todayMinutes">0m</div>
-                            <div class="today-label">집중 시간</div>
-                        </div>
-                        <div class="today-card">
-                            <div class="today-value" id="streakDays">0🔥</div>
-                            <div class="today-label">연속 일수</div>
-                        </div>
+                <!-- 📤 Share 버튼 -->
+                <button id="shareCardBtn" onclick="_openShareCard()">
+                    📤 Share Today
+                </button>
+
+                <!-- ===== 🔥 스트릭 + 레벨 배너 (Stats 최상단) ===== -->
+                <div class="streak-level-banner">
+                    <!-- 연속 일수 -->
+                    <div class="slb-cell slb-streak">
+                        <div class="slb-value" id="slbStreakVal">— </div>
+                        <div class="slb-label" data-i18n="streak.days">연속 일수</div>
                     </div>
-                </section>
+                    <div class="slb-divider"></div>
+                    <!-- 오늘 세션 -->
+                    <div class="slb-cell">
+                        <div class="slb-value" id="slbSessionVal">0회</div>
+                        <div class="slb-label" data-i18n="streak.sessions">오늘 세션</div>
+                    </div>
+                    <div class="slb-divider"></div>
+                    <!-- 레벨 -->
+                    <div class="slb-cell slb-level">
+                        <div class="slb-value" id="slbLevelVal">Lv.1</div>
+                        <div class="slb-label" id="slbLevelTitle" data-i18n="level.1">🌱 새싹</div>
+                    </div>
+                </div>
 
                 <!-- Weekly Summary -->
                 <section class="stats-summary">
@@ -301,7 +344,7 @@
         <div id="tasksView" class="view">
             <main class="content tasks-content">
                 <header>
-                    <h1 class="stats-title">My Tasks</h1>
+                    <h1 class="stats-title" data-i18n="tasks.title">My Tasks</h1>
                 </header>
 
                 <section class="tasks-section">
@@ -396,15 +439,15 @@
         <div id="settingsView" class="view">
             <main class="content settings-content">
                 <header>
-                    <h1 class="stats-title">Settings</h1>
+                    <h1 class="stats-title" data-i18n="settings.title">Settings</h1>
                 </header>
 
                 <!-- Timer Settings -->
                 <section class="settings-section">
-                    <h3 class="section-title">⏱️ Timer Settings</h3>
+                    <h3 class="section-title" data-i18n="settings.timer">⏱️ Timer Settings</h3>
 
                     <div class="setting-item">
-                        <label for="workDuration">Work Duration (minutes)</label>
+                        <label for="workDuration" data-i18n="settings.work">집중 시간 (분)</label>
                         <div class="setting-control">
                             <input type="number" id="workDuration" min="1" max="60" value="20">
                             <span class="unit">min</span>
@@ -412,7 +455,7 @@
                     </div>
 
                     <div class="setting-item">
-                        <label for="restDuration">Rest Duration (minutes)</label>
+                        <label for="restDuration" data-i18n="settings.rest">휴식 시간 (분)</label>
                         <div class="setting-control">
                             <input type="number" id="restDuration" min="1" max="30" value="5">
                             <span class="unit">min</span>
@@ -420,7 +463,7 @@
                     </div>
 
                     <div class="setting-item">
-                        <label for="autoStart">Auto-start next session</label>
+                        <label for="autoStart" data-i18n="settings.autoStart">자동 시작</label>
                         <label class="toggle">
                             <input type="checkbox" id="autoStart" checked>
                             <span class="toggle-slider"></span>
@@ -428,27 +471,28 @@
                     </div>
 
                     <div class="setting-item">
-                        <label for="flowmodoroToggleBtn" style="flex:1;">초몰입 연장 (Flowmodoro)</label>
+                        <label for="flowmodoroToggleBtn" style="flex:1;" data-i18n="settings.flowmodoro">초몰입 연장
+                            (Flowmodoro)</label>
                         <button id="flowmodoroToggleBtn" class="btn-setting"
                             onclick="window.setFlowmodoroEnabled(!window.isFlowmodoroEnabled())"
                             style="width: auto; padding: 8px 15px;">⏱️ OFF</button>
                     </div>
 
                     <div class="setting-item">
-                        <label for="dailyGoal">하루 목표 집중 시간</label>
+                        <label for="dailyGoal" data-i18n="settings.dailyGoal">하루 목표 집중 시간</label>
                         <div class="setting-control">
                             <input type="number" id="dailyGoal" min="0" max="12" value="0">
-                            <span class="unit">hrs (0=없음)</span>
+                            <span class="unit" data-i18n="settings.dailyUnit">시간 (0=없음)</span>
                         </div>
                     </div>
                 </section>
 
                 <!-- Appearance Settings -->
                 <section class="settings-section">
-                    <h3 class="section-title">🎨 Appearance</h3>
+                    <h3 class="section-title" data-i18n="settings.appearance">🎨 Appearance</h3>
 
                     <div class="setting-item">
-                        <label for="themeSelect">앱 테마</label>
+                        <label for="themeSelect" data-i18n="settings.theme">앱 테마</label>
                         <select id="themeSelect" class="setting-control"
                             style="width: auto; padding: 5px 10px; border-radius: 8px; background: rgba(0,0,0,0.2); color: white; border: 1px solid rgba(255,255,255,0.1); outline: none;">
                             <option value="neon">기본 네온</option>
@@ -458,13 +502,16 @@
                             <option value="black">리얼 블랙</option>
                             <option value="gray">모던 그레이</option>
                             <option value="melancholy">딥 오션 (우울한 비)</option>
+                            <option value="gelato">젤라토 데이즈</option>
+                            <option value="malibu">말리부 에스케이프</option>
+                            <option value="pool">풀 파티</option>
                         </select>
                     </div>
                 </section>
 
                 <!-- Sound Settings -->
                 <section class="settings-section">
-                    <h3 class="section-title">🔊 Sound Settings</h3>
+                    <h3 class="section-title" data-i18n="settings.sound">🔊 Sound Settings</h3>
 
                     <div class="setting-item setting-column">
                         <div class="setting-row-header">
@@ -509,19 +556,11 @@
                     </div>
 
 
-                    <div class="setting-item">
-                        <label for="particleEffects">Particle effects</label>
-                        <label class="toggle">
-                            <input type="checkbox" id="particleEffects" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-
                 </section>
 
                 <!-- Data Settings -->
                 <section class="settings-section">
-                    <h3 class="section-title">💾 Data</h3>
+                    <h3 class="section-title" data-i18n="settings.data">💾 Data</h3>
 
                     <div class="setting-item">
                         <button class="btn-setting" id="exportData">
@@ -592,6 +631,28 @@
                     </div>
 
 
+                    <!-- 바디더블 설정 -->
+                    <h3 class="section-title" style="margin-top: 30px;">🐧 바디더블 설정</h3>
+                    <div class="setting-item setting-column">
+                        <div class="setting-row-header">
+                            <label for="anonymousMode">익명(펭귄)으로 참여</label>
+                            <label class="toggle">
+                                <input type="checkbox" id="anonymousMode">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="setting-item setting-column">
+                        <div class="setting-row-header">
+                            <label for="autoJoinBodyDouble">타이머 시작 시 자동 참여</label>
+                            <label class="toggle">
+                                <input type="checkbox" id="autoJoinBodyDouble" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+
                     <!-- 🤖 AI 브릿지 설정 -->
                     <h3 class="section-title" style="margin-top: 30px;">🤖 AI 브릿지 (Gemini)</h3>
                     <div class="setting-item setting-column">
@@ -608,6 +669,14 @@
                         <div id="apiKeyStatus" class="api-key-status"></div>
                     </div>
 
+                    <!-- AI 쪼개기 팝업 on/off -->
+                    <div class="setting-item">
+                        <label for="showMicroAction" style="flex:1;">⚡ 시작 시 AI 할일 쪼개기 팝업</label>
+                        <label class="toggle">
+                            <input type="checkbox" id="showMicroAction">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
 
                     <div class="setting-item">
                         <button class="btn-setting btn-danger" id="clearAllData">
@@ -623,14 +692,23 @@
                     </div>
                 </section>
 
+                <!-- 🌐 Language -->
+                <section class="settings-section">
+                    <h3 class="section-title" data-i18n="settings.language">🌐 언어 / Language</h3>
+                    <div class="lang-selector">
+                        <button class="lang-btn active" data-lang="ko">🇰🇷 한국어</button>
+                        <button class="lang-btn" data-lang="en">🇺🇸 English</button>
+                    </div>
+                </section>
+
                 <!-- About -->
                 <section class="settings-section">
-                    <h3 class="section-title">ℹ️ About</h3>
+                    <h3 class="section-title" data-i18n="settings.about">ℹ️ About</h3>
                     <div class="about-info">
                         <p><strong>Bbangmodoro</strong></p>
                         <p>Version 1.0.0</p>
                         <p id="buildTimestamp">Updated: Loading...</p>
-                        <p>장작 소리와 함께하는 몰입형 포모도로 타이머</p>
+                        <p data-i18n="settings.aboutDesc">장작 소리와 함께하는 몰입형 포모도로 타이머</p>
                         <p class="copyright">© 2026 Bbangmodoro</p>
                     </div>
                 </section>
@@ -642,7 +720,7 @@
         </audio>
     </div>
 
-    <!-- 하단 네비게이션 -->
+    <!-- 하단 네비게이션 (#app 바깥 - cozy-mode filter에 영향받지 않도록) -->
     <nav class="bottom-nav">
         <button class="nav-item active" data-view="timerView">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -724,26 +802,73 @@
         </div>
     </div>
 
-    <!-- ===== 랜덤 보상 가챠 오버레이 ===== -->
-    <div id="gachaOverlay" class="gacha-overlay hidden">
-        <div id="gachaShimmer" class="gacha-shimmer"></div>
-        <div class="gacha-view">
-            <h2>🎉 집중 보상 도착!</h2>
-            <div id="gachaBox" class="gacha-box">🎁</div>
-            <div id="gachaResultCard" class="gacha-result-card hidden"></div>
-            <div class="gacha-actions">
-                <button id="gachaCloseBtn" class="btn-primary"
-                    style="margin-top:10px; padding:10px 20px; border-radius:10px; border:none; background:#4f46e5; color:white; cursor:pointer;">확인</button>
-                <button id="gachaToCollectionBtn" class="btn-secondary"
-                    style="margin-top:10px; padding:10px 20px; border-radius:10px; border:1px solid #4f46e5; background:transparent; color:white; cursor:pointer;">지갑
-                    보기</button>
+    <!-- ===== 랜덤 보상 가챠 오버레이 모달 ===== -->
+    <div class="modal-overlay" id="gachaModalOverlay">
+        <div id="gachaOverlay" class="modal-container"
+            style="background: rgba(0,0,0,0.85); border-color: rgba(255,255,255,0.2);">
+            <div class="modal-header" style="justify-content: flex-end; margin-bottom: 0;">
+                <button class="modal-close-btn" onclick="modalManager.closeModal('gachaOverlay')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="gachaShimmer" class="gacha-shimmer"></div>
+                <div class="gacha-view">
+                    <h2>🎉 집중 보상 도착!</h2>
+                    <div id="gachaBox" class="gacha-box">🎁</div>
+                    <div id="gachaResultCard" class="gacha-result-card hidden"></div>
+                    <div class="gacha-actions">
+                        <button id="gachaCloseBtn" class="btn-primary"
+                            style="margin-top:10px; padding:10px 20px; border-radius:10px; border:none; background:#4f46e5; color:white; cursor:pointer;"
+                            onclick="modalManager.closeModal('gachaOverlay')">닫기</button>
+                        <button id="gachaToCollectionBtn" class="btn-secondary"
+                            style="margin-top:10px; padding:10px 20px; border-radius:10px; border:1px solid #4f46e5; background:transparent; color:white; cursor:pointer;">지갑
+                            보기</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ===== 🍞 BbangModal - 통합 팝업 모달 ===== -->
-    <div id="bbang-modal" class="bbang-overlay hidden">
-        <div id="bbang-modal-card" class="bbang-card"></div>
+    <!-- ===== 코지 모드 믹서 패널 모달 ===== -->
+    <div class="modal-overlay" id="cozyModalOverlay">
+        <div id="cozyMixerPanel" class="modal-container">
+            <div class="modal-header">
+                <h3>🌿 세로토닌 코지 모드</h3>
+                <div style="display:flex; align-items:center; gap: 15px;">
+                    <label class="toggle" style="margin:0;">
+                        <input type="checkbox" id="cozyModeSwitch">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <button id="cozyPanelClose" class="modal-close-btn"
+                        onclick="modalManager.closeModal('cozyMixerPanel')">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body cozy-mixer-body">
+                <div class="mixer-track">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <label style="margin:0;">🌧️ 빗소리</label>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span id="cozyRainValue" style="font-size: 0.9em; opacity: 0.8;">30%</span>
+                            <button id="playRainBtn" class="btn-sound-play"
+                                style="background:transparent; border:none; color:white; font-size:16px; cursor:pointer; padding:0;">▶</button>
+                        </div>
+                    </div>
+                    <input type="range" id="cozyRainSlider" min="0" max="1" step="0.05" value="0.3">
+                </div>
+                <div class="mixer-track">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <label style="margin:0;">🔥 장작소리</label>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span id="cozyFireValue" style="font-size: 0.9em; opacity: 0.8;">50%</span>
+                            <button id="playFireBtn" class="btn-sound-play"
+                                style="background:transparent; border:none; color:white; font-size:16px; cursor:pointer; padding:0;">▶</button>
+                        </div>
+                    </div>
+                    <input type="range" id="cozyFireSlider" min="0" max="1" step="0.05" value="0.5">
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ===== 기능1: 5-4-3-2-1 집중 로켓 오버레이 ===== -->
@@ -754,40 +879,50 @@
         <div class="rocket-label">집중 모드 복귀!</div>
     </div>
 
-    <!-- ===== 기능2: 5초 벌떡 스트레칭 오버레이 ===== -->
-    <div id="stretchOverlay" class="stretch-overlay hidden">
-        <div class="stretch-inner">
-            <div class="stretch-emoji">🏃</div>
-            <div class="stretch-title">벌떡 일어나세요!</div>
-            <div class="stretch-desc">자리에서 일어나 몸을 깨워주세요 💪</div>
-            <div id="stretchCountdown" class="stretch-countdown">5</div>
-            <button id="stretchDoneBtn" class="btn-stretch-done">일어났어요! ✅</button>
-            <div class="stretch-hint">또는 폰을 들고 흔들어도 됩니다</div>
+    <!-- ===== 기능2: 5초 벌떡 스트레칭 오버레이 모달 ===== -->
+    <div class="modal-overlay" id="stretchModalOverlay">
+        <div id="stretchOverlay" class="modal-container" style="text-align: center; max-width: 350px;">
+            <div class="modal-header" style="justify-content: flex-end; margin-bottom: 0;">
+                <button class="modal-close-btn" onclick="modalManager.closeModal('stretchOverlay')">&times;</button>
+            </div>
+            <div class="modal-body stretch-inner" style="padding: 0;">
+                <div class="stretch-emoji">🏃</div>
+                <div class="stretch-title" style="color: var(--text-primary); margin-top: 10px;">벌떡 일어나세요!</div>
+                <div class="stretch-desc" style="color: var(--text-secondary);">자리에서 일어나 몸을 깨워주세요 💪</div>
+                <div id="stretchCountdown" class="stretch-countdown">5</div>
+                <button id="stretchDoneBtn" class="btn-stretch-done">일어났어요! ✅</button>
+                <div class="stretch-hint" style="color: var(--text-secondary);">또는 폰을 들고 흔들어도 됩니다</div>
+            </div>
         </div>
     </div>
 
-    <!-- ===== 기능3: 5초 마이크로 액션 팝업 ===== -->
-    <div id="microActionOverlay" class="micro-overlay hidden">
-        <div class="micro-card">
-            <div class="micro-title">🎯 지금 바로 할 딱 한 가지는?</div>
-            <input id="microActionInput" class="micro-input" type="text" placeholder="예: 이메일 답장 하나 쓰기" maxlength="50"
-                autocomplete="off">
-
-            <!-- AI 쪼개기 버튼 -->
-            <button id="microAIBtn" class="btn-ai-breakdown" onclick="handleAIBreakdown(
-                document.getElementById('microActionInput'),
-                document.getElementById('aiStepsContainer'),
-                document.getElementById('microAIBtn')
-            )">✨ AI로 쪼개기</button>
-
-            <!-- AI 결과 표시 영역 -->
-            <div id="aiStepsContainer" class="ai-steps-container hidden"></div>
-
-            <div class="micro-timer-bar">
-                <div id="microTimerFill" class="micro-timer-fill"></div>
+    <!-- ===== 기능3: 5초 마이크로 액션 팝업 모달 ===== -->
+    <div class="modal-overlay" id="microActionModalOverlay">
+        <div id="microActionOverlay" class="modal-container" style="max-width: 400px; text-align: center;">
+            <div class="modal-header" style="justify-content: flex-end; margin-bottom: 0px;">
+                <button class="modal-close-btn" onclick="modalManager.closeModal('microActionOverlay')">&times;</button>
             </div>
-            <div class="micro-hint">5초 후 자동 시작...</div>
-            <button id="microStartBtn" class="btn-micro-start">시작 🚀</button>
+            <div class="modal-body micro-card" style="padding: 0; box-shadow: none; background: transparent;">
+                <div class="micro-title" style="color: var(--text-primary);">🎯 지금 바로 할 딱 한 가지는?</div>
+                <input id="microActionInput" class="micro-input" type="text" placeholder="예: 이메일 답장 하나 쓰기"
+                    maxlength="50" autocomplete="off" style="color: white;">
+
+                <!-- AI 쪼개기 버튼 -->
+                <button id="microAIBtn" class="btn-ai-breakdown" onclick="handleAIBreakdown(
+                    document.getElementById('microActionInput'),
+                    document.getElementById('aiStepsContainer'),
+                    document.getElementById('microAIBtn')
+                )">✨ AI로 쪼개기</button>
+
+                <!-- AI 결과 표시 영역 -->
+                <div id="aiStepsContainer" class="ai-steps-container hidden"></div>
+
+                <div class="micro-timer-bar">
+                    <div id="microTimerFill" class="micro-timer-fill"></div>
+                </div>
+                <div class="micro-hint">5초 후 자동 시작...</div>
+                <button id="microStartBtn" class="btn-micro-start">시작 🚀</button>
+            </div>
         </div>
     </div>
 
@@ -795,29 +930,39 @@
     <div id="microActionBadge" class="micro-badge hidden"></div>
 
     <!-- ===== 🐇 토끼굴 파킹 ===== -->
-    <!-- FAB 버튼 -->
-    <div id="rabbitHoleFab" class="rabbit-fab-wrap">
-        <div id="rabbitFabTip" class="rabbit-fab-tip">생각 던지기</div>
-        <div style="position:relative;">
-            <button id="rabbitHoleBtn" class="rabbit-fab" title="집중 중 — 생각 파킹하기">🐇</button>
-            <span id="rabbitBadge" class="rabbit-badge" style="display:none;">0</span>
+    <!-- 빠른 입력 패널 모달 (집중 중) -->
+    <div class="modal-overlay" id="rabbitModalOverlay">
+        <div id="rabbitHolePanel" class="modal-container">
+            <div class="modal-header" style="margin-bottom: 10px;">
+                <div class="rabbit-panel-title" style="margin-bottom: 0;">🐇 나중에 볼 생각</div>
+                <button id="rabbitCloseBtn" class="modal-close-btn"
+                    onclick="modalManager.closeModal('rabbitHolePanel')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="rabbit-input-row">
+                    <input id="rabbitInput" class="rabbit-input" type="text" placeholder="지금 떠오르는 생각을 일단 여기 미루세요"
+                        maxlength="80" autocomplete="off">
+                    <button id="rabbitSaveBtn" class="btn-rabbit-save">🔒</button>
+                </div>
+                <div class="rabbit-hint">저장 후 포모도로가 끝나면 열람 가능</div>
+            </div>
         </div>
     </div>
 
-    <!-- 빠른 입력 패널 (집중 중) -->
-    <div id="rabbitHolePanel" class="rabbit-panel hidden">
-        <div class="rabbit-panel-inner">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <div class="rabbit-panel-title" style="margin-bottom: 0;">🐇 나중에 볼 생각</div>
-                <button id="rabbitCloseBtn"
-                    style="background: none; border: none; color: rgba(255,255,255,0.5); font-size: 18px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
+    <!-- 보관함 패널 모달 (휴식/종료 후) -->
+    <div class="modal-overlay" id="rabbitVaultOverlay">
+        <div id="rabbitVaultPanel" class="modal-container rabbit-vault-inner" style="max-width: 400px;">
+            <div class="modal-header rabbit-vault-header" style="margin-bottom: 15px;">
+                <span class="rabbit-vault-title" style="font-size: 18px; font-weight: 700; color: #a78bfa;">🐇 파킹해 둔
+                    생각들</span>
+                <button class="modal-close-btn" onclick="modalManager.closeModal('rabbitVaultPanel')">&times;</button>
             </div>
-            <div class="rabbit-input-row">
-                <input id="rabbitInput" class="rabbit-input" type="text" placeholder="지금 떠오르는 생각을 일단 여기 미루세요"
-                    maxlength="80" autocomplete="off">
-                <button id="rabbitSaveBtn" class="btn-rabbit-save">🔒</button>
+            <div class="modal-body">
+                <ul id="rabbitVaultList" class="rabbit-vault-list"></ul>
+                <button id="rabbitClearBtn" class="btn-rabbit-clear"
+                    style="margin-top:20px; width:100%; padding:10px; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); color:#fca5a5; border-radius:12px; cursor:pointer;">모두
+                    삭제</button>
             </div>
-            <div class="rabbit-hint">저장 후 포모도로가 끝나면 열람 가능</div>
         </div>
     </div>
 
@@ -838,11 +983,7 @@
         </div>
     </div>
 
-    <!-- ===== 🐧 뺑수 펭귄 ===== -->
-    <div id="penguinBuddy" class="penguin-buddy hidden">
-        <div id="penguinBubble" class="penguin-bubble hidden"></div>
-        <div id="penguinSprite" class="penguin-sprite">🐧</div>
-    </div>
+    <!-- ===== 🐧 뺑수 펭귄 (이동됨) ===== -->
 
     <!-- ===== 🍱 도파민 메뉴 선택기 ===== -->
     <div id="dopamineMenuOverlay" class="dopamine-overlay hidden">
@@ -900,12 +1041,13 @@
     </div>
 
     <!-- Firebase Config & Init -->
-    <script src="bbang-modal.js"></script>
     <script src="firebase-config.js"></script>
 
     <!-- Sound Config -->
     <script src="sounds.js"></script>
-
+    <script src="weather-buddy.js"></script>
+    <script src="body-double.js"></script>
+    <script src="body-double-firebase.js"></script>
     <script src="main.js"></script>
     <script src="stats.js"></script>
     <script src="tasks-settings.js"></script>
@@ -918,8 +1060,31 @@
     <script src="penguin.js"></script>
     <script src="flowmodoro.js"></script>
     <script src="gacha.js"></script>
-    <script src="cozy-particles.js"></script>
     <script src="cozy-mode.js"></script>
+    <script src="schedule-start.js"></script>
+    <script src="share-card.js"></script>
+
+    <!-- 📤 Share Card Modal -->
+    <div id="shareCardModal">
+        <div class="sc-canvas-wrap">
+            <canvas id="shareCanvas" width="1200" height="600"></canvas>
+            <button id="scCloseBtn" title="닫기">✕</button>
+        </div>
+        <div class="sc-actions">
+            <button id="scTweetBtn" class="sc-btn">🐦 Tweet</button>
+            <button id="scDownloadBtn" class="sc-btn">⬇️ Download PNG</button>
+        </div>
+        <p class="sc-hint">캔버스를 길게 눌러 직접 저장할 수도 있습니다</p>
+    </div>
+
+    <script>
+        // Share Card 연결 함수
+        function _openShareCard() {
+            if (typeof statsManager === 'undefined' || typeof shareCard === 'undefined') return;
+            const data = statsManager.getShareData();
+            shareCard.open(data);
+        }
+    </script>
 </body>
 
 </html>

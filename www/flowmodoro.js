@@ -5,10 +5,7 @@
 
 let flowmodoroEnabled = false;
 let flowElapsed = 0;       // 업카운트 초
-let flowTimerId = null;    // 하위 호환성 유지 (레거시)
-let flowRafId = null;      // requestAnimationFrame ID
-let flowRafStartTime = null;  // rAF 기준 시작 시각
-let flowRafBaseElapsed = 0;   // 기준 시점의 flowElapsed
+let flowTimerId = null;
 let flowActive = false;
 let flowOnStop = null;     // 완료 시 콜백
 
@@ -39,33 +36,20 @@ function startFlowmodoro(alreadyWorkedSec, onStop) {
     showFlowmodoroBar(true);
     updateFlowmodoroDisplay();
 
-    // Document Visibility: 백그라운드 복귀 시 기준 재보정
+    // Document Visibility: 백그라운드 진입 시 멈춤
     document.addEventListener('visibilitychange', _onVisibilityChange);
 
-    flowRafStartTime = performance.now();
-    flowRafBaseElapsed = flowElapsed;
-
-    function flowTick(now) {
-        if (!flowActive) return;
+    flowTimerId = setInterval(() => {
         if (!document.hidden) {
-            const elapsed = Math.floor((now - flowRafStartTime) / 1000);
-            const newElapsed = flowRafBaseElapsed + elapsed;
-            if (newElapsed !== flowElapsed) {
-                flowElapsed = newElapsed;
-                updateFlowmodoroDisplay();
-            }
+            flowElapsed++;
+            updateFlowmodoroDisplay();
         }
-        flowRafId = requestAnimationFrame(flowTick);
-    }
-    flowRafId = requestAnimationFrame(flowTick);
+    }, 1000);
 }
 
 function _onVisibilityChange() {
-    if (!document.hidden && flowActive) {
-        // 탭 복귀 시 기준 재보정
-        flowRafBaseElapsed = flowElapsed;
-        flowRafStartTime = performance.now();
-
+    // 백그라운드 복귀 시 배지로 알림 (타이머는 계속)
+    if (!document.hidden) {
         const bar = document.getElementById('flowmodoroBar');
         if (bar) bar.classList.add('flow-resumed');
         setTimeout(() => bar?.classList.remove('flow-resumed'), 1500);
@@ -78,9 +62,8 @@ function _onVisibilityChange() {
 function stopFlowmodoro() {
     if (!flowActive) return;
 
-    cancelAnimationFrame(flowRafId);
-    flowRafId = null;
-    flowRafStartTime = null;
+    clearInterval(flowTimerId);
+    flowTimerId = null;
     flowActive = false;
     document.removeEventListener('visibilitychange', _onVisibilityChange);
 

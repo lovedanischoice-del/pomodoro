@@ -12,13 +12,20 @@ body.cozy-mode {
 
 .cozy-toggle-btn {
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: 24px;
+    left: 24px;
     background: rgba(255, 255, 255, 0.1);
     border: none;
     border-radius: 50%;
     width: 44px;
     height: 44px;
+    padding: 0;
+    box-sizing: border-box;
+    aspect-ratio: 1 / 1;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 20px;
     cursor: pointer;
     backdrop-filter: blur(5px);
@@ -32,42 +39,7 @@ body.cozy-mode {
     transform: scale(1.1);
 }
 
-.cozy-mixer-panel {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(20, 30, 25, 0.9);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(16, 185, 129, 0.2);
-    padding: 24px;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 320px;
-    z-index: 1500;
-    color: #e2f0ea;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.cozy-mixer-panel.hidden {
-    opacity: 0;
-    pointer-events: none;
-    transform: translate(-50%, -45%);
-}
-
-.cozy-mixer-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.cozy-mixer-header h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 600;
-}
+/* 공통 모달 시스템 사용으로 대체됨 */
 
 .mixer-track {
     margin-bottom: 15px;
@@ -188,22 +160,7 @@ body.cozy-mode {
 }
 
 /* 🎁 Gacha System */
-.gacha-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    backdrop-filter: blur(8px);
-    transition: 0.3s;
-}
-
-.gacha-overlay.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
+/* 공통 모달 시스템 사용으로 대체됨 */
 
 .gacha-view {
     text-align: center;

@@ -391,7 +391,7 @@
 
 .tasks-list {
     flex: 1;
-    min-height: 380px;
+    min-height: 200px;
     overflow-y: auto;
     margin-bottom: 20px;
     padding-right: 4px;
@@ -572,7 +572,6 @@
     background: var(--gradient-button);
 }
 
-/* 50 - 20(원) - 3(left) - 3(right margin) = 24px */
 .toggle input:checked+.toggle-slider:before {
     transform: translateX(24px);
 }
