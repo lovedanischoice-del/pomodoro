@@ -3362,3 +3362,25 @@ button {
         transform: translate(-50%, -60%) scale(0.9);
     }
 }
+
+/* ================================================
+   안드로이드 앱 전체화면 모드
+   Capacitor 네이티브 환경에서 배경이 화면을 꽉 채움
+   ================================================ */
+body.native-app {
+    padding: 0;
+    align-items: stretch;
+}
+
+body.native-app #app {
+    max-width: 100%;
+    min-height: 100vh;
+}
+
+body.native-app .content {
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    min-height: 100vh;
+}

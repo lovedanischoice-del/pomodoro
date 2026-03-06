@@ -40,6 +40,10 @@ function startApp() {
 
 
 window.addEventListener('DOMContentLoaded', () => {
+    if (window.Capacitor?.isNativePlatform()) {
+        document.body.classList.add('native-app');
+    }
+
     const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
     const onboarding = document.getElementById('onboarding');
     const app = document.getElementById('app');
