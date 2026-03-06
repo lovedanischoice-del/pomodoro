@@ -57,7 +57,7 @@ body[data-theme="cozy"] {
 }
 
 /* 세로토닌 코지 모드 활성화 시 전체 그레이스케일 처리 */
-body.cozy-mode {
+body.cozy-mode #app {
     filter: grayscale(70%) sepia(20%) brightness(85%);
     transition: filter 0.8s ease;
 }

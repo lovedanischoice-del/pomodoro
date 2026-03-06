@@ -259,8 +259,14 @@ const CozyParticles = (() => {
 
     // ── Public API ────────────────────────────────
 
+    function isParticleEnabled() {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        return settings.particleEffects !== false;
+    }
+
     function activate(name) {
         if (!PRESETS[name]) return;
+        if (!isParticleEnabled()) return;
         if (activePresets.has(name)) {
             const s = activePresets.get(name);
             s.fadingOut = false;

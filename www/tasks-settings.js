@@ -168,6 +168,7 @@ function initSettings() {
     const volumeSettings = document.getElementById('volumeSettings');
     const volumeValue = document.getElementById('volumeValue');
     const notificationSound = document.getElementById('notificationSound');
+    const particleEffects = document.getElementById('particleEffects');
     const exportData = document.getElementById('exportData');
     const bgmBtn = document.getElementById('bgmBtn');
     const bellBtn = document.getElementById('bellBtn');
@@ -320,6 +321,7 @@ function initSettings() {
             updateVolumeDisplay(settings.volume || 0.5);
         }
         if (notificationSound) notificationSound.checked = settings.notificationSound !== false;
+        if (particleEffects) particleEffects.checked = settings.particleEffects !== false;
 
         // Update audio sources based on loaded settings
         updateAudioSource('fireSound', settings.bgmId);
@@ -349,6 +351,7 @@ function initSettings() {
         settings.soundEnabled = soundEnabled?.checked !== false;
         settings.volume = parseFloat(volumeSettings?.value || 0.5);
         settings.notificationSound = notificationSound?.checked !== false;
+        settings.particleEffects = particleEffects?.checked !== false;
         settings.dailyGoal = parseFloat(dailyGoalEl?.value || 0);
 
         localStorage.setItem('settings', JSON.stringify(settings));
@@ -558,8 +561,17 @@ function initSettings() {
     if (notificationSound) {
         notificationSound.addEventListener('change', (e) => {
             saveSettings();
-            // Note: removed automatic test play on toggle to avoid annoyance, 
+            // Note: removed automatic test play on toggle to avoid annoyance,
             // but user can use sound selector change to test.
+        });
+    }
+
+    if (particleEffects) {
+        particleEffects.addEventListener('change', (e) => {
+            saveSettings();
+            if (!e.target.checked) {
+                window.CozyParticles?.deactivateAll();
+            }
         });
     }
 
