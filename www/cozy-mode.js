@@ -241,9 +241,11 @@ async function toggleRain() {
     if (isRainPlaying) {
         stopRain();
         if (btn) btn.textContent = '▶';
+        window.CozyParticles?.deactivate('rain');
     } else {
         await startRain();
         if (btn) btn.textContent = '⏸';
+        window.CozyParticles?.activate('rain');
     }
 }
 
@@ -252,9 +254,11 @@ async function toggleFire() {
     if (isFirePlaying) {
         stopFire();
         if (btn) btn.textContent = '▶';
+        window.CozyParticles?.deactivate('fire');
     } else {
         await startFire();
         if (btn) btn.textContent = '⏸';
+        window.CozyParticles?.activate('fire');
     }
 }
 
@@ -367,9 +371,11 @@ async function toggleFireplace() {
     if (isFireplacePlaying) {
         stopFireplace();
         if (btn) btn.textContent = '▶';
+        window.CozyParticles?.deactivate('fireplace');
     } else {
         await startFireplace();
         if (btn) btn.textContent = '⏸';
+        window.CozyParticles?.activate('fireplace');
     }
 }
 
@@ -425,9 +431,11 @@ async function toggleLibrary() {
     if (isLibraryPlaying) {
         stopLibrary();
         if (btn) btn.textContent = '▶';
+        window.CozyParticles?.deactivate('library');
     } else {
         await startLibrary();
         if (btn) btn.textContent = '⏸';
+        window.CozyParticles?.activate('library');
     }
 }
 
@@ -491,6 +499,7 @@ function stopCozyAudio() {
     if (btnFireplace) btnFireplace.textContent = '▶';
     const btnLibrary = document.getElementById('playLibraryBtn');
     if (btnLibrary) btnLibrary.textContent = '▶';
+    window.CozyParticles?.deactivateAll();
 }
 
 function setRainVolume(value) {
