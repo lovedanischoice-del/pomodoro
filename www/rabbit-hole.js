@@ -18,15 +18,11 @@ function initRabbitHole() {
     if (isRabbitHoleInitialized) return;
     isRabbitHoleInitialized = true;
 
-    const fab = document.getElementById('rabbitHoleBtn');
     const fabWrap = document.getElementById('rabbitHoleFab');
     const panel = document.getElementById('rabbitHolePanel');
     const inputEl = document.getElementById('rabbitInput');
     const saveBtn = document.getElementById('rabbitSaveBtn');
     const closeBtn = document.getElementById('rabbitCloseBtn');
-    const vault = document.getElementById('rabbitVaultPanel');
-    const vaultList = document.getElementById('rabbitVaultList');
-    const clearBtn = document.getElementById('rabbitClearBtn');
     const badge = document.getElementById('rabbitBadge');
 
     if (!fabWrap) return;
@@ -42,7 +38,7 @@ function initRabbitHole() {
             }
         } else {
             // 휴식/정지 중 → 보관함 열기
-            openRabbitVault(vault, vaultList);
+            openRabbitVault();
         }
     });
 
@@ -62,13 +58,6 @@ function initRabbitHole() {
             panel?.classList.add('hidden');
             rabbitInputVisible = false;
         }
-    });
-
-    // 모두 삭제 버튼
-    clearBtn?.addEventListener('click', () => {
-        localStorage.removeItem(RABBIT_STORAGE_KEY);
-        renderVaultList(vaultList);
-        updateRabbitBadge(badge);
     });
 
     // 초기 배지
@@ -92,11 +81,29 @@ function saveRabbitItem(inputEl, panel, badge) {
     showRabbitSaveFeedback();
 }
 
-function openRabbitVault(vault, vaultList) {
-    if (!vault) return;
-    renderVaultList(vaultList);
-    vault.classList.remove('hidden');
-    vault.classList.add('active');
+function openRabbitVault() {
+    BbangModal.show({
+        position: 'center',
+        content: `
+            <div class="bbang-modal-header">
+                <span class="bbang-modal-title">🐇 파킹해 둔 생각들</span>
+                <button class="bbang-modal-close" onclick="BbangModal.hide()">✕</button>
+            </div>
+            <ul id="rabbitVaultList" class="rabbit-vault-list"></ul>
+            <button id="rabbitClearBtn" class="btn-rabbit-clear">모두 삭제</button>
+        `,
+        onReady: () => {
+            renderVaultList(document.getElementById('rabbitVaultList'));
+            const clearBtn = document.getElementById('rabbitClearBtn');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    localStorage.removeItem(RABBIT_STORAGE_KEY);
+                    renderVaultList(document.getElementById('rabbitVaultList'));
+                    updateRabbitBadge(null);
+                });
+            }
+        },
+    });
 }
 
 function renderVaultList(listEl) {
@@ -147,14 +154,14 @@ window.deleteRabbitItem = function (index) {
     const items = getItems();
     items.splice(index, 1);
     localStorage.setItem(RABBIT_STORAGE_KEY, JSON.stringify(items));
-    renderVaultList(document.getElementById('rabbitVaultList'));
+    // BbangModal 내부의 목록 갱신
+    const listEl = document.getElementById('rabbitVaultList');
+    if (listEl) renderVaultList(listEl);
     updateRabbitBadge(null);
 };
 
 window.closeRabbitVault = function () {
-    const vault = document.getElementById('rabbitVaultPanel');
-    vault?.classList.remove('active');
-    vault?.classList.add('hidden');
+    BbangModal.hide();
 };
 
 /**
@@ -193,12 +200,7 @@ function unlockRabbitHole() {
     // 저장된 아이템이 있으면 자동으로 보관함 팝업
     const items = getItems();
     if (items.length > 0) {
-        setTimeout(() => {
-            openRabbitVault(
-                document.getElementById('rabbitVaultPanel'),
-                document.getElementById('rabbitVaultList')
-            );
-        }, 800);
+        setTimeout(() => openRabbitVault(), 800);
     }
 }
 

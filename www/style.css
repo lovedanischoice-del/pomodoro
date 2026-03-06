@@ -3364,6 +3364,101 @@ button {
 }
 
 /* ================================================
+   🍞 BbangModal - 통합 팝업 모달 시스템
+   ================================================ */
+.bbang-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.bbang-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.bbang-overlay.hidden {
+    display: none;
+}
+
+.bbang-overlay.position-bottom {
+    align-items: flex-end;
+    padding-bottom: 90px;
+}
+
+.bbang-card {
+    width: calc(100% - 40px);
+    max-width: 400px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 28px 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: bbangCardIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bbang-overlay.position-bottom .bbang-card {
+    border-radius: 24px 24px 16px 16px;
+}
+
+@keyframes bbangCardIn {
+    from {
+        transform: scale(0.92) translateY(16px);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.bbang-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.bbang-modal-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.bbang-modal-close {
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: var(--text-secondary);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    flex: unset;
+}
+
+.bbang-modal-close:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--text-primary);
+}
+
+/* ================================================
    안드로이드 앱 전체화면 모드
    Capacitor 네이티브 환경에서 배경이 화면을 꽉 채움
    ================================================ */

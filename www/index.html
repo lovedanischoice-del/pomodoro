@@ -733,41 +733,9 @@
         </div>
     </div>
 
-    <!-- ===== 코지 모드 믹서 패널 ===== -->
-    <div id="cozyMixerPanel" class="cozy-mixer-panel hidden">
-        <div class="cozy-mixer-header">
-            <h3>🌿 세로토닌 코지 모드</h3>
-            <label class="toggle">
-                <input type="checkbox" id="cozyModeSwitch">
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
-        <div class="cozy-mixer-body">
-            <div class="mixer-track">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                    <label style="margin:0;">🌧️ 빗소리</label>
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <span id="cozyRainValue" style="font-size: 0.9em; opacity: 0.8;">30%</span>
-                        <button id="playRainBtn" class="btn-sound-play"
-                            style="background:transparent; border:none; color:white; font-size:16px; cursor:pointer; padding:0;">▶</button>
-                    </div>
-                </div>
-                <input type="range" id="cozyRainSlider" min="0" max="1" step="0.05" value="0.3">
-            </div>
-            <div class="mixer-track">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                    <label style="margin:0;">🔥 장작소리</label>
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <span id="cozyFireValue" style="font-size: 0.9em; opacity: 0.8;">50%</span>
-                        <button id="playFireBtn" class="btn-sound-play"
-                            style="background:transparent; border:none; color:white; font-size:16px; cursor:pointer; padding:0;">▶</button>
-                    </div>
-                </div>
-                <input type="range" id="cozyFireSlider" min="0" max="1" step="0.05" value="0.5">
-            </div>
-        </div>
-        <button id="cozyPanelClose" class="btn-secondary"
-            style="margin-top:10px; width:100%; padding:8px; border-radius:10px; border:none; cursor:pointer; background:rgba(255,255,255,0.2); color:white;">닫기</button>
+    <!-- ===== 🍞 BbangModal - 통합 팝업 모달 ===== -->
+    <div id="bbang-modal" class="bbang-overlay hidden">
+        <div id="bbang-modal-card" class="bbang-card"></div>
     </div>
 
     <!-- ===== 기능1: 5-4-3-2-1 집중 로켓 오버레이 ===== -->
@@ -842,18 +810,6 @@
                 <button id="rabbitSaveBtn" class="btn-rabbit-save">🔒</button>
             </div>
             <div class="rabbit-hint">저장 후 포모도로가 끝나면 열람 가능</div>
-        </div>
-    </div>
-
-    <!-- 보관함 패널 (휴식/종료 후) -->
-    <div id="rabbitVaultPanel" class="rabbit-vault hidden">
-        <div class="rabbit-vault-inner">
-            <div class="rabbit-vault-header">
-                <span class="rabbit-vault-title">🐇 파킹해 둔 생각들</span>
-                <button class="rabbit-vault-close" onclick="closeRabbitVault()">✕</button>
-            </div>
-            <ul id="rabbitVaultList" class="rabbit-vault-list"></ul>
-            <button id="rabbitClearBtn" class="btn-rabbit-clear">모두 삭제</button>
         </div>
     </div>
 
@@ -936,6 +892,7 @@
     </div>
 
     <!-- Firebase Config & Init -->
+    <script src="bbang-modal.js"></script>
     <script src="firebase-config.js"></script>
 
     <!-- Sound Config -->

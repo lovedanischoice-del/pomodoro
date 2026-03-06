@@ -24,28 +24,61 @@ let isFirePlaying = false;
 /**
  * 코지 모드 초기화
  */
-function initCozyMode() {
-    // 저장된 상태 복원
-    cozyEnabled = localStorage.getItem(COZY_STORAGE_KEY) === 'true';
+function getCozyPanelHTML() {
+    const savedRain = parseFloat(localStorage.getItem('cozyRainVol') || '0.3');
+    const savedFire = parseFloat(localStorage.getItem('cozyFireVol') || '0.5');
+    const rainPct = Math.round(savedRain * 100);
+    const firePct = Math.round(savedFire * 100);
+    const rainBtn = isRainPlaying ? '⏸' : '▶';
+    const fireBtn = isFirePlaying ? '⏸' : '▶';
 
-    const toggleBtn = document.getElementById('cozyToggleBtn');
-    const panel = document.getElementById('cozyMixerPanel');
-    const rainSlider = document.getElementById('cozyRainSlider');
-    const fireSlider = document.getElementById('cozyFireSlider');
+    return `
+        <div class="bbang-modal-header">
+            <h3 class="bbang-modal-title">🌿 세로토닌 코지 모드</h3>
+            <button class="bbang-modal-close" id="cozyPanelClose">✕</button>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+            <span style="color:var(--text-secondary); font-size:14px;">코지 모드</span>
+            <label class="toggle">
+                <input type="checkbox" id="cozyModeSwitch" ${cozyEnabled ? 'checked' : ''}>
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <div class="cozy-mixer-body">
+            <div class="mixer-track">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                    <label style="margin:0; color:var(--text-primary);">🌧️ 빗소리</label>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span id="cozyRainValue" style="font-size:0.9em; color:var(--text-secondary);">${rainPct}%</span>
+                        <button id="playRainBtn" style="background:transparent; border:none; color:var(--text-primary); font-size:16px; cursor:pointer; padding:0;">${rainBtn}</button>
+                    </div>
+                </div>
+                <input type="range" id="cozyRainSlider" min="0" max="1" step="0.05" value="${savedRain}">
+            </div>
+            <div class="mixer-track">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                    <label style="margin:0; color:var(--text-primary);">🔥 장작소리</label>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span id="cozyFireValue" style="font-size:0.9em; color:var(--text-secondary);">${firePct}%</span>
+                        <button id="playFireBtn" style="background:transparent; border:none; color:var(--text-primary); font-size:16px; cursor:pointer; padding:0;">${fireBtn}</button>
+                    </div>
+                </div>
+                <input type="range" id="cozyFireSlider" min="0" max="1" step="0.05" value="${savedFire}">
+            </div>
+        </div>
+    `;
+}
+
+function bindCozyControls() {
     const closeBtn = document.getElementById('cozyPanelClose');
+    if (closeBtn) closeBtn.addEventListener('click', () => BbangModal.hide());
 
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
-            openCozyPanel(panel);
-        });
+    const cozySwitch = document.getElementById('cozyModeSwitch');
+    if (cozySwitch) {
+        cozySwitch.addEventListener('change', (e) => toggleCozyMode(e.target.checked));
     }
 
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            closeCozyPanel(panel);
-        });
-    }
-
+    const rainSlider = document.getElementById('cozyRainSlider');
     if (rainSlider) {
         rainSlider.addEventListener('input', (e) => {
             setRainVolume(parseFloat(e.target.value));
@@ -54,6 +87,7 @@ function initCozyMode() {
         });
     }
 
+    const fireSlider = document.getElementById('cozyFireSlider');
     if (fireSlider) {
         fireSlider.addEventListener('input', (e) => {
             setFireVolume(parseFloat(e.target.value));
@@ -63,22 +97,19 @@ function initCozyMode() {
     }
 
     const playRainBtn = document.getElementById('playRainBtn');
+    if (playRainBtn) playRainBtn.addEventListener('click', toggleRain);
+
     const playFireBtn = document.getElementById('playFireBtn');
+    if (playFireBtn) playFireBtn.addEventListener('click', toggleFire);
+}
 
-    if (playRainBtn) {
-        playRainBtn.addEventListener('click', toggleRain);
-    }
-    if (playFireBtn) {
-        playFireBtn.addEventListener('click', toggleFire);
-    }
+function initCozyMode() {
+    // 저장된 상태 복원
+    cozyEnabled = localStorage.getItem(COZY_STORAGE_KEY) === 'true';
 
-    // 코지 모드 토글 스위치
-    const cozySwitch = document.getElementById('cozyModeSwitch');
-    if (cozySwitch) {
-        cozySwitch.checked = cozyEnabled;
-        cozySwitch.addEventListener('change', (e) => {
-            toggleCozyMode(e.target.checked);
-        });
+    const toggleBtn = document.getElementById('cozyToggleBtn');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => openCozyPanel());
     }
 
     // 복원
@@ -88,18 +119,16 @@ function initCozyMode() {
     }
 }
 
-function openCozyPanel(panel) {
-    if (!panel) panel = document.getElementById('cozyMixerPanel');
-    if (!panel) return;
-    panel.classList.remove('hidden');
-    panel.classList.add('active');
+function openCozyPanel() {
+    BbangModal.show({
+        position: 'center',
+        content: getCozyPanelHTML(),
+        onReady: bindCozyControls,
+    });
 }
 
-function closeCozyPanel(panel) {
-    if (!panel) panel = document.getElementById('cozyMixerPanel');
-    if (!panel) return;
-    panel.classList.remove('active');
-    setTimeout(() => panel.classList.add('hidden'), 300);
+function closeCozyPanel() {
+    BbangModal.hide();
 }
 
 /**
