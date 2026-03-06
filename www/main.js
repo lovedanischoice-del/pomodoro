@@ -64,6 +64,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
 window.startApp = startApp;
 
+// 탭 복귀 시 타이머 기준시각 재보정 (rAF throttle 대응)
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && isRunning && timerStartTime !== null) {
+        // 숨겨진 동안 경과한 시간을 반영해 기준 재설정
+        const elapsed = Math.floor((performance.now() - timerStartTime) / 1000);
+        timerBaseSeconds = Math.max(0, timerBaseSeconds - elapsed);
+        timerStartTime = performance.now();
+    }
+});
+
 // DOM Elements
 const timeMain = document.getElementById('timeMain');
 const timeSub = document.getElementById('timeSub');
@@ -155,7 +165,10 @@ function isAutoStart() {
 var timeLeft = getWorkTime();
 var isRunning = false;
 var isWorkMode = true;
-var timerId = null;
+var timerId = null; // 하위 호환성 유지 (레거시)
+var rAFId = null; // requestAnimationFrame ID
+var timerStartTime = null; // 타이머 시작 시점 (performance.now())
+var timerBaseSeconds = null; // 시작 시점의 timeLeft
 var pomodoroCount = 0; // 완료한 뽀모도로 수
 var isLongRest = false; // 긴 휴식 중인지
 let todos = JSON.parse(localStorage.getItem('todos')) || [];
@@ -191,10 +204,16 @@ function init() {
 // Timer Logic
 let rocketCountdownStarted = false; // 이번 휴식에서 이미 시작됐는지 체크
 
-function tick() {
-    if (timeLeft > 0) {
-        timeLeft--;
+function tick(now) {
+    if (!isRunning) return;
+
+    const elapsed = Math.floor((now - timerStartTime) / 1000);
+    const newTimeLeft = timerBaseSeconds - elapsed;
+
+    if (newTimeLeft !== timeLeft) {
+        timeLeft = Math.max(0, newTimeLeft);
         updateDisplay();
+
         const totalTime = isWorkMode ? getWorkTime() : (isLongRest ? LONG_REST_TIME : getRestTime());
         const progress = (totalTime - timeLeft) / totalTime;
         updateProgress(progress);
@@ -206,24 +225,34 @@ function tick() {
         // 🚀 기능1: 휴식 타이머 5초 남았을 때 로켓 카운트다운 트리거
         if (!isWorkMode && timeLeft === 5 && !rocketCountdownStarted) {
             rocketCountdownStarted = true;
-            clearInterval(timerId); // 타이머 일시 정지
+            cancelAnimationFrame(rAFId);
+            rAFId = null;
             isRunning = false;
             if (typeof startRocketCountdown === 'function') {
                 startRocketCountdown(() => {
-                    // 카운트다운 끝나면 switchMode 실행
                     switchMode();
                 });
             } else {
                 switchMode();
             }
+            return;
         }
-    } else {
-        switchMode();
+
+        if (timeLeft <= 0) {
+            cancelAnimationFrame(rAFId);
+            rAFId = null;
+            isRunning = false;
+            switchMode();
+            return;
+        }
     }
+
+    rAFId = requestAnimationFrame(tick);
 }
 
 function switchMode() {
-    clearInterval(timerId);
+    cancelAnimationFrame(rAFId);
+    rAFId = null;
     isRunning = false;
 
     const workTimeMin = getWorkTime() / 60;
@@ -277,9 +306,11 @@ function switchMode() {
                         isWorkMode = true; // 아직 워크 모드
                         rocketCountdownStarted = false;
                         timeLeft = extendSec;
-                        clearInterval(timerId);
-                        timerId = setInterval(tick, 1000);
+                        cancelAnimationFrame(rAFId);
+                        timerStartTime = performance.now();
+                        timerBaseSeconds = timeLeft;
                         isRunning = true;
+                        rAFId = requestAnimationFrame(tick);
                         document.body.classList.add('timer-running');
                         document.body.classList.remove('timer-rest');
                     },
@@ -360,9 +391,11 @@ function _finishSwitchModeCore() {
         document.body.classList.remove('timer-running', 'timer-rest');
     } else {
         // 자동 시작 시 타이머 재개
-        clearInterval(timerId);
-        timerId = setInterval(tick, 1000);
+        cancelAnimationFrame(rAFId);
+        timerStartTime = performance.now();
+        timerBaseSeconds = timeLeft;
         isRunning = true;
+        rAFId = requestAnimationFrame(tick);
     }
 
     // Update body classes for background animation
@@ -411,6 +444,13 @@ function handleSound() {
         return;
     }
 
+    // 코지 모드 활성 시 fireSound 억제
+    if (window.cozyEnabled) {
+        fireSound.pause();
+        if (soundStatus) soundStatus.classList.remove('visible');
+        return;
+    }
+
     // Check if sound is enabled in settings
     const soundEnabled = document.getElementById('soundEnabled')?.checked ?? true;
 
@@ -442,8 +482,10 @@ function handleSound() {
 
 function _startTimerNow() {
     const playIcon = document.getElementById('playIcon');
-    clearInterval(timerId);
-    timerId = setInterval(tick, 1000);
+    cancelAnimationFrame(rAFId);
+    timerStartTime = performance.now();
+    timerBaseSeconds = timeLeft;
+    rAFId = requestAnimationFrame(tick);
     if (toggleText) toggleText.textContent = 'PAUSE';
     if (playIcon) playIcon.textContent = '■';
     isRunning = true;
@@ -469,7 +511,8 @@ function _startTimerNow() {
 function toggleTimer() {
     const playIcon = document.getElementById('playIcon');
     if (isRunning) {
-        clearInterval(timerId);
+        cancelAnimationFrame(rAFId);
+        rAFId = null;
         if (toggleText) toggleText.textContent = 'START';
         if (playIcon) playIcon.textContent = '▶';
         isRunning = false;
@@ -488,7 +531,10 @@ function toggleTimer() {
 }
 
 function resetTimer() {
-    clearInterval(timerId);
+    cancelAnimationFrame(rAFId);
+    rAFId = null;
+    timerStartTime = null;
+    timerBaseSeconds = null;
     isRunning = false;
     isWorkMode = true;
     isLongRest = false;

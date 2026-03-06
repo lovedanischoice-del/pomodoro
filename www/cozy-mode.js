@@ -15,11 +15,23 @@ let rainSourceNode = null;
 let rainGainNode = null;
 let isRainPlaying = false;
 
-// Fire
+// Fire (장작)
 let fireAudioBuffer = null;
 let fireSourceNode = null;
 let fireGainNode = null;
 let isFirePlaying = false;
+
+// Fireplace (벽난로)
+let fireplaceAudioBuffer = null;
+let fireplaceSourceNode = null;
+let fireplaceGainNode = null;
+let isFireplacePlaying = false;
+
+// Library (도서관)
+let libraryAudioBuffer = null;
+let librarySourceNode = null;
+let libraryGainNode = null;
+let isLibraryPlaying = false;
 
 /**
  * 코지 모드 초기화
@@ -31,6 +43,13 @@ function getCozyPanelHTML() {
     const firePct = Math.round(savedFire * 100);
     const rainBtn = isRainPlaying ? '⏸' : '▶';
     const fireBtn = isFirePlaying ? '⏸' : '▶';
+
+    const savedFireplace = parseFloat(localStorage.getItem('cozyFireplaceVol') || '0.4');
+    const savedLibrary = parseFloat(localStorage.getItem('cozyLibraryVol') || '0.3');
+    const fireplacePct = Math.round(savedFireplace * 100);
+    const libraryPct = Math.round(savedLibrary * 100);
+    const fireplaceBtn = isFireplacePlaying ? '⏸' : '▶';
+    const libraryBtn = isLibraryPlaying ? '⏸' : '▶';
 
     return `
         <div class="bbang-modal-header">
@@ -64,6 +83,26 @@ function getCozyPanelHTML() {
                     </div>
                 </div>
                 <input type="range" id="cozyFireSlider" min="0" max="1" step="0.05" value="${savedFire}">
+            </div>
+            <div class="mixer-track">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                    <label style="margin:0; color:var(--text-primary);">🏠 벽난로</label>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span id="cozyFireplaceValue" style="font-size:0.9em; color:var(--text-secondary);">${fireplacePct}%</span>
+                        <button id="playFireplaceBtn" style="background:transparent; border:none; color:var(--text-primary); font-size:16px; cursor:pointer; padding:0;">${fireplaceBtn}</button>
+                    </div>
+                </div>
+                <input type="range" id="cozyFireplaceSlider" min="0" max="1" step="0.05" value="${savedFireplace}">
+            </div>
+            <div class="mixer-track">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                    <label style="margin:0; color:var(--text-primary);">📚 도서관</label>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span id="cozyLibraryValue" style="font-size:0.9em; color:var(--text-secondary);">${libraryPct}%</span>
+                        <button id="playLibraryBtn" style="background:transparent; border:none; color:var(--text-primary); font-size:16px; cursor:pointer; padding:0;">${libraryBtn}</button>
+                    </div>
+                </div>
+                <input type="range" id="cozyLibrarySlider" min="0" max="1" step="0.05" value="${savedLibrary}">
             </div>
         </div>
     `;
@@ -101,11 +140,36 @@ function bindCozyControls() {
 
     const playFireBtn = document.getElementById('playFireBtn');
     if (playFireBtn) playFireBtn.addEventListener('click', toggleFire);
+
+    const fireplaceSlider = document.getElementById('cozyFireplaceSlider');
+    if (fireplaceSlider) {
+        fireplaceSlider.addEventListener('input', (e) => {
+            setFireplaceVolume(parseFloat(e.target.value));
+            const label = document.getElementById('cozyFireplaceValue');
+            if (label) label.textContent = Math.round(e.target.value * 100) + '%';
+        });
+    }
+
+    const librarySlider = document.getElementById('cozyLibrarySlider');
+    if (librarySlider) {
+        librarySlider.addEventListener('input', (e) => {
+            setLibraryVolume(parseFloat(e.target.value));
+            const label = document.getElementById('cozyLibraryValue');
+            if (label) label.textContent = Math.round(e.target.value * 100) + '%';
+        });
+    }
+
+    const playFireplaceBtn = document.getElementById('playFireplaceBtn');
+    if (playFireplaceBtn) playFireplaceBtn.addEventListener('click', toggleFireplace);
+
+    const playLibraryBtn = document.getElementById('playLibraryBtn');
+    if (playLibraryBtn) playLibraryBtn.addEventListener('click', toggleLibrary);
 }
 
 function initCozyMode() {
     // 저장된 상태 복원
     cozyEnabled = localStorage.getItem(COZY_STORAGE_KEY) === 'true';
+    window.cozyEnabled = cozyEnabled;
 
     const toggleBtn = document.getElementById('cozyToggleBtn');
     if (toggleBtn) {
@@ -136,6 +200,7 @@ function closeCozyPanel() {
  */
 function toggleCozyMode(forceState) {
     cozyEnabled = forceState !== undefined ? forceState : !cozyEnabled;
+    window.cozyEnabled = cozyEnabled;
     localStorage.setItem(COZY_STORAGE_KEY, cozyEnabled);
 
     applyCozyTheme(cozyEnabled);
@@ -143,6 +208,8 @@ function toggleCozyMode(forceState) {
 
     if (!cozyEnabled) {
         stopCozyAudio();
+        // 코지 모드 OFF 시 기존 BGM 복원
+        if (typeof handleSound === 'function') handleSound();
     }
 }
 
@@ -295,13 +362,135 @@ function stopFire() {
     } catch (e) { }
 }
 
+async function toggleFireplace() {
+    const btn = document.getElementById('playFireplaceBtn');
+    if (isFireplacePlaying) {
+        stopFireplace();
+        if (btn) btn.textContent = '▶';
+    } else {
+        await startFireplace();
+        if (btn) btn.textContent = '⏸';
+    }
+}
+
+async function startFireplace() {
+    try {
+        const ctx = getAudioCtx();
+        if (ctx.state === 'suspended') await ctx.resume();
+
+        if (!fireplaceAudioBuffer) {
+            const resp = await fetch('sounds/bgm/Fireplace-loop.mp3');
+            if (resp.ok) {
+                const arrayBuffer = await resp.arrayBuffer();
+                fireplaceAudioBuffer = await ctx.decodeAudioData(arrayBuffer);
+            }
+        }
+
+        if (fireplaceAudioBuffer && !fireplaceSourceNode) {
+            fireplaceSourceNode = ctx.createBufferSource();
+            fireplaceSourceNode.buffer = fireplaceAudioBuffer;
+            fireplaceSourceNode.loop = true;
+
+            fireplaceGainNode = ctx.createGain();
+            const savedVol = parseFloat(localStorage.getItem('cozyFireplaceVol') || '0.4');
+            fireplaceGainNode.gain.value = savedVol;
+
+            fireplaceSourceNode.connect(fireplaceGainNode);
+            fireplaceGainNode.connect(ctx.destination);
+            fireplaceSourceNode.start(0);
+            isFireplacePlaying = true;
+        }
+    } catch (err) {
+        console.warn('[CozyMode] 벽난로 시작 실패:', err);
+    }
+}
+
+function stopFireplace() {
+    try {
+        if (fireplaceSourceNode) {
+            fireplaceSourceNode.stop();
+            fireplaceSourceNode.disconnect();
+            fireplaceSourceNode = null;
+        }
+        if (fireplaceGainNode) {
+            fireplaceGainNode.disconnect();
+            fireplaceGainNode = null;
+        }
+        isFireplacePlaying = false;
+    } catch (e) { }
+}
+
+async function toggleLibrary() {
+    const btn = document.getElementById('playLibraryBtn');
+    if (isLibraryPlaying) {
+        stopLibrary();
+        if (btn) btn.textContent = '▶';
+    } else {
+        await startLibrary();
+        if (btn) btn.textContent = '⏸';
+    }
+}
+
+async function startLibrary() {
+    try {
+        const ctx = getAudioCtx();
+        if (ctx.state === 'suspended') await ctx.resume();
+
+        if (!libraryAudioBuffer) {
+            const resp = await fetch('sounds/bgm/Library.mp3');
+            if (resp.ok) {
+                const arrayBuffer = await resp.arrayBuffer();
+                libraryAudioBuffer = await ctx.decodeAudioData(arrayBuffer);
+            }
+        }
+
+        if (libraryAudioBuffer && !librarySourceNode) {
+            librarySourceNode = ctx.createBufferSource();
+            librarySourceNode.buffer = libraryAudioBuffer;
+            librarySourceNode.loop = true;
+
+            libraryGainNode = ctx.createGain();
+            const savedVol = parseFloat(localStorage.getItem('cozyLibraryVol') || '0.3');
+            libraryGainNode.gain.value = savedVol;
+
+            librarySourceNode.connect(libraryGainNode);
+            libraryGainNode.connect(ctx.destination);
+            librarySourceNode.start(0);
+            isLibraryPlaying = true;
+        }
+    } catch (err) {
+        console.warn('[CozyMode] 도서관 시작 실패:', err);
+    }
+}
+
+function stopLibrary() {
+    try {
+        if (librarySourceNode) {
+            librarySourceNode.stop();
+            librarySourceNode.disconnect();
+            librarySourceNode = null;
+        }
+        if (libraryGainNode) {
+            libraryGainNode.disconnect();
+            libraryGainNode = null;
+        }
+        isLibraryPlaying = false;
+    } catch (e) { }
+}
+
 function stopCozyAudio() {
     stopRain();
     stopFire();
+    stopFireplace();
+    stopLibrary();
     const btnRain = document.getElementById('playRainBtn');
     if (btnRain) btnRain.textContent = '▶';
     const btnFire = document.getElementById('playFireBtn');
     if (btnFire) btnFire.textContent = '▶';
+    const btnFireplace = document.getElementById('playFireplaceBtn');
+    if (btnFireplace) btnFireplace.textContent = '▶';
+    const btnLibrary = document.getElementById('playLibraryBtn');
+    if (btnLibrary) btnLibrary.textContent = '▶';
 }
 
 function setRainVolume(value) {
@@ -316,6 +505,20 @@ function setFireVolume(value) {
         fireGainNode.gain.value = value;
     }
     localStorage.setItem('cozyFireVol', value);
+}
+
+function setFireplaceVolume(value) {
+    if (fireplaceGainNode) {
+        fireplaceGainNode.gain.value = value;
+    }
+    localStorage.setItem('cozyFireplaceVol', value);
+}
+
+function setLibraryVolume(value) {
+    if (libraryGainNode) {
+        libraryGainNode.gain.value = value;
+    }
+    localStorage.setItem('cozyLibraryVol', value);
 }
 
 window.initCozyMode = initCozyMode;
