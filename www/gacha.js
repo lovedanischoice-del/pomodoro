@@ -60,6 +60,13 @@ function saveToCollection(item) {
  * @param {Function} onClose 닫기 후 콜백
  */
 function openGachaBox(onClose) {
+    // 집중 보상 팝업 설정 확인
+    const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+    if (settings.rewardPopup === false) {
+        if (onClose) onClose();
+        return;
+    }
+
     if (!window.modalManager) {
         if (onClose) onClose();
         return;
@@ -75,6 +82,14 @@ function openGachaBox(onClose) {
 
     window.modalManager.openModal('gachaOverlay');
 
+    let autoCloseTimer = null;
+
+    const closeGacha = () => {
+        if (autoCloseTimer) { clearTimeout(autoCloseTimer); autoCloseTimer = null; }
+        window.modalManager.closeModal('gachaOverlay');
+        if (onClose) onClose();
+    };
+
     // 1초 후 상자 열기
     setTimeout(() => {
         if (boxEl) boxEl.classList.add('open');
@@ -86,22 +101,23 @@ function openGachaBox(onClose) {
             saveToCollection(item);
             showGachaResult(item, resultCard);
             if (shimmer) shimmer.classList.remove('active');
+
+            // 결과 공개 후 5초 뒤 자동 닫기
+            autoCloseTimer = setTimeout(closeGacha, 5000);
         }, 800);
     }, 600);
 
     // 닫기 버튼
     const closeBtn = document.getElementById('gachaCloseBtn');
     if (closeBtn) {
-        closeBtn.onclick = () => {
-            window.modalManager.closeModal('gachaOverlay');
-            if (onClose) onClose();
-        };
+        closeBtn.onclick = closeGacha;
     }
 
     // 컬렉션 보기 버튼
     const colBtn = document.getElementById('gachaToCollectionBtn');
     if (colBtn) {
         colBtn.onclick = () => {
+            if (autoCloseTimer) { clearTimeout(autoCloseTimer); autoCloseTimer = null; }
             window.modalManager.closeModal('gachaOverlay');
             // 컬렉션 탭으로 이동
             const navItem = document.querySelector('.nav-item[data-view="collectionView"]');

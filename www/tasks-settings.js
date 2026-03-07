@@ -320,6 +320,18 @@ function initSettings() {
         const showMicroActionEl = document.getElementById('showMicroAction');
         if (showMicroActionEl) showMicroActionEl.checked = settings.showMicroAction !== false;
 
+        // 창문 효과 토글 로드
+        const windowEffectEl = document.getElementById('windowEffect');
+        if (windowEffectEl) windowEffectEl.checked = settings.particleEffects !== false;
+
+        // 집중 보상 팝업 토글 로드
+        const rewardPopupEl = document.getElementById('rewardPopup');
+        if (rewardPopupEl) rewardPopupEl.checked = settings.rewardPopup !== false;
+
+        // 도파민 메뉴 토글 로드
+        const dopamineMenuEl = document.getElementById('dopamineMenu');
+        if (dopamineMenuEl) dopamineMenuEl.checked = settings.dopamineMenu !== false;
+
 
         // Load initial button texts
         updateSoundDisplay('bgm', settings.bgmId || 'crackle');
@@ -369,6 +381,24 @@ function initSettings() {
         // AI 쪼개기 팝업 토글 저장
         const showMicroActionEl = document.getElementById('showMicroAction');
         if (showMicroActionEl) settings.showMicroAction = showMicroActionEl.checked;
+
+        // 창문 효과 토글 저장
+        const windowEffectEl = document.getElementById('windowEffect');
+        if (windowEffectEl) {
+            settings.particleEffects = windowEffectEl.checked;
+            // 끄면 즉시 파티클 제거
+            if (!windowEffectEl.checked && window.CozyParticles) {
+                window.CozyParticles.deactivateAll();
+            }
+        }
+
+        // 집중 보상 팝업 토글 저장
+        const rewardPopupEl = document.getElementById('rewardPopup');
+        if (rewardPopupEl) settings.rewardPopup = rewardPopupEl.checked;
+
+        // 도파민 메뉴 토글 저장
+        const dopamineMenuEl = document.getElementById('dopamineMenu');
+        if (dopamineMenuEl) settings.dopamineMenu = dopamineMenuEl.checked;
 
         localStorage.setItem('settings', JSON.stringify(settings));
         applyTimerSettings(settings);

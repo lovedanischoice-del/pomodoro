@@ -477,7 +477,7 @@ header {
     fill: none;
     stroke: url(#gradient);
     stroke-width: 8;
-    opacity: 0.4;
+    opacity: 0.8;
     /* 못함으로 배경 그라디언트가 비치는 효과 */
 }
 
@@ -645,7 +645,7 @@ button {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    max-height: 200px;
+    max-height: 400px;
     overflow-y: auto;
     padding-right: 8px;
 }
@@ -850,6 +850,26 @@ button {
 #volumeSlider::-moz-range-thumb:hover {
     transform: scale(1.2);
     box-shadow: 0 4px 12px rgba(255, 107, 107, 0.6);
+}
+
+/* 네이티브 앱 (Capacitor) 전체화면 */
+body.is-native {
+    padding: 0;
+    align-items: stretch;
+}
+
+body.is-native #app {
+    max-width: 100%;
+    min-height: 100vh;
+}
+
+body.is-native .content {
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    border: none;
+    padding-bottom: calc(70px + env(safe-area-inset-bottom));
 }
 
 /* 반응형 */

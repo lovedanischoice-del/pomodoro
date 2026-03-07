@@ -12,13 +12,13 @@ const CozyParticles = (() => {
     // ── 프리셋 정의 ───────────────────────────────
     const PRESETS = {
         rain: {
-            spawnRate: 0.18,       // particles/ms
-            maxOpacity: 0.55,
+            spawnRate: 0.09,       // particles/ms
+            maxOpacity: 0.45,
             getParticle(W, H) {
-                const vy = 0.4 + Math.random() * 0.25;
+                const vy = 0.18 + Math.random() * 0.06;
                 const vx = -vy * 0.35;
                 return {
-                    x: Math.random() * (W + 120) - 60,
+                    x: Math.random() * (W + 250) - 60,
                     y: Math.random() * -30 - 5,
                     vx,
                     vy,
@@ -53,14 +53,14 @@ const CozyParticles = (() => {
                     x: W * 0.3 + Math.random() * W * 0.4,
                     y: H + Math.random() * 10,
                     vx: (Math.random() - 0.5) * 0.06,
-                    vy: -(0.05 + Math.random() * 0.12),
-                    wobbleAmp: 6 + Math.random() * 10,
-                    wobbleSpeed: 1.5 + Math.random() * 2.0,
+                    vy: -(0.06 + Math.random() * 0.24),
+                    wobbleAmp: 4 + Math.random() * 8,
+                    wobbleSpeed: 0.3 + Math.random() * 0.8,
                     wobble: Math.random() * Math.PI * 2,
                     size: 1.5 + Math.random() * 2.5,
                     length: 0,
                     life: 1,
-                    decay: 0.0008 + Math.random() * 0.0008,
+                    decay: 0.00015 + Math.random() * 0.00015,
                     r: isGrey ? 150 : 210,
                     g: isGrey ? 120 : 140,
                     b: isGrey ? 90 : 60,
@@ -75,22 +75,25 @@ const CozyParticles = (() => {
         },
 
         fireplace: {
-            spawnRate: 0.025,
-            maxOpacity: 0.6,
+            spawnRate: 0.05,
+            maxOpacity: 0.7,
             getParticle(W, H) {
+                const isGrey = Math.random() > 0.4;
                 return {
                     x: W * 0.15 + Math.random() * W * 0.7,
-                    y: H + Math.random() * 20,
-                    vx: (Math.random() - 0.5) * 0.04,
-                    vy: -(0.025 + Math.random() * 0.07),
-                    wobbleAmp: 18 + Math.random() * 18,
-                    wobbleSpeed: 0.5 + Math.random() * 0.9,
+                    y: H + Math.random() * 10,
+                    vx: (Math.random() - 0.5) * 0.06,
+                    vy: -(0.06 + Math.random() * 0.24),
+                    wobbleAmp: 4 + Math.random() * 8,
+                    wobbleSpeed: 0.3 + Math.random() * 0.8,
                     wobble: Math.random() * Math.PI * 2,
-                    size: 2.5 + Math.random() * 3.0,
+                    size: 1.5 + Math.random() * 2.5,
                     length: 0,
                     life: 1,
-                    decay: 0.0004 + Math.random() * 0.0006,
-                    r: 210, g: 185, b: 145,
+                    decay: 0.00015 + Math.random() * 0.00015,
+                    r: isGrey ? 150 : 210,
+                    g: isGrey ? 120 : 140,
+                    b: isGrey ? 90 : 60,
                 };
             },
             draw(ctx, p, alpha) {
@@ -125,6 +128,67 @@ const CozyParticles = (() => {
                 ctx.fillStyle = `rgba(${p.r},${p.g},${p.b},${alpha})`;
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fill();
+            },
+        },
+
+        // 옴 명상: 화면 중앙에서 퍼지는 동심원 ripple
+        om: {
+            spawnRate: 0.0015,
+            maxOpacity: 0.45,
+            getParticle(W, H) {
+                return {
+                    x: W / 2 + (Math.random() - 0.5) * W * 0.15,
+                    y: H / 2 + (Math.random() - 0.5) * H * 0.15,
+                    vx: 0, vy: 0,
+                    wobbleAmp: 0, wobbleSpeed: 0, wobble: 0,
+                    size: 10 + Math.random() * 20,
+                    length: 0,
+                    life: 1,
+                    decay: 0.00015 + Math.random() * 0.0001,
+                    r: 160, g: 200, b: 255,
+                };
+            },
+            draw(ctx, p, alpha) {
+                const radius = p.size + (1 - p.life) * 220;
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(${p.r},${p.g},${p.b},${alpha})`;
+                ctx.lineWidth = 1.2;
+                ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+                ctx.stroke();
+            },
+        },
+
+        // 싱잉볼: 화면 전체를 흐르는 수평 sine 파형
+        singingbowl: {
+            spawnRate: 0.002,
+            maxOpacity: 0.35,
+            getParticle(W, H) {
+                const freq = 0.008 + Math.random() * 0.008; // 공간 주파수 (x축)
+                const speed = 0.8 + Math.random() * 0.6;    // 위상 이동 속도 (시간축)
+                return {
+                    x: 0,
+                    y: H * (0.15 + Math.random() * 0.7),
+                    vx: 0, vy: 0,
+                    wobbleAmp: 10 + Math.random() * 22,
+                    wobbleSpeed: speed,
+                    wobble: Math.random() * Math.PI * 2,
+                    size: freq,   // size 필드를 공간 주파수로 재활용
+                    length: W,
+                    life: 1,
+                    decay: 0.0003 + Math.random() * 0.0002,
+                    r: 200, g: 170, b: 255,
+                };
+            },
+            draw(ctx, p, alpha) {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(${p.r},${p.g},${p.b},${alpha})`;
+                ctx.lineWidth = 1.0;
+                for (let x = 0; x <= p.length; x += 3) {
+                    const y = p.y + Math.sin(x * p.size + p.wobble) * p.wobbleAmp;
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
             },
         },
     };

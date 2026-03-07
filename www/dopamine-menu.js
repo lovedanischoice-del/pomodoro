@@ -21,6 +21,13 @@ const BADGES_KEY = 'dopamineBadges';
  * @param {Function} onDone - 선택/스킵 후 콜백
  */
 function showDopamineMenu(onDone) {
+    // 도파민 메뉴 설정 확인
+    const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+    if (settings.dopamineMenu === false) {
+        if (onDone) onDone();
+        return;
+    }
+
     const overlay = document.getElementById('dopamineMenuOverlay');
     if (!overlay) {
         if (onDone) onDone();
@@ -81,6 +88,13 @@ window.selectDopamineItem = function (index) {
 };
 
 function showDopaminePraise(item, onDone) {
+    // 집중 보상 팝업 설정 확인
+    const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+    if (settings.rewardPopup === false) {
+        dismissDopamineMenu(onDone);
+        return;
+    }
+
     const overlay = document.getElementById('dopamineMenuOverlay');
     const contentEl = document.getElementById('dopamineContent');
     if (!contentEl) {
@@ -106,8 +120,8 @@ function showDopaminePraise(item, onDone) {
         </div>
     `;
 
-    // 2.5초 후 자동 닫기
-    setTimeout(() => dismissDopamineMenu(onDone), 2500);
+    // 5초 후 자동 닫기
+    setTimeout(() => dismissDopamineMenu(onDone), 5000);
 }
 
 function dismissDopamineMenu(onDone) {

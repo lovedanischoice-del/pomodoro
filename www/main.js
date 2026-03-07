@@ -450,6 +450,19 @@ function handleSound() {
     }
 }
 
+// BGM ID → 파티클 프리셋 이름 매핑
+function getBgmParticlePreset(bgmId) {
+    const map = {
+        crackle: 'fire',
+        rain: 'rain',
+        fireplace: 'fireplace',
+        library: 'library',
+        om: 'om',
+        singingbowl: 'singingbowl',
+    };
+    return map[bgmId] || null;
+}
+
 function _startTimerNow() {
     const playIcon = document.getElementById('playIcon');
     clearInterval(timerId);
@@ -469,12 +482,20 @@ function _startTimerNow() {
         if (window.penguinBuddy) window.penguinBuddy.startWork();
         // 👨‍👩‍👦 바디더블 상태 업데이트
         if (window.updateBodyDoubleStatus) window.updateBodyDoubleStatus('focusing');
+        // 🌊 창문 효과 — 집중 시작 시 BGM에 맞는 파티클 활성화
+        if (window.CozyParticles) {
+            const _s = JSON.parse(localStorage.getItem('settings') || '{}');
+            const preset = getBgmParticlePreset(_s.bgmId || 'crackle');
+            if (preset) window.CozyParticles.activate(preset);
+        }
     } else {
         window.currentMode = 'rest';
         document.body.classList.add('timer-rest');
         document.body.classList.remove('timer-running');
         // 👨‍👩‍👦 바디더블 상태 업데이트
         if (window.updateBodyDoubleStatus) window.updateBodyDoubleStatus('break');
+        // 🌊 휴식 중에는 파티클 비활성화
+        if (window.CozyParticles) window.CozyParticles.deactivateAll();
     }
     handleSound();
     if ('Notification' in window && Notification.permission === 'default') {
@@ -492,6 +513,8 @@ function toggleTimer() {
         document.body.classList.remove('timer-running', 'timer-rest');
         // 👨‍👩‍👦 바디더블 상태 업데이트 일시정지
         if (window.updateBodyDoubleStatus) window.updateBodyDoubleStatus('waiting');
+        // 🌊 일시정지 시 파티클 비활성화
+        if (window.CozyParticles) window.CozyParticles.deactivateAll();
         handleSound();
     } else {
         // 🎯 기능3: 워크 모드 시작 시 마이크로 액션 팝업
@@ -520,8 +543,10 @@ function resetTimer() {
     document.body.classList.remove('timer-running', 'timer-rest');
     document.documentElement.style.setProperty('--bg-rotation', '0deg');
 
-    // 👨‍👩‍👦 바디더블 상태 업데이트 
+    // 👨‍👩‍👦 바디더블 상태 업데이트
     if (window.updateBodyDoubleStatus) window.updateBodyDoubleStatus('waiting');
+    // 🌊 리셋 시 파티클 비활성화
+    if (window.CozyParticles) window.CozyParticles.deactivateAll();
 
     if (toggleText) toggleText.textContent = 'START';
     if (statusBadge) {

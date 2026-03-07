@@ -34,6 +34,11 @@
                     .catch((err) => console.log('등록 실패:', err));
             });
         }
+        // Capacitor 네이티브 앱 감지 → 전체화면 모드 활성화
+        if (window.Capacitor?.isNativePlatform()) {
+            document.documentElement.classList.add('is-native');
+            document.body.classList.add('is-native');
+        }
     </script>
 </head>
 
@@ -241,10 +246,9 @@
                     <p>20m Work • 5m Rest</p>
                     <div class="sound-controls">
                         <div class="sound-indicator" id="soundStatus">
-                            <span class="icon-sound">🔥</span> 소리 재생 중
                         </div>
                         <div class="volume-control">
-                            <span>VOL</span>
+                            <span class="icon-sound">🔥</span><span>VOL</span>
                             <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.5">
                         </div>
                     </div>
@@ -506,6 +510,39 @@
                             <option value="malibu">말리부 에스케이프</option>
                             <option value="pool">풀 파티</option>
                         </select>
+                    </div>
+
+                    <div class="setting-item">
+                        <div style="flex:1;">
+                            <label for="windowEffect" style="display:block;">창문 효과</label>
+                            <span style="font-size:0.75rem; opacity:0.6;">타이머 실행 중 배경음에 맞는 파티클 이펙트</span>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="windowEffect" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <div style="flex:1;">
+                            <label for="rewardPopup" style="display:block;">집중 보상 팝업</label>
+                            <span style="font-size:0.75rem; opacity:0.6;">집중/휴식 완료 후 보상 팝업 표시 (5초 자동 닫힘)</span>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="rewardPopup" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <div style="flex:1;">
+                            <label for="dopamineMenu" style="display:block;">도파민 메뉴</label>
+                            <span style="font-size:0.75rem; opacity:0.6;">휴식 시작 시 건강한 활동 선택 팝업 (15초 자동 스킵)</span>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="dopamineMenu" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
                     </div>
                 </section>
 
@@ -1061,6 +1098,7 @@
     <script src="flowmodoro.js"></script>
     <script src="gacha.js"></script>
     <script src="cozy-mode.js"></script>
+    <script src="cozy-particles.js"></script>
     <script src="schedule-start.js"></script>
     <script src="share-card.js"></script>
 
