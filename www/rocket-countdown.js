@@ -8,7 +8,8 @@
 // ─────────────────────────────────────────────
 // 공통 유틸: Web Audio API 효과음 합성
 // ─────────────────────────────────────────────
-function playCountdownBeep(frequency = 440, duration = 0.15) {
+function playCountdownBeep() {
+    // 차분한 싱잉볼 느낌: 낮고 일정한 음, 부드러운 페이드
     try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
@@ -16,31 +17,33 @@ function playCountdownBeep(frequency = 440, duration = 0.15) {
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.type = 'sine';
-        osc.frequency.value = frequency;
-        gain.gain.setValueAtTime(0.4, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.frequency.value = 432;
+        gain.gain.setValueAtTime(0.001, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.13, ctx.currentTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.65);
         osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + duration);
-    } catch (e) {
-        // 오디오 컨텍스트 없을 때 무시
-    }
+        osc.stop(ctx.currentTime + 0.65);
+    } catch (e) { }
 }
 
 function playLaunchSound() {
-    // 로켓 발사 느낌: 주파수 스윕 업
+    // 부드러운 2음 종소리 (집중 시작)
     try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(200, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.6);
-        gain.gain.setValueAtTime(0.35, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 0.6);
+        [432, 576].forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            const t = ctx.currentTime + i * 0.22;
+            gain.gain.setValueAtTime(0.001, t);
+            gain.gain.linearRampToValueAtTime(0.15, t + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.9);
+            osc.start(t);
+            osc.stop(t + 0.9);
+        });
     } catch (e) { }
 }
 
@@ -64,15 +67,14 @@ function startRocketCountdown(onComplete) {
     numEl.className = 'rocket-number count-' + count;
 
     // 첫 beep
-    playCountdownBeep(300 + count * 80, 0.18);
+    playCountdownBeep();
 
     rocketTimerId = setInterval(() => {
         count--;
         if (count > 0) {
             numEl.textContent = count;
             numEl.className = 'rocket-number count-' + count;
-            // 카운트가 낮을수록 높은 주파수 (긴장감)
-            playCountdownBeep(300 + count * 80, 0.18);
+            playCountdownBeep();
         } else {
             // 발사!
             clearInterval(rocketTimerId);

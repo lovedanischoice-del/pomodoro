@@ -98,6 +98,14 @@ function closeCozyPanel(panel) {
     if (window.modalManager) {
         window.modalManager.closeModal('cozyMixerPanel');
     }
+    // 패널 닫을 때 소리 중지 + 스위치 OFF
+    stopCozyAudio();
+    cozyEnabled = false;
+    localStorage.setItem(COZY_STORAGE_KEY, false);
+    applyCozyTheme(false);
+    updateCozyToggleBtn(false);
+    const cozySwitch = document.getElementById('cozyModeSwitch');
+    if (cozySwitch) cozySwitch.checked = false;
 }
 
 /**

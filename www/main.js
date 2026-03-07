@@ -482,11 +482,13 @@ function _startTimerNow() {
         if (window.penguinBuddy) window.penguinBuddy.startWork();
         // 👨‍👩‍👦 바디더블 상태 업데이트
         if (window.updateBodyDoubleStatus) window.updateBodyDoubleStatus('focusing');
-        // 🌊 창문 효과 — 집중 시작 시 BGM에 맞는 파티클 활성화
+        // 🌊 창문 효과 — 집중 시작 시 BGM에 맞는 파티클 활성화 (설정 ON일 때만)
         if (window.CozyParticles) {
             const _s = JSON.parse(localStorage.getItem('settings') || '{}');
-            const preset = getBgmParticlePreset(_s.bgmId || 'crackle');
-            if (preset) window.CozyParticles.activate(preset);
+            if (_s.particleEffects !== false) {
+                const preset = getBgmParticlePreset(_s.bgmId || 'crackle');
+                if (preset) window.CozyParticles.activate(preset);
+            }
         }
     } else {
         window.currentMode = 'rest';

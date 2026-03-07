@@ -247,7 +247,7 @@ function initSettings() {
     function getCurrentSoundId(type) {
         const settings = JSON.parse(localStorage.getItem('settings') || '{}');
         if (type === 'bgm') return settings.bgmId || 'crackle';
-        return settings.bellId || 'chime';
+        return settings.bellId || 'bell3';
     }
 
     function selectSound(type, id) {
@@ -335,7 +335,7 @@ function initSettings() {
 
         // Load initial button texts
         updateSoundDisplay('bgm', settings.bgmId || 'crackle');
-        updateSoundDisplay('bell', settings.bellId || 'chime');
+        updateSoundDisplay('bell', settings.bellId || 'bell3');
 
         if (volumeSettings) {
             volumeSettings.value = settings.volume || 0.5;
@@ -346,7 +346,7 @@ function initSettings() {
         // Update audio sources based on loaded settings
         updateAudioSource('fireSound', settings.bgmId);
 
-        // Gemini API Key 로드
+        /* Gemini API Key 로드 (비활성화 - 추후 사용)
         const savedKey = localStorage.getItem('geminiApiKey');
         const apiKeyInput = document.getElementById('geminiApiKey');
         const apiKeyStatus = document.getElementById('apiKeyStatus');
@@ -357,6 +357,7 @@ function initSettings() {
                 apiKeyStatus.className = 'api-key-status saved';
             }
         }
+        */
     }
 
     function saveSettings() {
@@ -681,7 +682,7 @@ function initSettings() {
         });
     }
 
-    // Gemini API Key 저장 버튼
+    /* Gemini API Key 저장 버튼 (비활성화 - 추후 사용)
     const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
     if (saveApiKeyBtn) {
         saveApiKeyBtn.addEventListener('click', () => {
@@ -700,12 +701,12 @@ function initSettings() {
                 apiKeyStatus.textContent = '✅ 저장 완료!';
                 apiKeyStatus.className = 'api-key-status saved';
             }
-            // 3초 후 상태 메시지 숨기기
             setTimeout(() => {
                 if (apiKeyStatus) apiKeyStatus.textContent = '✅ API Key 저장됨';
             }, 3000);
         });
     }
+    */
 
     loadSettings();
 }

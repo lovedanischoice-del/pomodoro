@@ -690,7 +690,7 @@
                     </div>
 
 
-                    <!-- 🤖 AI 브릿지 설정 -->
+                    <!-- 🤖 AI 브릿지 설정 (비활성화 - 추후 사용)
                     <h3 class="section-title" style="margin-top: 30px;">🤖 AI 브릿지 (Gemini)</h3>
                     <div class="setting-item setting-column">
                         <div class="setting-row-header">
@@ -705,6 +705,7 @@
                         </div>
                         <div id="apiKeyStatus" class="api-key-status"></div>
                     </div>
+                    -->
 
                     <!-- AI 쪼개기 팝업 on/off -->
                     <div class="setting-item">
@@ -875,8 +876,7 @@
                         <input type="checkbox" id="cozyModeSwitch">
                         <span class="toggle-slider"></span>
                     </label>
-                    <button id="cozyPanelClose" class="modal-close-btn"
-                        onclick="modalManager.closeModal('cozyMixerPanel')">&times;</button>
+                    <button id="cozyPanelClose" class="modal-close-btn">&times;</button>
                 </div>
             </div>
             <div class="modal-body cozy-mixer-body">
@@ -944,15 +944,14 @@
                 <input id="microActionInput" class="micro-input" type="text" placeholder="예: 이메일 답장 하나 쓰기"
                     maxlength="50" autocomplete="off" style="color: white;">
 
-                <!-- AI 쪼개기 버튼 -->
+                <!-- AI 쪼개기 버튼 (비활성화 - 추후 사용)
                 <button id="microAIBtn" class="btn-ai-breakdown" onclick="handleAIBreakdown(
                     document.getElementById('microActionInput'),
                     document.getElementById('aiStepsContainer'),
                     document.getElementById('microAIBtn')
                 )">✨ AI로 쪼개기</button>
-
-                <!-- AI 결과 표시 영역 -->
                 <div id="aiStepsContainer" class="ai-steps-container hidden"></div>
+                -->
 
                 <div class="micro-timer-bar">
                     <div id="microTimerFill" class="micro-timer-fill"></div>
@@ -1090,7 +1089,7 @@
     <script src="tasks-settings.js"></script>
     <script src="leaderboard.js"></script>
     <script src="rocket-countdown.js"></script>
-    <script src="ai-bridge.js"></script>
+    <!-- <script src="ai-bridge.js"></script> -->
     <script src="rabbit-hole.js"></script>
     <script src="dopamine-menu.js"></script>
     <script src="flow-guard.js"></script>
