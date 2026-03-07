@@ -260,7 +260,7 @@ function switchMode() {
             if (typeof startStretchMission === 'function') {
                 startStretchMission(() => {
                     if (typeof show1MinTaste === 'function') {
-                        show1MinTaste(() => _finishSwitchMode());
+                        show1MinTaste((started) => started ? _finishSwitchMode() : _finishSwitchModeCore());
                     } else {
                         _finishSwitchMode();
                     }

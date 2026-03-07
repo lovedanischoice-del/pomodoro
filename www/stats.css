@@ -125,10 +125,6 @@
 }
 
 .bar-value {
-    position: absolute;
-    top: -24px;
-    left: 50%;
-    transform: translateX(-50%);
     font-size: 12px;
     font-weight: 600;
     color: var(--text-primary);

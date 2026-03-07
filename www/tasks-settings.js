@@ -332,6 +332,17 @@ function initSettings() {
         const dopamineMenuEl = document.getElementById('dopamineMenu');
         if (dopamineMenuEl) dopamineMenuEl.checked = settings.dopamineMenu !== false;
 
+        // 벌떡 스트레칭 토글 로드
+        const stretchMissionEl = document.getElementById('stretchMission');
+        if (stretchMissionEl) stretchMissionEl.checked = settings.stretchMission !== false;
+
+        // 1분 맛보기 토글 로드
+        const oneMinTasteEl = document.getElementById('oneMinTaste');
+        if (oneMinTasteEl) oneMinTasteEl.checked = settings.oneMinTaste !== false;
+
+        // 할일 쪼개기 팝업 토글 로드
+        const microActionEl = document.getElementById('microAction');
+        if (microActionEl) microActionEl.checked = settings.microAction !== false;
 
         // Load initial button texts
         updateSoundDisplay('bgm', settings.bgmId || 'crackle');
@@ -400,6 +411,18 @@ function initSettings() {
         // 도파민 메뉴 토글 저장
         const dopamineMenuEl = document.getElementById('dopamineMenu');
         if (dopamineMenuEl) settings.dopamineMenu = dopamineMenuEl.checked;
+
+        // 벌떡 스트레칭 토글 저장
+        const stretchMissionEl = document.getElementById('stretchMission');
+        if (stretchMissionEl) settings.stretchMission = stretchMissionEl.checked;
+
+        // 1분 맛보기 토글 저장
+        const oneMinTasteEl = document.getElementById('oneMinTaste');
+        if (oneMinTasteEl) settings.oneMinTaste = oneMinTasteEl.checked;
+
+        // 할일 쪼개기 팝업 토글 저장
+        const microActionEl = document.getElementById('microAction');
+        if (microActionEl) settings.microAction = microActionEl.checked;
 
         localStorage.setItem('settings', JSON.stringify(settings));
         applyTimerSettings(settings);

@@ -101,6 +101,9 @@ let stretchTimerId = null;
 let motionListener = null;
 
 function startStretchMission(onComplete) {
+    const _s = JSON.parse(localStorage.getItem('settings') || '{}');
+    if (_s.stretchMission === false) { if (onComplete) onComplete(); return; }
+
     const overlay = document.getElementById('stretchOverlay');
     const countdownEl = document.getElementById('stretchCountdown');
     const doneBtn = document.getElementById('stretchDoneBtn');
@@ -170,6 +173,9 @@ let microTimerId = null;
 let microTimerBarAnim = null;
 
 function showMicroActionPopup(onStart) {
+    const _s = JSON.parse(localStorage.getItem('settings') || '{}');
+    if (_s.microAction === false) { if (onStart) onStart(''); return; }
+
     const overlay = document.getElementById('microActionOverlay');
     const input = document.getElementById('microActionInput');
     const startBtn = document.getElementById('microStartBtn');
@@ -256,6 +262,9 @@ window.updateMicroActionBadge = updateMicroActionBadge;
 let tasteTimerId = null;
 
 function show1MinTaste(onDone) {
+    const _s = JSON.parse(localStorage.getItem('settings') || '{}');
+    if (_s.oneMinTaste === false) { if (onDone) onDone(); return; }
+
     const overlay = document.getElementById('oneMinTasteOverlay');
     if (!overlay) {
         if (onDone) onDone();
@@ -304,7 +313,7 @@ function show1MinTaste(onDone) {
                 window._oneMinOverride = true;
             }
         }
-        if (onDone) onDone();
+        if (onDone) onDone(startWork);
     }
 
     if (startBtn) startBtn.onclick = () => dismiss(true);

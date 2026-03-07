@@ -313,9 +313,8 @@ class StatsManager {
 
             return `
                 <div class="chart-bar">
-                    <div class="bar" style="height: ${heightPercent}%">
-                        <span class="bar-value">${hours}</span>
-                    </div>
+                    <div class="bar" style="height: ${heightPercent}%"></div>
+                    <span class="bar-value">${hours}</span>
                     <span class="bar-label">${day}</span>
                 </div>
             `;
