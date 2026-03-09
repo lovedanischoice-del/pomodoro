@@ -313,7 +313,9 @@ class StatsManager {
 
             return `
                 <div class="chart-bar">
-                    <div class="bar" style="height: ${heightPercent}%"></div>
+                    <div class="bar-wrap">
+                        <div class="bar" style="height: ${heightPercent}%"></div>
+                    </div>
                     <span class="bar-value">${hours}</span>
                     <span class="bar-label">${day}</span>
                 </div>

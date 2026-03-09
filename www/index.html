@@ -535,7 +535,7 @@
                             <span style="font-size:0.75rem; opacity:0.6;">집중/휴식 완료 후 보상 팝업 표시 (5초 자동 닫힘)</span>
                         </div>
                         <label class="toggle">
-                            <input type="checkbox" id="rewardPopup" checked>
+                            <input type="checkbox" id="rewardPopup">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -546,7 +546,7 @@
                             <span style="font-size:0.75rem; opacity:0.6;">휴식 시작 시 건강한 활동 선택 팝업 (15초 자동 스킵)</span>
                         </div>
                         <label class="toggle">
-                            <input type="checkbox" id="dopamineMenu" checked>
+                            <input type="checkbox" id="dopamineMenu">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -557,7 +557,7 @@
                             <span style="font-size:0.75rem; opacity:0.6;">집중 완료 후 5초 기립 미션 표시</span>
                         </div>
                         <label class="toggle">
-                            <input type="checkbox" id="stretchMission" checked>
+                            <input type="checkbox" id="stretchMission">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -568,7 +568,7 @@
                             <span style="font-size:0.75rem; opacity:0.6;">벌떡 스트레칭 후 1분 미니 세션 제안</span>
                         </div>
                         <label class="toggle">
-                            <input type="checkbox" id="oneMinTaste" checked>
+                            <input type="checkbox" id="oneMinTaste">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -579,7 +579,7 @@
                             <span style="font-size:0.75rem; opacity:0.6;">집중 시작 전 지금 할 일을 한 가지 선언하는 팝업</span>
                         </div>
                         <label class="toggle">
-                            <input type="checkbox" id="microAction" checked>
+                            <input type="checkbox" id="microAction">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -1008,8 +1008,8 @@
     <!-- 빠른 입력 패널 모달 (집중 중) -->
     <div class="modal-overlay" id="rabbitModalOverlay">
         <div id="rabbitHolePanel" class="modal-container">
-            <div class="modal-header" style="margin-bottom: 10px;">
-                <div class="rabbit-panel-title" style="margin-bottom: 0;">🐇 나중에 볼 생각</div>
+            <div class="modal-header">
+                <div class="rabbit-panel-title">🐇 나중에 볼 생각</div>
                 <button id="rabbitCloseBtn" class="modal-close-btn"
                     onclick="modalManager.closeModal('rabbitHolePanel')">&times;</button>
             </div>

@@ -77,11 +77,11 @@ const volumeSlider = document.getElementById('volumeSlider');
 function playChimeBell() {
     try {
         // Get selected chime from settings
-        let soundFile = 'sounds/bells/chime.mp3'; // new default path
+        let soundFile = 'sounds/bells/freesounds123-bell-sound-370341.mp3'; // default: 청명한 벨
 
         if (window.SOUND_CONFIG) {
             const settings = JSON.parse(localStorage.getItem('settings') || '{}');
-            const bellId = settings.bellId || 'chime';
+            const bellId = settings.bellId || 'bell3';
             const sound = window.SOUND_CONFIG.bells.find(s => s.id === bellId);
             if (sound) soundFile = sound.file;
         }

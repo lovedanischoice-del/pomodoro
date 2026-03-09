@@ -2787,6 +2787,79 @@ body.is-native .content {
     border: 2px solid #0f0f1a;
 }
 
+/* ─── 토끼굴 파킹 패널 내부 ──────────────────── */
+.rabbit-panel-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.rabbit-input-row {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 5px 5px 5px 14px;
+    gap: 8px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+}
+
+.rabbit-input-row:focus-within {
+    border-color: rgba(167, 139, 250, 0.5);
+}
+
+.rabbit-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    padding: 7px 0;
+    min-width: 0;
+}
+
+.rabbit-input::placeholder {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.btn-rabbit-save {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #a78bfa, #7c3aed);
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.35);
+}
+
+.btn-rabbit-save:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.55);
+}
+
+.rabbit-hint {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 2px 0;
+    letter-spacing: 0.1px;
+}
+
 /* 공통 모달 시스템 사용으로 대체됨 */
 
 .rabbit-vault-list {

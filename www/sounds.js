@@ -41,11 +41,6 @@ const SOUND_CONFIG = {
     // 알림음 (Notification Bells)
     bells: [
         {
-            id: 'chime',
-            name: '기본 차임벨 (Default Chime)',
-            file: 'sounds/bells/chime.mp3'
-        },
-        {
             id: 'bell',
             name: '종소리 (Bell)',
             file: 'sounds/bells/Bell.mp3'

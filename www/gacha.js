@@ -168,12 +168,30 @@ function renderCollectionView() {
     const legendEl = document.getElementById('collectionLegendaryCount');
     if (legendEl) legendEl.textContent = legendaryCount;
 
-    container.innerHTML = col.map(item => {
+    // 중복 아이템 합치기 (id 기준으로 그룹화)
+    const grouped = {};
+    col.forEach(item => {
+        if (!grouped[item.id]) {
+            grouped[item.id] = { ...item, count: 0 };
+        }
+        grouped[item.id].count++;
+        // 가장 최근 획득 날짜 유지
+        if (item.obtainedAt > grouped[item.id].obtainedAt) {
+            grouped[item.id].obtainedAt = item.obtainedAt;
+        }
+    });
+    const uniqueItems = Object.values(grouped);
+
+    container.innerHTML = uniqueItems.map(item => {
         const rarity = RARITY_LABEL[item.rarity] || RARITY_LABEL.common;
         const date = new Date(item.obtainedAt);
         const dateStr = `${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
+        const countBadge = item.count > 1
+            ? `<div class="collection-item-count">×${item.count}</div>`
+            : '';
         return `
         <div class="collection-item rarity-${item.rarity}" title="${item.name}: ${item.desc}">
+            ${countBadge}
             <div class="collection-item-emoji">${item.emoji}</div>
             <div class="collection-item-name">${item.name}</div>
             <div class="collection-item-rarity" style="color:${rarity.color}">${rarity.label}</div>
