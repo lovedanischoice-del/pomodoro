@@ -1,0 +1,472 @@
+﻿/* ============================================
+   Streak & Level Visualization + Schedule Start
+   ============================================ */
+
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   ?�트�?+ ?�벨 배너 (?�?�머 ?�면)
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
+.streak-level-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px auto 0;
+    max-width: 360px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    padding: 10px 18px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+    animation: bannerFadeIn 0.5s ease;
+}
+
+/* Stats ?�이지?�서???�단 ?�백 ?�이 */
+.stats-content .streak-level-banner {
+    margin: 0 auto 16px;
+    max-width: 100%;
+}
+
+
+@keyframes bannerFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 개별 ?�탯 ?� */
+.slb-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+}
+
+.slb-divider {
+    width: 1px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.15);
+    flex-shrink: 0;
+}
+
+.slb-value {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    letter-spacing: -0.5px;
+}
+
+.slb-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+/* ?�트�?강조 ?�상 */
+.slb-streak .slb-value {
+    color: #ff9f43;
+}
+
+.slb-streak .slb-value.hot {
+    color: #ff6b6b;
+    text-shadow: 0 0 12px rgba(255, 107, 107, 0.6);
+}
+
+/* ?�벨 강조 ?�상 */
+.slb-level .slb-value {
+    color: #a78bfa;
+}
+
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   XP ?�벨 게이지
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
+.xp-bar-wrap {
+    margin: 6px auto 24px;
+    max-width: 320px;
+    padding: 0 4px;
+}
+
+.xp-bar-track {
+    position: relative;
+    width: 100%;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.xp-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #a78bfa, #6366f1, #60a5fa);
+    background-size: 200% 100%;
+    animation: xpShimmer 2.5s linear infinite;
+    transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes xpShimmer {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+.xp-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.35);
+    margin-top: 3px;
+    padding: 0 2px;
+}
+
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   ?�벨???�니메이???�버?�이
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
+.levelup-burst {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    animation: burstFadeOut 2.2s ease forwards;
+}
+
+.levelup-burst-emoji {
+    font-size: 5rem;
+    animation: burstBounce 0.5s ease infinite alternate;
+}
+
+.levelup-burst-text {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 0 30px #a78bfa, 0 0 60px #6366f1;
+    margin-top: 12px;
+    letter-spacing: 2px;
+}
+
+@keyframes burstFadeOut {
+    0% {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+
+    15% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+
+    70% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes burstBounce {
+    from {
+        transform: translateY(0) rotate(-5deg);
+    }
+
+    to {
+        transform: translateY(-10px) rotate(5deg);
+    }
+}
+
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   ?�작 ?�약 버튼 (controls ?�션)
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
+
+
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   ?�작 ?�약 ?�버?�이
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
+.schedule-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 8000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+.schedule-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.schedule-sheet {
+    width: 100%;
+    max-width: 480px;
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(128, 128, 128, 0.12);
+    border-radius: 24px 24px 0 0;
+    padding: 28px 24px 40px;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.schedule-overlay.visible .schedule-sheet {
+    transform: translateY(0);
+}
+
+.schedule-sheet h3 {
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 20px;
+}
+
+.schedule-sheet-handle {
+    width: 40px;
+    height: 4px;
+    background: rgba(128, 128, 128, 0.3);
+    border-radius: 99px;
+    margin: 0 auto 20px;
+}
+
+.schedule-btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.schedule-choice-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    border-radius: 16px;
+    border: 1.5px solid rgba(128, 128, 128, 0.12);
+    background: rgba(128, 128, 128, 0.06);
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    width: 100%;
+}
+
+.schedule-choice-btn:hover {
+    background: rgba(128, 128, 128, 0.12);
+    border-color: rgba(128, 128, 128, 0.25);
+    transform: translateX(3px);
+}
+
+.sch-btn-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.sch-btn-title {
+    font-size: 1rem;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.sch-btn-desc {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    display: block;
+}
+
+.schedule-choice-btn.now-btn {
+    border-color: rgba(78, 205, 196, 0.4);
+    background: rgba(78, 205, 196, 0.08);
+}
+
+.schedule-choice-btn.later-btn {
+    border-color: rgba(255, 159, 67, 0.4);
+    background: rgba(255, 159, 67, 0.08);
+}
+
+.schedule-cancel-btn {
+    margin-top: 8px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.schedule-cancel-btn:hover {
+    color: var(--text-secondary);
+}
+
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   15�??��??�로??배�?
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
+.schedule-badge {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 7000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+    border-radius: 99px;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
+    animation: badgePulse 2s ease infinite;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.schedule-badge:hover {
+    transform: translateX(-50%) scale(1.05);
+}
+
+.schedule-badge.hidden {
+    display: none;
+}
+
+.badge-cancel-x {
+    font-size: 1.1rem;
+    opacity: 0.75;
+    line-height: 1;
+}
+
+@keyframes badgePulse {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 4px 32px rgba(255, 107, 107, 0.7);
+    }
+}
+
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   5-4-3-2-1 카운?�다???�버?�이 ?�활???��???보완
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
+.schedule-countdown-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 8500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+}
+
+.sco-number {
+    font-family: 'Outfit', sans-serif;
+    font-size: 9rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 0 60px #ff9f43;
+    animation: scoPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    line-height: 1;
+}
+
+@keyframes scoPop {
+    from {
+        transform: scale(0.4);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.sco-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 16px;
+    letter-spacing: 2px;
+}
+
+/* ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+   Controls ?�이?�웃 조정 (?�약 버튼 추�? ?�??
+   ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?� */
+.controls {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px !important;
+    margin: 28px 0 36px !important;
+    /* 위아래 균등한 여백 */
+    align-items: stretch;
+}
+
+/* START 버튼?� ?�게, RESET?� ?�당?? ?�약 버튼?� ?�체??*/
+.controls .btn-primary {
+    flex: 2 1 120px;
+}
+
+.controls .btn-secondary {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.controls .btn-schedule {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    white-space: nowrap !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.controls .btn-schedule:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-primary) !important;
+    transform: translateY(-2px);
+}

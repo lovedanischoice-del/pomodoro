@@ -1,0 +1,400 @@
+/* ===== Features CSS (Cozy, Flowmodoro, Gacha) ===== */
+
+/* 🌿 Cozy Mode Theme */
+body.cozy-mode {
+    --bg-color: #0f1c1a;
+    --text-primary: #e2f0ea;
+    --text-secondary: #9dbcab;
+    --accent-work: #10b981;
+    --card-bg: rgba(20, 40, 35, 0.4);
+    background: radial-gradient(circle at center, #1b352c 0%, #0f1a16 100%);
+}
+
+.cozy-toggle-btn {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    box-sizing: border-box;
+    aspect-ratio: 1 / 1;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: 0.3s;
+    z-index: 10;
+}
+
+.cozy-toggle-btn:hover,
+.cozy-toggle-btn.active {
+    background: rgba(16, 185, 129, 0.3);
+    transform: scale(1.1);
+}
+
+/* 공통 모달 시스템 사용으로 대체됨 */
+
+.mixer-track {
+    margin-bottom: 15px;
+}
+
+.mixer-track label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.mixer-track input[type="range"] {
+    width: 100%;
+    accent-color: #10b981;
+}
+
+/* ⏱️ Flowmodoro (Up-count) */
+.flowmodoro-bar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(139, 92, 246, 0.9);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+    z-index: 1000;
+    transition: 0.3s;
+}
+
+.flowmodoro-bar.hidden {
+    transform: translate(-50%, -100px);
+    opacity: 0;
+}
+
+.flowmodoro-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.flowmodoro-icon {
+    font-size: 24px;
+}
+
+.flowmodoro-title {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.flowmodoro-desc {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.btn-flowmodoro-stop {
+    background: white;
+    color: #8b5cf6;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-flowmodoro-stop:hover {
+    background: #f3f4f6;
+    transform: scale(1.05);
+}
+
+.flow-result-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    backdrop-filter: blur(5px);
+    transition: 0.3s;
+}
+
+.flow-result-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.flow-result-card {
+    background: #1f2937;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    border: 1px solid #8b5cf6;
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+}
+
+.flow-result-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.flow-result-card h2 {
+    margin: 0 0 15px;
+    color: #a78bfa;
+}
+
+.flow-result-stats p {
+    margin: 8px 0;
+    font-size: 18px;
+}
+
+/* 🎁 Gacha System */
+/* 공통 모달 시스템 사용으로 대체됨 */
+
+.gacha-view {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+}
+
+.gacha-view h2 {
+    color: white;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.gacha-box {
+    font-size: 80px;
+    cursor: pointer;
+    transition: transform 0.3s, filter 0.3s;
+    user-select: none;
+}
+
+.gacha-box:hover {
+    transform: scale(1.1);
+}
+
+.gacha-box.open {
+    animation: gachaShake 0.5s ease-in-out;
+    filter: brightness(0);
+}
+
+.gacha-result-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border: 2px solid var(--rarity-color, #9ca3af);
+    border-radius: 20px;
+    padding: 24px;
+    margin: 20px 0;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px var(--rarity-color);
+    animation: gachaFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gacha-result-card.hidden {
+    display: none;
+}
+
+.gacha-item-emoji {
+    font-size: 64px;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 0 20px var(--rarity-color));
+}
+
+.gacha-rarity-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    border: 1px solid;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.gacha-item-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.gacha-item-desc {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.gacha-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.gacha-actions button {
+    min-width: 120px;
+}
+
+@keyframes gachaPop {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    70% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes gachaFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes gachaShake {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-10deg) scale(1.1);
+    }
+
+    50% {
+        transform: rotate(10deg) scale(1.1);
+    }
+
+    75% {
+        transform: rotate(-10deg) scale(1.1);
+    }
+}
+
+.gacha-shimmer {
+    position: absolute;
+    inset: -50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
+    opacity: 0;
+    transform: scale(0.5);
+    transition: 0.5s;
+    z-index: 1;
+}
+
+.gacha-shimmer.active {
+    opacity: 1;
+    transform: scale(1) rotate(45deg);
+    animation: shimmerSpin 10s linear infinite;
+}
+
+@keyframes shimmerSpin {
+    100% {
+        transform: scale(1) rotate(405deg);
+    }
+}
+
+/* Collection View */
+.collection-stats {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 15px;
+    padding: 10px;
+}
+
+.collection-item {
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 15px 10px;
+    text-align: center;
+    transition: 0.2s;
+    position: relative;
+}
+
+.collection-item-count {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    background: rgba(255, 107, 107, 0.85);
+    border-radius: 8px;
+    padding: 1px 6px;
+    line-height: 1.4;
+}
+
+.collection-item:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.collection-item.rarity-legendary {
+    border-color: rgba(251, 191, 36, 0.4);
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.1);
+}
+
+.collection-item.rarity-rare {
+    border-color: rgba(96, 165, 250, 0.4);
+}
+
+.collection-item-emoji {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.collection-item-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.collection-item-rarity {
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.collection-item-date {
+    font-size: 10px;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
+
+.collection-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 40px 20px;
+}

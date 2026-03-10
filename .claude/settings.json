@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls \"e:\\\\바이브코딩\\\\pomodoro\"/*.js \"e:\\\\바이브코딩\\\\pomodoro\"/*.css \"e:\\\\바이브코딩\\\\pomodoro\"/*.html \"e:\\\\바이브코딩\\\\pomodoro\"/*.json)"
+    ]
+  }
+}

@@ -1,0 +1,183 @@
+/* 
+  body-double.css - Body Doubling Feature Styles
+  Included in index.html to style the AvatarRow and StatusOverlays 
+*/
+
+#bodyDoubleContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    z-index: 50;
+    min-height: 40px;
+}
+
+.avatar-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.avatar-item {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--bg-primary, #1e1e2e);
+    margin-left: -12px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.avatar-item:first-child {
+    margin-left: 0;
+}
+
+.avatar-item:hover {
+    transform: translateY(-2px);
+    z-index: 10;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.status-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    /* Let clicks pass through to avatar if needed */
+}
+
+/* Status configs */
+.status-overlay.focusing,
+.status-overlay.work {
+    background: transparent;
+}
+
+.status-overlay.break {
+    background: rgba(100, 149, 237, 0.45);
+}
+
+.status-overlay.done {
+    background: rgba(72, 199, 142, 0.45);
+}
+
+.status-overlay.waiting {
+    background: rgba(150, 150, 150, 0.35);
+}
+
+.overflow-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid var(--bg-primary, #1e1e2e);
+    margin-left: -12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    color: var(--text-primary, #fff);
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    backdrop-filter: blur(4px);
+    transition: transform 0.2s ease;
+}
+
+.overflow-badge:hover {
+    transform: translateY(-2px);
+}
+
+/* Light theme overrides for border color using data-theme inheritance */
+body[data-theme="gelato"] .avatar-item,
+body[data-theme="gelato"] .overflow-badge,
+body[data-theme="malibu"] .avatar-item,
+body[data-theme="malibu"] .overflow-badge,
+body[data-theme="pool"] .avatar-item,
+body[data-theme="pool"] .overflow-badge {
+    border-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Dropdown list for Overflow avatars */
+.avatar-dropdown {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    width: 200px;
+    max-height: 250px;
+    overflow-y: auto;
+    background: var(--bg-card, rgba(30, 30, 46, 0.95));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    padding: 8px 0;
+    backdrop-filter: blur(10px);
+}
+
+.avatar-dropdown.show {
+    display: flex;
+    animation: dropIn 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.avatar-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    color: var(--text-primary, #fff);
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.avatar-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.dropdown-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+@keyframes dropIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
